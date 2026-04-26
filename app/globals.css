@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand */
+  --aring-green: #2a4a3c;
+  --aring-green-deep: #1c3328;
+  --aring-green-soft: #4a6b5c;
+  --aring-green-bg: #eff3f0;
+
+  /* Pastel palette */
+  --aring-pink: #fbc8dc;
+  --aring-peach: #ffd9b8;
+  --aring-butter: #ffefb5;
+  --aring-mint: #c8e6c9;
+  --aring-sky: #c5ddf0;
+  --aring-sage: #d8e5c8;
+  --aring-accent: #f5a8c7;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #ffffff;
+  color: #1e1b2e;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* hide scrollbar for horizontal carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* gradient text — pastel multi-stop */
+.grad-text {
+  background: linear-gradient(135deg, #fbc8dc 0%, #ffd9b8 50%, #c8e6c9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.grad-text-green {
+  background: linear-gradient(135deg, #2a4a3c 0%, #1c3328 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* radial halo (hero illustration) */
+.radial-halo {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+/* gradient ring (hero earring illustration) — pastel border */
+.grad-ring {
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #fbc8dc, #ffd9b8, #c8e6c9) border-box;
+  border: 10px solid transparent;
+}
+
+/* FAB inner deep ring overlay */
+.fab-ring {
+  background:
+    linear-gradient(#1c3328, #1c3328) padding-box,
+    linear-gradient(135deg, #fbc8dc, #c5ddf0) border-box;
+  border: 2px solid transparent;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Glassmorphism utilities (Direction 2: Soft Glass + Pastel)
+   ──────────────────────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.glass-strong {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+.glass-dark {
+  background: rgba(28, 51, 40, 0.55);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Soft motion — pulse dot + floating pastel blobs
+   ──────────────────────────────────────────────────────────── */
+@keyframes aring-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.8); opacity: 0; }
+}
+.aring-pulse { animation: aring-pulse 1.8s ease-out infinite; }
+
+@keyframes aring-blob-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-14px, -10px) scale(1.06); }
+}
+@keyframes aring-blob-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(12px, 14px) scale(1.08); }
+}
+@keyframes aring-blob-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-8px, 16px) scale(0.96); }
+}
+.aring-blob-a { animation: aring-blob-a 9s ease-in-out infinite; }
+.aring-blob-b { animation: aring-blob-b 11s ease-in-out infinite; }
+.aring-blob-c { animation: aring-blob-c 10s ease-in-out infinite; }
