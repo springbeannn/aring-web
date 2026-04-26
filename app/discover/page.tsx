@@ -9,7 +9,20 @@ import {
   type RecentItem,
   type ThumbTone,
 } from '@/lib/mock';
-import { supabase, type Listing } from '@/lib/supabase';
+import {
+  supabase,
+  type Listing,
+  type ColorKey,
+  type ThemeKey,
+  type SizeKey,
+  type ConditionKey,
+} from '@/lib/supabase';
+import {
+  COLOR_OPTIONS,
+  THEME_OPTIONS,
+  SIZE_OPTIONS,
+  CONDITION_OPTIONS,
+} from '@/lib/categories';
 
 // ─────────────────────────────────────────────────────────────
 // /discover — 알약식 다중 속성 필터 페이지 (스와로브스키 카테고리 차용)
@@ -47,11 +60,15 @@ function listingToRecent(row: Listing): RecentItem {
     tone: pickTone(row.id),
     story: row.story ?? undefined,
     image: row.photo_url,
+    color: row.color,
+    theme: row.theme,
+    item_size: row.item_size,
+    condition: row.condition,
   };
 }
 
 // ─────────────────────────────────────────────────────────────
-// 카테고리 옵션 정의
+// 카테고리 옵션 정의 (color/theme/size/condition는 lib/categories에서 import)
 // ─────────────────────────────────────────────────────────────
 type ShapeKey = 'all' | 'stud' | 'drop' | 'hoop' | 'chandelier' | 'cuff' | 'climber';
 type MaterialKey =
@@ -62,10 +79,9 @@ type MaterialKey =
   | 'gold'
   | 'rose_gold'
   | 'plated';
-type SideKey = 'all' | 'L' | 'R';
 type PriceKey = 'all' | 'under_30' | 'mid_30_50' | 'mid_50_100' | 'over_100';
 
-const SHAPE_OPTIONS: { value: ShapeKey; label: string; icon: string }[] = [
+const SHAPE_LIST: { value: ShapeKey; label: string; icon: string }[] = [
   { value: 'all', label: '전체', icon: '◇' },
   { value: 'stud', label: '스터드', icon: '●' },
   { value: 'drop', label: '드롭', icon: '◆' },
@@ -75,7 +91,7 @@ const SHAPE_OPTIONS: { value: ShapeKey; label: string; icon: string }[] = [
   { value: 'climber', label: '클라이머', icon: '⤴' },
 ];
 
-const MATERIAL_OPTIONS: {
+const MATERIAL_LIST: {
   value: MaterialKey;
   label: string;
   swatch: string;
@@ -90,44 +106,7 @@ const MATERIAL_OPTIONS: {
   { value: 'plated', label: '도금', swatch: '#E8DFD0' },
 ];
 
-const COLOR_OPTIONS: { label: string; swatch?: string; gradient?: string; border?: string }[] = [
-  { label: '화이트', swatch: '#FFFFFF', border: '#D5D5D5' },
-  { label: '핑크', swatch: '#F8BBD0' },
-  { label: '옐로', swatch: '#FFE082' },
-  { label: '오렌지', swatch: '#FFB088' },
-  { label: '레드', swatch: '#EF5350' },
-  { label: '그린', swatch: '#A5D6A7' },
-  { label: '블루', swatch: '#90CAF9' },
-  { label: '퍼플', swatch: '#CE93D8' },
-  { label: '골드', swatch: '#F5C26B' },
-  { label: '실버', swatch: '#D6D6D6' },
-  { label: '블랙', swatch: '#1E1B2E' },
-  {
-    label: '멀티',
-    gradient: 'linear-gradient(135deg, #FBC8DC, #FFD9B8, #C8E6C9)',
-  },
-];
-
-const THEME_OPTIONS = [
-  { label: '하트', icon: '♡' },
-  { label: '별', icon: '★' },
-  { label: '꽃', icon: '✿' },
-  { label: '동물', icon: '◐' },
-  { label: '나비', icon: '✦' },
-  { label: '미니멀', icon: '·' },
-];
-
-const SIZE_OPTIONS = ['S', 'M', 'L'];
-
-const CONDITION_OPTIONS = ['미사용', 'S급', 'A급', 'B급'];
-
-const SIDE_OPTIONS: { value: SideKey; label: string }[] = [
-  { value: 'all', label: '전체' },
-  { value: 'L', label: 'L · 왼쪽' },
-  { value: 'R', label: 'R · 오른쪽' },
-];
-
-const PRICE_OPTIONS: { value: PriceKey; label: string }[] = [
+const PRICE_LIST: { value: PriceKey; label: string }[] = [
   { value: 'all', label: '전체' },
   { value: 'under_30', label: '3만 ↓' },
   { value: 'mid_30_50', label: '3~5만' },
@@ -330,7 +309,10 @@ export default function DiscoverPage() {
   // 활성 필터
   const [shape, setShape] = useState<ShapeKey>('all');
   const [material, setMaterial] = useState<MaterialKey>('all');
-  const [side, setSide] = useState<SideKey>('all');
+  const [color, setColor] = useState<ColorKey | 'all'>('all');
+  const [theme, setTheme] = useState<ThemeKey | 'all'>('all');
+  const [itemSize, setItemSize] = useState<SizeKey | 'all'>('all');
+  const [condition, setCondition] = useState<ConditionKey | 'all'>('all');
   const [price, setPrice] = useState<PriceKey>('all');
   const [brand, setBrand] = useState<string>('all');
 
@@ -391,28 +373,40 @@ export default function DiscoverPage() {
         const corpus = `${it.name} ${it.story ?? ''}`;
         if (!containsAny(corpus, MATERIAL_KEYWORDS[material])) return false;
       }
-      // side
-      if (side !== 'all' && it.side !== side) return false;
+      // color (정확 매칭, attribute 컬럼)
+      if (color !== 'all' && it.color !== color) return false;
+      // theme
+      if (theme !== 'all' && it.theme !== theme) return false;
+      // size
+      if (itemSize !== 'all' && it.item_size !== itemSize) return false;
+      // condition
+      if (condition !== 'all' && it.condition !== condition) return false;
       // price
       if (price !== 'all' && !priceMatches(it.price ?? 0, price)) return false;
       // brand
       if (brand !== 'all' && it.brand !== brand) return false;
       return true;
     });
-  }, [items, shape, material, side, price, brand]);
+  }, [items, shape, material, color, theme, itemSize, condition, price, brand]);
 
   // 활성 필터 개수 (초기화 버튼용)
   const activeCount =
     (shape !== 'all' ? 1 : 0) +
     (material !== 'all' ? 1 : 0) +
-    (side !== 'all' ? 1 : 0) +
+    (color !== 'all' ? 1 : 0) +
+    (theme !== 'all' ? 1 : 0) +
+    (itemSize !== 'all' ? 1 : 0) +
+    (condition !== 'all' ? 1 : 0) +
     (price !== 'all' ? 1 : 0) +
     (brand !== 'all' ? 1 : 0);
 
   function resetAll() {
     setShape('all');
     setMaterial('all');
-    setSide('all');
+    setColor('all');
+    setTheme('all');
+    setItemSize('all');
+    setCondition('all');
     setPrice('all');
     setBrand('all');
   }
@@ -445,7 +439,7 @@ export default function DiscoverPage() {
             {/* 모양 */}
             <CategoryRow title="모양">
               <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-1 px-1">
-                {SHAPE_OPTIONS.map((opt) => (
+                {SHAPE_LIST.map((opt) => (
                   <IconChip
                     key={opt.value}
                     icon={opt.icon}
@@ -460,7 +454,7 @@ export default function DiscoverPage() {
             {/* 소재 */}
             <CategoryRow title="소재">
               <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
-                {MATERIAL_OPTIONS.map((opt) => (
+                {MATERIAL_LIST.map((opt) => (
                   <SwatchChip
                     key={opt.value}
                     swatch={opt.swatch}
@@ -473,63 +467,84 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            {/* 컬러 — Phase 2 (disabled) */}
-            <CategoryRow title="컬러" hint="곧 만나요">
+            {/* 컬러 (활성) */}
+            <CategoryRow title="컬러">
               <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
+                <SwatchChip
+                  swatch="#FFFFFF"
+                  border="#E5E5E5"
+                  label="전체"
+                  isActive={color === 'all'}
+                  onClick={() => setColor('all')}
+                />
                 {COLOR_OPTIONS.map((opt) => (
                   <SwatchChip
-                    key={opt.label}
+                    key={opt.value}
                     swatch={opt.swatch}
                     gradient={opt.gradient}
                     border={opt.border}
                     label={opt.label}
-                    isDisabled
+                    isActive={color === opt.value}
+                    onClick={() => setColor(opt.value)}
                   />
                 ))}
               </div>
             </CategoryRow>
 
-            {/* 테마 — Phase 2 (disabled) */}
-            <CategoryRow title="테마" hint="곧 만나요">
+            {/* 테마 (활성) */}
+            <CategoryRow title="테마">
               <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-1 px-1">
+                <IconChip
+                  icon="◇"
+                  label="전체"
+                  isActive={theme === 'all'}
+                  onClick={() => setTheme('all')}
+                />
                 {THEME_OPTIONS.map((opt) => (
                   <IconChip
-                    key={opt.label}
+                    key={opt.value}
                     icon={opt.icon}
                     label={opt.label}
-                    isDisabled
+                    isActive={theme === opt.value}
+                    onClick={() => setTheme(opt.value)}
                   />
                 ))}
               </div>
             </CategoryRow>
 
-            {/* 사이즈 — Phase 2 */}
-            <CategoryRow title="사이즈" hint="곧 만나요">
+            {/* 사이즈 (활성) */}
+            <CategoryRow title="사이즈">
               <div className="flex gap-2 flex-wrap">
-                {SIZE_OPTIONS.map((s) => (
-                  <TextChip key={s} label={s} isDisabled />
-                ))}
-              </div>
-            </CategoryRow>
-
-            {/* 상태 — Phase 2 */}
-            <CategoryRow title="상태" hint="곧 만나요">
-              <div className="flex gap-2 flex-wrap">
-                {CONDITION_OPTIONS.map((c) => (
-                  <TextChip key={c} label={c} isDisabled />
-                ))}
-              </div>
-            </CategoryRow>
-
-            {/* L · R */}
-            <CategoryRow title="L · R">
-              <div className="flex gap-2 flex-wrap">
-                {SIDE_OPTIONS.map((opt) => (
+                <TextChip
+                  label="전체"
+                  isActive={itemSize === 'all'}
+                  onClick={() => setItemSize('all')}
+                />
+                {SIZE_OPTIONS.map((opt) => (
                   <TextChip
                     key={opt.value}
                     label={opt.label}
-                    isActive={side === opt.value}
-                    onClick={() => setSide(opt.value)}
+                    isActive={itemSize === opt.value}
+                    onClick={() => setItemSize(opt.value)}
+                  />
+                ))}
+              </div>
+            </CategoryRow>
+
+            {/* 상태 (활성) */}
+            <CategoryRow title="상태">
+              <div className="flex gap-2 flex-wrap">
+                <TextChip
+                  label="전체"
+                  isActive={condition === 'all'}
+                  onClick={() => setCondition('all')}
+                />
+                {CONDITION_OPTIONS.map((opt) => (
+                  <TextChip
+                    key={opt.value}
+                    label={opt.label}
+                    isActive={condition === opt.value}
+                    onClick={() => setCondition(opt.value)}
                   />
                 ))}
               </div>
@@ -538,7 +553,7 @@ export default function DiscoverPage() {
             {/* 가격대 */}
             <CategoryRow title="가격대">
               <div className="flex gap-2 flex-wrap">
-                {PRICE_OPTIONS.map((opt) => (
+                {PRICE_LIST.map((opt) => (
                   <TextChip
                     key={opt.value}
                     label={opt.label}

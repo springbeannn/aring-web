@@ -90,8 +90,6 @@ export function ItemFilterChips({
       : sort === 'price_desc'
       ? '높은순'
       : '가격대';
-  const sideLabel =
-    side === 'L' ? '왼쪽 (L)' : side === 'R' ? '오른쪽 (R)' : 'L · R';
 
   return (
     <div
@@ -167,59 +165,8 @@ export function ItemFilterChips({
         )}
       </div>
 
-      {/* chip 3: L·R (드롭다운) */}
-      <div className="relative" data-filter-chip>
-        <button
-          onClick={() => setOpen(open === 'side' ? null : 'side')}
-          className={[
-            'shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
-            side !== 'all'
-              ? 'bg-aring-ink-900 text-white'
-              : 'glass text-aring-ink-900',
-          ].join(' ')}
-        >
-          {sideLabel}
-          <IconChevronDown
-            className={[
-              'w-3 h-3 transition-transform',
-              side !== 'all' ? 'text-white/80' : 'text-aring-ink-500',
-              open === 'side' ? 'rotate-180' : '',
-            ].join(' ')}
-          />
-        </button>
-        {open === 'side' && (
-          <div className="absolute top-full left-0 mt-1.5 z-30 min-w-[140px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden">
-            {[
-              { value: 'all' as SideFilter, label: 'L · R 전체' },
-              { value: 'L' as SideFilter, label: '왼쪽 (L)' },
-              { value: 'R' as SideFilter, label: '오른쪽 (R)' },
-            ].map((opt) => {
-              const selected = side === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => {
-                    setSide(opt.value);
-                    setOpen(null);
-                    console.log('[aring]', 'filter:side', opt.value);
-                  }}
-                  className={[
-                    'w-full text-left px-3.5 py-2.5 text-[12.5px] font-semibold transition',
-                    selected
-                      ? 'bg-aring-ink-900 text-white'
-                      : 'text-aring-ink-700 hover:bg-aring-ink-100',
-                  ].join(' ')}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
       {/* 초기화 — 활성 필터 있을 때만 노출 */}
-      {(sort !== 'recent' || side !== 'all') && (
+      {sort !== 'recent' && (
         <button
           onClick={() => {
             setSort('recent');

@@ -269,12 +269,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
 
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
-      <div className="flex items-center gap-2">
-        <p className="text-[12px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
-        <span className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-2 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold tracking-wider">
-          {item.side}
-        </span>
-      </div>
+      <p className="text-[12px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
       <h1 className="mt-1 text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
@@ -427,14 +422,9 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         )}
       </div>
       <div className="px-2.5 py-2">
-        <div className="flex items-center gap-1">
-          <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
-            {item.brand}
-          </p>
-          <span className="shrink-0 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-pill bg-aring-ink-900 text-white text-[9px] font-extrabold">
-            {item.side}
-          </span>
-        </div>
+        <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
+          {item.brand}
+        </p>
         <p className="mt-0.5 text-[12px] font-bold text-aring-ink-900 truncate">
           {item.name}
         </p>

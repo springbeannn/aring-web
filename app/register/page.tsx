@@ -8,7 +8,17 @@ import {
   isSupabaseConfigured,
   buildPhotoPath,
   STORAGE_BUCKET,
+  type ColorKey,
+  type ThemeKey,
+  type SizeKey,
+  type ConditionKey,
 } from '@/lib/supabase';
+import {
+  COLOR_OPTIONS,
+  THEME_OPTIONS,
+  SIZE_OPTIONS,
+  CONDITION_OPTIONS,
+} from '@/lib/categories';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
@@ -38,7 +48,6 @@ const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
 // Types
 // ─────────────────────────────────────────────────────────────
 type Step = 'upload' | 'analyzing' | 'review';
-type Side = 'L' | 'R';
 type Analysis = {
   brand: string;
   shape: string;
@@ -72,7 +81,10 @@ export default function RegisterPage() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [progress, setProgress] = useState<number>(-1);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [side, setSide] = useState<Side>('L');
+  const [color, setColor] = useState<ColorKey | null>(null);
+  const [theme, setTheme] = useState<ThemeKey | null>(null);
+  const [itemSize, setItemSize] = useState<SizeKey | null>(null);
+  const [condition, setCondition] = useState<ConditionKey | null>(null);
   const [price, setPrice] = useState('');
   const [story, setStory] = useState('');
   const [region, setRegion] = useState('');
@@ -110,7 +122,7 @@ export default function RegisterPage() {
     // env 미설정 — mock 폴백
     if (!isSupabaseConfigured || !supabase) {
       console.log('[aring]', 'register:submit (mock — supabase 미설정)', {
-        analysis, side, price, story, region,
+        analysis, color, theme, itemSize, condition, price, story, region,
       });
       alert(
         '등록 완료 (mock)\n\n.env.local 에 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY 를 설정하면 실제 DB에 저장됩니다.'
@@ -137,7 +149,7 @@ export default function RegisterPage() {
         .getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
-      // 3) Insert listing
+      // 3) Insert listing — side는 L/R UI 제거됨, 'L' default 자동 입력 (legacy 컬럼)
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
@@ -146,10 +158,14 @@ export default function RegisterPage() {
         shape: analysis.shape,
         material: analysis.material,
         detail: analysis.detail,
-        side,
+        side: 'L',
         price: Number.isFinite(priceNum) ? priceNum : null,
         story: story || null,
         region: region || null,
+        color,
+        theme,
+        item_size: itemSize,
+        condition,
       });
       if (dbErr) throw dbErr;
 
@@ -196,8 +212,14 @@ export default function RegisterPage() {
           <ReviewStep
             photo={photo.url}
             analysis={analysis}
-            side={side}
-            setSide={setSide}
+            color={color}
+            setColor={setColor}
+            theme={theme}
+            setTheme={setTheme}
+            itemSize={itemSize}
+            setItemSize={setItemSize}
+            condition={condition}
+            setCondition={setCondition}
             price={price}
             setPrice={setPrice}
             story={story}
@@ -515,8 +537,14 @@ function AnalyzingOverlay({
 function ReviewStep({
   photo,
   analysis,
-  side,
-  setSide,
+  color,
+  setColor,
+  theme,
+  setTheme,
+  itemSize,
+  setItemSize,
+  condition,
+  setCondition,
   price,
   setPrice,
   story,
@@ -528,8 +556,14 @@ function ReviewStep({
 }: {
   photo: string;
   analysis: Analysis;
-  side: Side;
-  setSide: (s: Side) => void;
+  color: ColorKey | null;
+  setColor: (v: ColorKey | null) => void;
+  theme: ThemeKey | null;
+  setTheme: (v: ThemeKey | null) => void;
+  itemSize: SizeKey | null;
+  setItemSize: (v: SizeKey | null) => void;
+  condition: ConditionKey | null;
+  setCondition: (v: ConditionKey | null) => void;
   price: string;
   setPrice: (s: string) => void;
   story: string;
@@ -564,25 +598,117 @@ function ReviewStep({
         정보 추가
       </h2>
 
-      <FieldLabel>남은 한 짝의 위치</FieldLabel>
-      <div className="grid grid-cols-2 gap-2 mb-5">
-        <SideButton
-          active={side === 'L'}
-          onClick={() => setSide('L')}
-          side="L"
-          label="왼쪽 한 짝"
-        />
-        <SideButton
-          active={side === 'R'}
-          onClick={() => setSide('R')}
-          side="R"
-          label="오른쪽 한 짝"
-        />
+      {/* 컬러 (필수) — swatch */}
+      <FieldLabel>컬러</FieldLabel>
+      <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
+        {COLOR_OPTIONS.map((opt) => {
+          const active = color === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setColor(active ? null : opt.value)}
+              className={[
+                'flex flex-col items-center gap-1 w-[58px] shrink-0 active:scale-95 transition',
+              ].join(' ')}
+            >
+              <span
+                className={[
+                  'w-9 h-9 rounded-full',
+                  active ? 'ring-2 ring-aring-ink-900 ring-offset-2' : '',
+                ].join(' ')}
+                style={{
+                  background: opt.gradient ?? opt.swatch,
+                  border: opt.border ? `1px solid ${opt.border}` : undefined,
+                }}
+              />
+              <span
+                className={[
+                  'text-[10px] font-bold',
+                  active ? 'text-aring-ink-900' : 'text-aring-ink-700',
+                ].join(' ')}
+              >
+                {opt.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 테마 (선택) — icon chip */}
+      <FieldLabel>
+        테마 <span className="text-aring-ink-500 font-medium">(선택)</span>
+      </FieldLabel>
+      <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
+        {THEME_OPTIONS.map((opt) => {
+          const active = theme === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setTheme(active ? null : opt.value)}
+              className={[
+                'flex flex-col items-center justify-center gap-1 w-[68px] py-2.5 rounded-tile border transition shrink-0 active:scale-95',
+                active
+                  ? 'bg-aring-ink-900 text-white border-aring-ink-900'
+                  : 'bg-white text-aring-ink-900 border-aring-green-line',
+              ].join(' ')}
+            >
+              <span className="text-[18px] leading-none">{opt.icon}</span>
+              <span className="text-[10px] font-bold">{opt.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 사이즈 + 상태 (한 줄) */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div>
+          <FieldLabel>사이즈</FieldLabel>
+          <div className="flex gap-1.5">
+            {SIZE_OPTIONS.map((opt) => {
+              const active = itemSize === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setItemSize(active ? null : opt.value)}
+                  className={[
+                    'flex-1 inline-flex items-center justify-center px-2 py-2 rounded-pill text-[12px] font-bold transition active:scale-95',
+                    active
+                      ? 'bg-aring-ink-900 text-white'
+                      : 'bg-white text-aring-ink-700 border border-aring-green-line',
+                  ].join(' ')}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div>
+          <FieldLabel>상태</FieldLabel>
+          <div className="grid grid-cols-4 gap-1">
+            {CONDITION_OPTIONS.map((opt) => {
+              const active = condition === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setCondition(active ? null : opt.value)}
+                  className={[
+                    'inline-flex items-center justify-center px-1 py-2 rounded-pill text-[11px] font-bold transition active:scale-95',
+                    active
+                      ? 'bg-aring-ink-900 text-white'
+                      : 'bg-white text-aring-ink-700 border border-aring-green-line',
+                  ].join(' ')}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <FieldLabel>
-        가격{' '}
-        <span className="text-aring-ink-500 font-medium">(선택)</span>
+        가격 <span className="text-aring-ink-500 font-medium">(선택)</span>
       </FieldLabel>
       <Input
         value={price}
@@ -652,51 +778,6 @@ function Input({
         </span>
       )}
     </div>
-  );
-}
-
-function SideButton({
-  active,
-  onClick,
-  side,
-  label,
-}: {
-  active: boolean;
-  onClick: () => void;
-  side: 'L' | 'R';
-  label: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={[
-        'rounded-tile border px-4 py-3 text-left transition',
-        active
-          ? 'border-aring-ink-900 bg-aring-ink-100'
-          : 'border-aring-green-line bg-white',
-      ].join(' ')}
-    >
-      <div className="flex items-center gap-2">
-        <span
-          className={[
-            'w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-extrabold transition',
-            active
-              ? 'bg-aring-ink-900 text-white'
-              : 'bg-aring-ink-100 text-aring-ink-700',
-          ].join(' ')}
-        >
-          {side}
-        </span>
-        <span
-          className={[
-            'text-[12.5px] font-bold',
-            active ? 'text-aring-ink-900' : 'text-aring-ink-700',
-          ].join(' ')}
-        >
-          {label}
-        </span>
-      </div>
-    </button>
   );
 }
 

@@ -52,17 +52,9 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
 
       {/* 본문 */}
       <div className="px-3 py-3">
-        <div className="flex items-center gap-1.5">
-          <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
-            {it.brand}
-          </p>
-          <span
-            className="shrink-0 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1.5 rounded-pill bg-aring-ink-900 text-white text-[9.5px] font-extrabold tracking-wider"
-            aria-label={it.side === 'L' ? '왼쪽 한 짝' : '오른쪽 한 짝'}
-          >
-            {it.side}
-          </span>
-        </div>
+        <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
+          {it.brand}
+        </p>
         <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
           {it.name}
         </p>

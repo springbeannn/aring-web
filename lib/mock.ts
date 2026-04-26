@@ -26,6 +26,12 @@ export type RecentItem = {
   tone: ThumbTone;
   story?: string; // "3년간 보관" 같은 한줄 스토리
   image: string; // 실사 이미지 URL (Unsplash 핫링크)
+
+  // 004_listings_attributes — 탐색 필터용 (optional, mock엔 없음)
+  color?: import('@/lib/supabase').ColorKey | null;
+  theme?: import('@/lib/supabase').ThemeKey | null;
+  item_size?: import('@/lib/supabase').SizeKey | null;
+  condition?: import('@/lib/supabase').ConditionKey | null;
 };
 
 // Pastel design system — 2026-04-25 update

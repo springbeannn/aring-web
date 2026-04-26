@@ -18,6 +18,16 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 // ────────────────────────────────────────────────────────────────
 // DB row 타입 — supabase/migrations/001_listings.sql 와 1:1 매칭
 // ────────────────────────────────────────────────────────────────
+export type ColorKey =
+  | 'white' | 'pink' | 'yellow' | 'orange' | 'red' | 'green'
+  | 'blue' | 'purple' | 'gold' | 'silver' | 'black' | 'multi';
+
+export type ThemeKey =
+  | 'heart' | 'star' | 'flower' | 'animal' | 'butterfly' | 'minimal';
+
+export type SizeKey = 'S' | 'M' | 'L';
+export type ConditionKey = 'new' | 'S' | 'A' | 'B';
+
 export type Listing = {
   id: string;
   created_at: string;
@@ -31,10 +41,17 @@ export type Listing = {
   material: string | null;
   detail: string | null;
 
+  // L/R 컬럼은 DB에 유지 (legacy data 보호) — UI에선 더 이상 노출/입력 안 함, 등록 시 default 'L' 자동 insert
   side: 'L' | 'R';
   price: number | null;
   story: string | null;
   region: string | null;
+
+  // 004_listings_attributes.sql — 탐색 필터용 4개 속성 (모두 nullable)
+  color: ColorKey | null;
+  theme: ThemeKey | null;
+  item_size: SizeKey | null;
+  condition: ConditionKey | null;
 
   status: 'open' | 'matched' | 'closed';
 };
