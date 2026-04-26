@@ -238,8 +238,34 @@ function GallerySection({
 // ─────────────────────────────────────────────────────────────
 // 3) 핵심 정보 헤더
 // ─────────────────────────────────────────────────────────────
+const LIKED_KEY = 'aring_liked_product_ids';
+
+function readLikedIds(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(LIKED_KEY) ?? '[]') as string[];
+  } catch {
+    return [];
+  }
+}
+
 function HeaderInfo({ item }: { item: ItemDetail }) {
   const [liked, setLiked] = useState(false);
+
+  // 마운트 시 localStorage에서 현재 상태 hydrate
+  useEffect(() => {
+    setLiked(readLikedIds().includes(item.id));
+  }, [item.id]);
+
+  function toggle() {
+    const ids = readLikedIds();
+    const next = ids.includes(item.id)
+      ? ids.filter((id) => id !== item.id)
+      : [...ids, item.id];
+    localStorage.setItem(LIKED_KEY, JSON.stringify(next));
+    setLiked(next.includes(item.id));
+    log('detail:like', { id: item.id, liked: next.includes(item.id) })();
+  }
 
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
@@ -257,10 +283,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
           {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
         </p>
         <button
-          onClick={() => {
-            setLiked((v) => !v);
-            log('detail:like', item.id)();
-          }}
+          onClick={toggle}
           aria-label="찜하기"
           className={[
             'inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[12px] font-bold transition',
