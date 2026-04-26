@@ -313,17 +313,26 @@ function CommentItem({
       new Date(comment.created_at).getTime() >
     1000;
 
+  const isSeller = comment.role === 'seller';
+
   return (
     <div>
-      <div className="rounded-tile border border-aring-green-line bg-white p-3">
+      <div
+        className={[
+          'rounded-tile border p-3',
+          isSeller
+            ? 'border-aring-ink-900/15 bg-aring-pastel-pink/20'
+            : 'border-aring-green-line bg-white',
+        ].join(' ')}
+      >
         {/* 헤더: 닉네임 + 판매자 뱃지 + 시각 */}
         <div className="flex items-center gap-1.5">
           <p className="text-[12.5px] font-bold text-aring-ink-900 truncate">
             {comment.user_name}
           </p>
-          {comment.role === 'seller' && (
+          {isSeller && (
             <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-pill bg-aring-ink-900 text-white text-[9.5px] font-extrabold tracking-wider">
-              판매자
+              {isReply ? '판매자 답글' : '판매자'}
             </span>
           )}
           <span className="ml-auto shrink-0 text-[10.5px] text-aring-ink-500">

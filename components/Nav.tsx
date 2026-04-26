@@ -25,6 +25,14 @@ const IconChat = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
   </svg>
 );
 
+// 두 말풍선 겹친 댓글 리스트 느낌 — 하단 탭 "댓글" 전용
+const IconComments = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" />
+    <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
+  </svg>
+);
+
 const IconHome = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 9.5 12 3l9 6.5V20a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2V9.5z" />
@@ -64,7 +72,7 @@ export function TopNav() {
     { key: 'home', label: '홈', href: '/' },
     { key: 'discover', label: '탐색', href: '/discover' },
     { key: 'register', label: '등록', href: '/register' },
-    { key: 'chat', label: '채팅', href: '/chat' },
+    { key: 'chat', label: '댓글', href: '/comments' },
     { key: 'my', label: 'MY', href: '/my' },
   ];
 
@@ -203,7 +211,7 @@ export function BottomNav({ active }: { active?: Tab }) {
             <IconPlus />
             <span className="text-[10.5px]">등록</span>
           </div>
-          {item('chat', '채팅', '/chat', <IconChat />, 'unread')}
+          {item('chat', '댓글', '/comments', <IconComments />, 'unread')}
           {item('my', 'MY', '/my', <IconUser />, 'new')}
         </div>
       </div>

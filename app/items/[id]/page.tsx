@@ -467,56 +467,6 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 8) 하단 고정 액션 바 — 찜 / 채팅하기 / 더보기
-// ─────────────────────────────────────────────────────────────
-function StickyActionBar({ item }: { item: ItemDetail }) {
-  const [liked, setLiked] = useState(false);
-  const router = useRouter();
-
-  // 모바일에선 BottomNav(약 64px) 위에 stacking, 데스크탑에선 BottomNav 숨김 → bottom-0
-  return (
-    <nav className="fixed lg:absolute left-0 right-0 bottom-[68px] lg:bottom-0 z-40">
-      <div className="mx-auto max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-aring-green-line/60">
-        <div className="flex items-center gap-3 px-4 lg:px-8 py-3">
-          <button
-            onClick={() => {
-              setLiked((v) => !v);
-              log('action:like', item.id)();
-            }}
-            aria-label="찜하기"
-            className={[
-              'shrink-0 w-12 h-12 rounded-tile flex flex-col items-center justify-center gap-0.5 transition',
-              liked ? 'text-aring-accent' : 'text-aring-ink-700',
-            ].join(' ')}
-          >
-            <IconHeart className="w-5 h-5" filled={liked} />
-            <span className="text-[9.5px] font-bold">
-              {item.likes + (liked ? 1 : 0)}
-            </span>
-          </button>
-          <div className="flex-1 min-w-0 hidden lg:block">
-            <p className="text-[11px] font-bold text-aring-ink-500">{item.brand}</p>
-            <p className="text-[14px] font-extrabold text-aring-ink-900 truncate">
-              {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              console.log('[aring]', 'action:chat', item.id);
-              router.push(`/chat/${item.id}`);
-            }}
-            className="flex-1 lg:flex-none lg:px-8 inline-flex items-center justify-center gap-2 h-12 rounded-pill bg-aring-ink-900 text-white text-[14px] font-extrabold shadow-cta active:scale-[0.98] transition"
-          >
-            <IconChat className="w-4 h-4" />
-            채팅하기
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────
 // 로딩 / 404
 // ─────────────────────────────────────────────────────────────
 function LoadingScreen() {
@@ -633,8 +583,8 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible
         "
       >
-        {/* 본문 — BottomNav(64px) + ActionBar(60px) + safe-area 만큼 padding */}
-        <div className="pb-[160px] lg:pb-32">
+        {/* 본문 — BottomNav(64px) + safe-area 만큼 padding */}
+        <div className="pb-28 lg:pb-12">
           <TopNav />
           <GallerySection
             images={item.images}
@@ -646,9 +596,10 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           <StorySection story={item.story} createdAt={item.createdAt} />
           <SimilarSection items={similars} />
           <SellerCard seller={item.seller} />
-          <CommentSection productId={item.id} ownerId={item.ownerId} />
+          <div id="comments">
+            <CommentSection productId={item.id} ownerId={item.ownerId} />
+          </div>
         </div>
-        <StickyActionBar item={item} />
         <BottomNav />
       </div>
     </main>
