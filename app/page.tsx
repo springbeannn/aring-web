@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   todayMatches,
   recentItems as mockRecentItems,
@@ -434,12 +434,162 @@ function MatchCardItem({ m }: { m: MatchCard }) {
 // ─────────────────────────────────────────────────────────────
 // 6) 최근 등록된 한 짝 — 2열 그리드
 // ─────────────────────────────────────────────────────────────
+// ── 필터 옵션 정의 ────────────────────────────────────────────
+type SortKey = 'recent' | 'price_low' | 'price_high' | 'popular';
+type PriceRange = 'all' | 'under_30' | 'mid_30_50' | 'mid_50_100' | 'over_100';
+type SideFilter = 'all' | 'L' | 'R';
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: 'recent', label: '최신순' },
+  { value: 'price_low', label: '낮은 가격순' },
+  { value: 'price_high', label: '높은 가격순' },
+  { value: 'popular', label: '인기순' },
+];
+const PRICE_OPTIONS: { value: PriceRange; label: string }[] = [
+  { value: 'all', label: '전체 가격' },
+  { value: 'under_30', label: '3만 원 이하' },
+  { value: 'mid_30_50', label: '3~5만 원' },
+  { value: 'mid_50_100', label: '5~10만 원' },
+  { value: 'over_100', label: '10만 원 이상' },
+];
+const SIDE_OPTIONS: { value: SideFilter; label: string }[] = [
+  { value: 'all', label: 'L · R 전체' },
+  { value: 'L', label: '왼쪽 한 짝 (L)' },
+  { value: 'R', label: '오른쪽 한 짝 (R)' },
+];
+
+function priceMatches(price: number, range: PriceRange): boolean {
+  switch (range) {
+    case 'under_30':
+      return price > 0 && price < 30000;
+    case 'mid_30_50':
+      return price >= 30000 && price < 50000;
+    case 'mid_50_100':
+      return price >= 50000 && price < 100000;
+    case 'over_100':
+      return price >= 100000;
+    case 'all':
+    default:
+      return true;
+  }
+}
+
+function FilterChip({
+  label,
+  isActive,
+  isOpen,
+  onToggle,
+  options,
+  current,
+  onSelect,
+}: {
+  label: string;
+  isActive: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
+  options: { value: string; label: string }[];
+  current: string;
+  onSelect: (v: string) => void;
+}) {
+  return (
+    <div className="relative" data-filter-chip>
+      <button
+        onClick={onToggle}
+        className={[
+          'shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card active:scale-[0.98] transition',
+          isActive
+            ? 'bg-aring-ink-900 text-white'
+            : 'glass text-aring-ink-900',
+        ].join(' ')}
+      >
+        {label}
+        <IconChevronDown
+          className={[
+            'w-3 h-3 transition-transform',
+            isActive ? 'text-white/80' : 'text-aring-ink-500',
+            isOpen ? 'rotate-180' : '',
+          ].join(' ')}
+        />
+      </button>
+      {isOpen && (
+        <div
+          className="absolute top-full left-0 mt-1.5 z-30 min-w-[160px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden"
+        >
+          {options.map((opt) => {
+            const selected = opt.value === current;
+            return (
+              <button
+                key={opt.value}
+                onClick={() => onSelect(opt.value)}
+                className={[
+                  'w-full text-left px-3.5 py-2.5 text-[12.5px] font-semibold transition',
+                  selected
+                    ? 'bg-aring-ink-900 text-white'
+                    : 'text-aring-ink-700 hover:bg-aring-ink-100',
+                ].join(' ')}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RecentItemsSection({ items }: { items: RecentItem[] }) {
-  const filters = [
-    { key: 'sort', label: '최신순' },
-    { key: 'price', label: '가격대' },
-    { key: 'side', label: 'L · R' },
-  ];
+  const [sort, setSort] = useState<SortKey>('recent');
+  const [price, setPrice] = useState<PriceRange>('all');
+  const [side, setSide] = useState<SideFilter>('all');
+  const [open, setOpen] = useState<null | 'sort' | 'price' | 'side'>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // 외부 클릭 / esc 시 dropdown 닫기
+  useEffect(() => {
+    if (!open) return;
+    const onMouse = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-filter-chip]')) setOpen(null);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(null);
+    };
+    document.addEventListener('mousedown', onMouse);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onMouse);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const filtered = useMemo(() => {
+    let arr = items.slice();
+    if (side !== 'all') arr = arr.filter((it) => it.side === side);
+    if (price !== 'all')
+      arr = arr.filter((it) => priceMatches(it.price ?? 0, price));
+    switch (sort) {
+      case 'price_low':
+        arr.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+        break;
+      case 'price_high':
+        arr.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+        break;
+      case 'popular':
+        arr.sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0));
+        break;
+      // 'recent'는 fetch 시점 정렬 그대로 유지
+    }
+    return arr;
+  }, [items, sort, price, side]);
+
+  const sortLabel =
+    SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '최신순';
+  const priceLabel =
+    price === 'all'
+      ? '가격대'
+      : PRICE_OPTIONS.find((o) => o.value === price)?.label ?? '가격대';
+  const sideLabel = side === 'all' ? 'L · R' : `한 짝: ${side}`;
 
   return (
     <section className="pt-2 pb-5">
@@ -450,32 +600,89 @@ function RecentItemsSection({ items }: { items: RecentItem[] }) {
         onMore={log('recent:more')}
       />
 
-      {/* Frosted filter chips */}
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-5 lg:px-8 mb-3">
-        {filters.map((f) => (
+      {/* 필터 chips — 동작 가능 */}
+      <div
+        ref={containerRef}
+        className="no-scrollbar flex gap-2 overflow-x-auto overflow-y-visible px-5 lg:px-8 mb-3"
+      >
+        <FilterChip
+          label={sortLabel}
+          isActive={sort !== 'recent'}
+          isOpen={open === 'sort'}
+          onToggle={() => setOpen(open === 'sort' ? null : 'sort')}
+          options={SORT_OPTIONS}
+          current={sort}
+          onSelect={(v) => {
+            setSort(v as SortKey);
+            setOpen(null);
+            console.log('[aring]', 'filter:sort', v);
+          }}
+        />
+        <FilterChip
+          label={priceLabel}
+          isActive={price !== 'all'}
+          isOpen={open === 'price'}
+          onToggle={() => setOpen(open === 'price' ? null : 'price')}
+          options={PRICE_OPTIONS}
+          current={price}
+          onSelect={(v) => {
+            setPrice(v as PriceRange);
+            setOpen(null);
+            console.log('[aring]', 'filter:price', v);
+          }}
+        />
+        <FilterChip
+          label={sideLabel}
+          isActive={side !== 'all'}
+          isOpen={open === 'side'}
+          onToggle={() => setOpen(open === 'side' ? null : 'side')}
+          options={SIDE_OPTIONS}
+          current={side}
+          onSelect={(v) => {
+            setSide(v as SideFilter);
+            setOpen(null);
+            console.log('[aring]', 'filter:side', v);
+          }}
+        />
+        {(sort !== 'recent' || price !== 'all' || side !== 'all') && (
           <button
-            key={f.key}
-            onClick={log(`filter:${f.key}`)}
-            className="shrink-0 inline-flex items-center gap-1.5 rounded-pill glass px-3 py-1.5 text-[11.5px] font-bold text-aring-ink-900 shadow-card active:scale-[0.98] transition"
+            onClick={() => {
+              setSort('recent');
+              setPrice('all');
+              setSide('all');
+              setOpen(null);
+            }}
+            className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
           >
-            {f.label}
-            <IconChevronDown className="w-3 h-3 text-aring-ink-500" />
+            초기화
           </button>
-        ))}
+        )}
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-        {items.map((it) => (
-          <RecentItemCard key={it.id} it={it} />
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <div className="px-5 lg:px-8 py-10 text-center">
+          <p className="text-[13px] font-bold text-aring-ink-900">
+            조건에 맞는 한 짝이 없어요
+          </p>
+          <p className="mt-1 text-[11.5px] text-aring-ink-500">
+            필터를 초기화하거나 다른 조건을 선택해 주세요
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
+          {filtered.map((it) => (
+            <RecentItemCard key={it.id} it={it} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
 
 function RecentItemCard({ it }: { it: RecentItem }) {
   return (
-    <button
+    <Link
+      href={`/items/${it.id}`}
       onClick={log('recent:tap', it.id)}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
@@ -535,7 +742,7 @@ function RecentItemCard({ it }: { it: RecentItem }) {
           </span>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 

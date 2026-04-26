@@ -193,3 +193,164 @@ export function thumbBg(tone: ThumbTone): string {
       return 'linear-gradient(135deg,#E5EDD8,#D8E5C8)';
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// Item Detail (P0 상세 페이지) — 2026-04-26
+// ─────────────────────────────────────────────────────────────
+
+export type ItemSummary = {
+  id: string;
+  brand: string;
+  name: string;
+  price?: number;
+  side: 'L' | 'R';
+  image: string;
+  tone: ThumbTone;
+  similarity?: number; // 매칭 후보일 때만
+};
+
+export type ItemDetail = RecentItem & {
+  images: string[]; // 메인 + 추가 갤러리 이미지
+  ai: {
+    shape: string;     // "드롭", "후프", "스터드"
+    material: string;  // "은", "크리스탈", "골드"
+    color: string;
+    details: string[]; // 태그형 ["데일리", "오피스"]
+  };
+  seller: {
+    nickname: string;
+    rating: number; // 0-5
+    deals: number;
+    region: string;
+  };
+  matchCandidateIds: string[]; // max 5
+  createdAt: string; // ISO
+};
+
+// detail 전용 추가 정보 — id 매핑
+const detailExtras: Record<
+  string,
+  Pick<ItemDetail, 'images' | 'ai' | 'seller' | 'matchCandidateIds' | 'createdAt'>
+> = {
+  r1: {
+    images: [
+      u('1611591437281-460bfbe1220a', 800),
+      u('1611652022419-a9419f74343d', 800),
+      u('1535632787350-4e68ef0ac584', 800),
+    ],
+    ai: {
+      shape: '드롭',
+      material: '크리스탈 · 로즈골드 도금',
+      color: '로즈골드',
+      details: ['데일리', '포멀', '심플', '컨템포러리'],
+    },
+    seller: {
+      nickname: '도현_jewels',
+      rating: 4.9,
+      deals: 12,
+      region: '서울 · 강남구',
+    },
+    matchCandidateIds: ['m1', 'm4', 'r3', 'm2', 'r4'],
+    createdAt: '2026-04-22T10:14:00.000Z',
+  },
+  r2: {
+    images: [
+      u('1605100804763-247f67b3557e', 800),
+      u('1602173574767-37ac01994b2a', 800),
+      u('1561591876-5cba85b78c6f', 800),
+    ],
+    ai: {
+      shape: '후프',
+      material: '실버 925',
+      color: '실버',
+      details: ['미니멀', '데일리', '유니섹스'],
+    },
+    seller: {
+      nickname: 'minji.silver',
+      rating: 5.0,
+      deals: 34,
+      region: '서울 · 성동구',
+    },
+    matchCandidateIds: ['m3', 'r4', 'm1', 'm2', 'r1'],
+    createdAt: '2026-04-23T18:32:00.000Z',
+  },
+  r3: {
+    images: [
+      u('1611652022419-a9419f74343d', 800),
+      u('1606760227091-3dd870d97f1d', 800),
+      u('1599643477877-530eb83abc8e', 800),
+    ],
+    ai: {
+      shape: '스터드 · 하트',
+      material: '크리스탈',
+      color: '크리스탈 클리어',
+      details: ['로맨틱', '파티', '포인트'],
+    },
+    seller: {
+      nickname: 'yuna.crystal',
+      rating: 4.7,
+      deals: 8,
+      region: '서울 · 마포구',
+    },
+    matchCandidateIds: ['m4', 'm1', 'r1', 'm2'],
+    createdAt: '2026-04-24T09:05:00.000Z',
+  },
+  r4: {
+    images: [
+      u('1599643477877-530eb83abc8e', 800),
+      u('1535632787350-4e68ef0ac584', 800),
+      u('1611591437281-460bfbe1220a', 800),
+    ],
+    ai: {
+      shape: '드롭',
+      material: '담수 펄 · 실버',
+      color: '화이트 펄',
+      details: ['클래식', '오피스', '단정'],
+    },
+    seller: {
+      nickname: 'hye_pearl',
+      rating: 4.8,
+      deals: 21,
+      region: '경기 · 성남시',
+    },
+    matchCandidateIds: ['m2', 'r2', 'm3', 'r1', 'm1'],
+    createdAt: '2026-04-25T15:48:00.000Z',
+  },
+};
+
+/** id로 ItemDetail 조회 (mock). recentItems + detailExtras 결합 */
+export function getItemDetail(id: string): ItemDetail | null {
+  const base = recentItems.find((r) => r.id === id);
+  const extras = detailExtras[id];
+  if (!base || !extras) return null;
+  return { ...base, ...extras };
+}
+
+/** id로 ItemSummary 조회 (recent + today match 통합 lookup, 매칭 후보 카드용) */
+export function getItemSummary(id: string): ItemSummary | null {
+  const r = recentItems.find((it) => it.id === id);
+  if (r) {
+    return {
+      id: r.id,
+      brand: r.brand,
+      name: r.name,
+      price: r.price,
+      side: r.side,
+      image: r.image,
+      tone: r.tone,
+    };
+  }
+  const m = todayMatches.find((it) => it.id === id);
+  if (m) {
+    return {
+      id: m.id,
+      brand: m.brand,
+      name: m.name,
+      side: 'L', // todayMatches는 양쪽 모두 가진 후보 — 표시용 기본 L
+      image: m.leftImage,
+      tone: m.leftTone,
+      similarity: m.similarity,
+    };
+  }
+  return null;
+}
