@@ -13,6 +13,7 @@ import {
   type ThumbTone,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
+import { TopNav, BottomNav } from '@/components/Nav';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘 (inline SVG)
@@ -136,35 +137,34 @@ function listingToSummary(row: Listing, idx: number): ItemSummary {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 1) Detail 상단 nav — back / share / more
+// 1) 갤러리 위 floating 액션 (back / share / more)
+//    공통 TopNav가 항상 떠있으므로, back 버튼은 갤러리 위에 floating으로 배치
 // ─────────────────────────────────────────────────────────────
-function DetailTopNav({ onBack }: { onBack: () => void }) {
+function GalleryFloatingActions({ onBack }: { onBack: () => void }) {
   return (
-    <div className="sticky top-0 z-30 glass">
-      <div className="flex items-center justify-between px-3 lg:px-6 py-2.5">
+    <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
+      <button
+        onClick={onBack}
+        aria-label="뒤로"
+        className="pointer-events-auto w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+      >
+        <IconArrowLeft />
+      </button>
+      <div className="pointer-events-auto flex items-center gap-2">
         <button
-          onClick={onBack}
-          aria-label="뒤로"
-          className="w-10 h-10 rounded-full flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+          onClick={log('detail:share')}
+          aria-label="공유"
+          className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
         >
-          <IconArrowLeft />
+          <IconShare />
         </button>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={log('detail:share')}
-            aria-label="공유"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
-          >
-            <IconShare />
-          </button>
-          <button
-            onClick={log('detail:more')}
-            aria-label="더보기"
-            className="w-10 h-10 rounded-full flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
-          >
-            <IconMore />
-          </button>
-        </div>
+        <button
+          onClick={log('detail:more')}
+          aria-label="더보기"
+          className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+        >
+          <IconMore />
+        </button>
       </div>
     </div>
   );
@@ -173,16 +173,27 @@ function DetailTopNav({ onBack }: { onBack: () => void }) {
 // ─────────────────────────────────────────────────────────────
 // 2) 이미지 갤러리 — swipe + dots
 // ─────────────────────────────────────────────────────────────
-function GallerySection({ images, tone }: { images: string[]; tone: ItemDetail['tone'] }) {
+function GallerySection({
+  images,
+  tone,
+  onBack,
+}: {
+  images: string[];
+  tone: ItemDetail['tone'];
+  onBack: () => void;
+}) {
   const [active, setActive] = useState(0);
   const showDots = images.length > 1;
 
   return (
-    <section className="-mt-12 lg:mt-0 lg:mb-6">
+    <section className="lg:mb-6">
       <div
         className="relative aspect-square w-full lg:rounded-card overflow-hidden"
         style={{ background: thumbBg(tone) }}
       >
+        {/* 갤러리 floating 액션 (back / share / more) */}
+        <GalleryFloatingActions onBack={onBack} />
+
         <div
           className="flex h-full transition-transform duration-300 ease-out"
           style={{ transform: `translateX(-${active * 100}%)` }}
@@ -459,9 +470,10 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
 function StickyActionBar({ item }: { item: ItemDetail }) {
   const [liked, setLiked] = useState(false);
 
+  // 모바일에선 BottomNav(약 64px) 위에 stacking, 데스크탑에선 BottomNav 숨김 → bottom-0
   return (
-    <nav className="fixed lg:absolute left-0 right-0 bottom-0 z-30">
-      <div className="mx-auto max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-aring-green-line/60 pb-[env(safe-area-inset-bottom,0px)]">
+    <nav className="fixed lg:absolute left-0 right-0 bottom-[68px] lg:bottom-0 z-40">
+      <div className="mx-auto max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-aring-green-line/60">
         <div className="flex items-center gap-3 px-4 lg:px-8 py-3">
           <button
             onClick={() => {
@@ -615,9 +627,14 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible
         "
       >
-        <div className="pb-28 lg:pb-32">
-          <DetailTopNav onBack={() => router.back()} />
-          <GallerySection images={item.images} tone={item.tone} />
+        {/* 본문 — BottomNav(64px) + ActionBar(60px) + safe-area 만큼 padding */}
+        <div className="pb-[160px] lg:pb-32">
+          <TopNav />
+          <GallerySection
+            images={item.images}
+            tone={item.tone}
+            onBack={() => router.back()}
+          />
           <HeaderInfo item={item} />
           <AIAnalysisCard ai={item.ai} />
           <StorySection story={item.story} createdAt={item.createdAt} />
@@ -625,6 +642,7 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           <SellerCard seller={item.seller} />
         </div>
         <StickyActionBar item={item} />
+        <BottomNav />
       </div>
     </main>
   );
