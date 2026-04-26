@@ -41,6 +41,25 @@ export type Listing = {
 
 export type NewListing = Omit<Listing, 'id' | 'created_at' | 'user_id' | 'status'>;
 
+// ────────────────────────────────────────────────────────────────
+// Comments — 002_comments.sql
+// ────────────────────────────────────────────────────────────────
+export type CommentRole = 'seller' | 'buyer';
+
+export type Comment = {
+  id: string;
+  product_id: string;
+  user_id: string;
+  user_name: string;
+  role: CommentRole;
+  message: string;
+  parent_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type NewComment = Omit<Comment, 'id' | 'created_at' | 'updated_at'>;
+
 // Storage 경로 생성 — 충돌 방지용 timestamp + random suffix
 export function buildPhotoPath(filename: string): string {
   const ext = (filename.split('.').pop() ?? 'jpg').toLowerCase();

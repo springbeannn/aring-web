@@ -211,6 +211,7 @@ export type ItemSummary = {
 
 export type ItemDetail = RecentItem & {
   images: string[]; // 메인 + 추가 갤러리 이미지
+  ownerId: string | null; // 등록자 user_id (댓글 role 판정에 사용)
   ai: {
     shape: string;     // "드롭", "후프", "스터드"
     material: string;  // "은", "크리스탈", "골드"
@@ -323,7 +324,7 @@ export function getItemDetail(id: string): ItemDetail | null {
   const base = recentItems.find((r) => r.id === id);
   const extras = detailExtras[id];
   if (!base || !extras) return null;
-  return { ...base, ...extras };
+  return { ...base, ...extras, ownerId: null };
 }
 
 /** id로 ItemSummary 조회 (recent + today match 통합 lookup, 매칭 후보 카드용) */

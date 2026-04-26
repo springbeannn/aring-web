@@ -14,6 +14,7 @@ import {
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
+import { CommentSection } from '@/components/CommentSection';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘 (inline SVG)
@@ -107,6 +108,7 @@ function listingToItemDetail(row: Listing): ItemDetail {
     story: row.story ?? undefined,
     image: row.photo_url,
     images: [row.photo_url],
+    ownerId: row.user_id, // 댓글 role 판정용
     ai: {
       shape: row.shape ?? '미상',
       material: row.material ?? '미상',
@@ -458,7 +460,7 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
             )}
           </div>
         </div>
-        <IconChevronRight className="text-aring-ink-500" />
+        <IconChevronRight className="w-4 h-4 shrink-0 text-aring-ink-500" />
       </button>
     </section>
   );
@@ -469,6 +471,7 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
 // ─────────────────────────────────────────────────────────────
 function StickyActionBar({ item }: { item: ItemDetail }) {
   const [liked, setLiked] = useState(false);
+  const router = useRouter();
 
   // 모바일에선 BottomNav(약 64px) 위에 stacking, 데스크탑에선 BottomNav 숨김 → bottom-0
   return (
@@ -498,7 +501,10 @@ function StickyActionBar({ item }: { item: ItemDetail }) {
             </p>
           </div>
           <button
-            onClick={log('action:chat', item.id)}
+            onClick={() => {
+              console.log('[aring]', 'action:chat', item.id);
+              router.push(`/chat/${item.id}`);
+            }}
             className="flex-1 lg:flex-none lg:px-8 inline-flex items-center justify-center gap-2 h-12 rounded-pill bg-aring-ink-900 text-white text-[14px] font-extrabold shadow-cta active:scale-[0.98] transition"
           >
             <IconChat className="w-4 h-4" />
@@ -640,6 +646,7 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           <StorySection story={item.story} createdAt={item.createdAt} />
           <SimilarSection items={similars} />
           <SellerCard seller={item.seller} />
+          <CommentSection productId={item.id} ownerId={item.ownerId} />
         </div>
         <StickyActionBar item={item} />
         <BottomNav />
