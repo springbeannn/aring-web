@@ -8,16 +8,14 @@ import {
   isSupabaseConfigured,
   buildPhotoPath,
   STORAGE_BUCKET,
-  type ColorKey,
-  type ThemeKey,
-  type SizeKey,
-  type ConditionKey,
 } from '@/lib/supabase';
 import {
-  COLOR_OPTIONS,
-  THEME_OPTIONS,
-  SIZE_OPTIONS,
-  CONDITION_OPTIONS,
+  SHAPE_OPTIONS,
+  MATERIAL_OPTIONS,
+  shapeLabel,
+  materialLabel,
+  type ShapeKey,
+  type MaterialKey,
 } from '@/lib/categories';
 
 // ─────────────────────────────────────────────────────────────
@@ -81,10 +79,8 @@ export default function RegisterPage() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [progress, setProgress] = useState<number>(-1);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [color, setColor] = useState<ColorKey | null>(null);
-  const [theme, setTheme] = useState<ThemeKey | null>(null);
-  const [itemSize, setItemSize] = useState<SizeKey | null>(null);
-  const [condition, setCondition] = useState<ConditionKey | null>(null);
+  const [shapeKey, setShapeKey] = useState<ShapeKey | null>(null);
+  const [materialKey, setMaterialKey] = useState<MaterialKey | null>(null);
   const [price, setPrice] = useState('');
   const [story, setStory] = useState('');
   const [region, setRegion] = useState('');
@@ -122,7 +118,7 @@ export default function RegisterPage() {
     // env 미설정 — mock 폴백
     if (!isSupabaseConfigured || !supabase) {
       console.log('[aring]', 'register:submit (mock — supabase 미설정)', {
-        analysis, color, theme, itemSize, condition, price, story, region,
+        analysis, shapeKey, materialKey, price, story, region,
       });
       alert(
         '등록 완료 (mock)\n\n.env.local 에 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY 를 설정하면 실제 DB에 저장됩니다.'
@@ -149,23 +145,20 @@ export default function RegisterPage() {
         .getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
-      // 3) Insert listing — side는 L/R UI 제거됨, 'L' default 자동 입력 (legacy 컬럼)
+      // 3) Insert listing — 사용자가 chip으로 선택한 라벨이 shape/material로 저장
+      // (탐색에서 inferShapeKey / inferMaterialKey 가 정확 매칭으로 잡아냄)
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
         photo_path: path,
         brand: analysis.brand,
-        shape: analysis.shape,
-        material: analysis.material,
+        shape: shapeKey ? shapeLabel(shapeKey) : analysis.shape,
+        material: materialKey ? materialLabel(materialKey) : analysis.material,
         detail: analysis.detail,
         side: 'L',
         price: Number.isFinite(priceNum) ? priceNum : null,
         story: story || null,
         region: region || null,
-        color,
-        theme,
-        item_size: itemSize,
-        condition,
       });
       if (dbErr) throw dbErr;
 
@@ -212,14 +205,10 @@ export default function RegisterPage() {
           <ReviewStep
             photo={photo.url}
             analysis={analysis}
-            color={color}
-            setColor={setColor}
-            theme={theme}
-            setTheme={setTheme}
-            itemSize={itemSize}
-            setItemSize={setItemSize}
-            condition={condition}
-            setCondition={setCondition}
+            shapeKey={shapeKey}
+            setShapeKey={setShapeKey}
+            materialKey={materialKey}
+            setMaterialKey={setMaterialKey}
             price={price}
             setPrice={setPrice}
             story={story}
@@ -534,17 +523,19 @@ function AnalyzingOverlay({
 // ─────────────────────────────────────────────────────────────
 // Step 3 — Review (AI 결과 + 사용자 추가 정보)
 // ─────────────────────────────────────────────────────────────
+// 활성/비활성 통일 디자인 (탐색과 동일)
+const ACTIVE_BG = '#EAF7F5';
+const ACTIVE_BORDER = '#8ED9CC';
+const ACTIVE_TEXT = '#222222';
+const INACTIVE_BORDER = '#E5E5E5';
+
 function ReviewStep({
   photo,
   analysis,
-  color,
-  setColor,
-  theme,
-  setTheme,
-  itemSize,
-  setItemSize,
-  condition,
-  setCondition,
+  shapeKey,
+  setShapeKey,
+  materialKey,
+  setMaterialKey,
   price,
   setPrice,
   story,
@@ -556,14 +547,10 @@ function ReviewStep({
 }: {
   photo: string;
   analysis: Analysis;
-  color: ColorKey | null;
-  setColor: (v: ColorKey | null) => void;
-  theme: ThemeKey | null;
-  setTheme: (v: ThemeKey | null) => void;
-  itemSize: SizeKey | null;
-  setItemSize: (v: SizeKey | null) => void;
-  condition: ConditionKey | null;
-  setCondition: (v: ConditionKey | null) => void;
+  shapeKey: ShapeKey | null;
+  setShapeKey: (v: ShapeKey | null) => void;
+  materialKey: MaterialKey | null;
+  setMaterialKey: (v: MaterialKey | null) => void;
   price: string;
   setPrice: (s: string) => void;
   story: string;
@@ -598,113 +585,66 @@ function ReviewStep({
         정보 추가
       </h2>
 
-      {/* 컬러 (필수) — swatch */}
-      <FieldLabel>컬러</FieldLabel>
-      <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
-        {COLOR_OPTIONS.map((opt) => {
-          const active = color === opt.value;
+      {/* 모양 — 텍스트 pill (탐색과 동일 데이터 구조) */}
+      <FieldLabel>모양</FieldLabel>
+      <div className="flex gap-2 flex-wrap mb-5">
+        {SHAPE_OPTIONS.map((opt) => {
+          const active = shapeKey === opt.value;
           return (
             <button
               key={opt.value}
-              onClick={() => setColor(active ? null : opt.value)}
-              className={[
-                'flex flex-col items-center gap-1 w-[58px] shrink-0 active:scale-95 transition',
-              ].join(' ')}
+              onClick={() => setShapeKey(active ? null : opt.value)}
+              className="inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition active:scale-95"
+              style={{
+                backgroundColor: active ? ACTIVE_BG : '#FFFFFF',
+                border: `1px solid ${active ? ACTIVE_BORDER : INACTIVE_BORDER}`,
+                color: active ? ACTIVE_TEXT : '#555555',
+              }}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 소재 — 실사 느낌 원형 썸네일 (탐색과 동일) */}
+      <FieldLabel>소재</FieldLabel>
+      <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
+        {MATERIAL_OPTIONS.map((opt) => {
+          const active = materialKey === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => setMaterialKey(active ? null : opt.value)}
+              className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition"
             >
               <span
-                className={[
-                  'w-9 h-9 rounded-full',
-                  active ? 'ring-2 ring-aring-ink-900 ring-offset-2' : '',
-                ].join(' ')}
+                className="relative w-12 h-12 rounded-full overflow-hidden"
                 style={{
-                  background: opt.gradient ?? opt.swatch,
-                  border: opt.border ? `1px solid ${opt.border}` : undefined,
+                  background: opt.bg,
+                  boxShadow: active
+                    ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF`
+                    : `0 0 0 1px ${INACTIVE_BORDER}`,
                 }}
-              />
+              >
+                <span
+                  aria-hidden
+                  className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
+                  style={{
+                    background:
+                      'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)',
+                  }}
+                />
+              </span>
               <span
-                className={[
-                  'text-[10px] font-bold',
-                  active ? 'text-aring-ink-900' : 'text-aring-ink-700',
-                ].join(' ')}
+                className="text-[10.5px] font-bold"
+                style={{ color: active ? ACTIVE_TEXT : '#555' }}
               >
                 {opt.label}
               </span>
             </button>
           );
         })}
-      </div>
-
-      {/* 테마 (선택) — icon chip */}
-      <FieldLabel>
-        테마 <span className="text-aring-ink-500 font-medium">(선택)</span>
-      </FieldLabel>
-      <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
-        {THEME_OPTIONS.map((opt) => {
-          const active = theme === opt.value;
-          return (
-            <button
-              key={opt.value}
-              onClick={() => setTheme(active ? null : opt.value)}
-              className={[
-                'flex flex-col items-center justify-center gap-1 w-[68px] py-2.5 rounded-tile border transition shrink-0 active:scale-95',
-                active
-                  ? 'bg-aring-ink-900 text-white border-aring-ink-900'
-                  : 'bg-white text-aring-ink-900 border-aring-green-line',
-              ].join(' ')}
-            >
-              <span className="text-[18px] leading-none">{opt.icon}</span>
-              <span className="text-[10px] font-bold">{opt.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* 사이즈 + 상태 (한 줄) */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
-        <div>
-          <FieldLabel>사이즈</FieldLabel>
-          <div className="flex gap-1.5">
-            {SIZE_OPTIONS.map((opt) => {
-              const active = itemSize === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => setItemSize(active ? null : opt.value)}
-                  className={[
-                    'flex-1 inline-flex items-center justify-center px-2 py-2 rounded-pill text-[12px] font-bold transition active:scale-95',
-                    active
-                      ? 'bg-aring-ink-900 text-white'
-                      : 'bg-white text-aring-ink-700 border border-aring-green-line',
-                  ].join(' ')}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <div>
-          <FieldLabel>상태</FieldLabel>
-          <div className="grid grid-cols-4 gap-1">
-            {CONDITION_OPTIONS.map((opt) => {
-              const active = condition === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => setCondition(active ? null : opt.value)}
-                  className={[
-                    'inline-flex items-center justify-center px-1 py-2 rounded-pill text-[11px] font-bold transition active:scale-95',
-                    active
-                      ? 'bg-aring-ink-900 text-white'
-                      : 'bg-white text-aring-ink-700 border border-aring-green-line',
-                  ].join(' ')}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
 
       <FieldLabel>
