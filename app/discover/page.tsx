@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
@@ -9,29 +8,25 @@ import {
   type RecentItem,
   type ThumbTone,
 } from '@/lib/mock';
-import {
-  supabase,
-  type Listing,
-  type ColorKey,
-  type ThemeKey,
-  type SizeKey,
-  type ConditionKey,
-} from '@/lib/supabase';
-import {
-  COLOR_OPTIONS,
-  THEME_OPTIONS,
-  SIZE_OPTIONS,
-  CONDITION_OPTIONS,
-} from '@/lib/categories';
+import { supabase, type Listing } from '@/lib/supabase';
 
 // ─────────────────────────────────────────────────────────────
-// /discover — 알약식 다중 속성 필터 페이지 (스와로브스키 카테고리 차용)
-//
-// 동작 카테고리 (Phase 1, 5종): shape · material · side · price · brand
-// 노출만 (Phase 2 예정, 4종, disabled): color · theme · size · condition
-//
-// 결과: 같은 페이지 하단 그리드, 즉시 갱신 (chip 클릭 즉시 리렌더)
+// /discover — 다중 속성 필터 (단순화 v2 · 2026-04-26)
+// 변경점:
+//  - 모양: 아이콘 제거 → 텍스트 pill 다중 선택
+//  - 소재: swatch → 실사 느낌 원형 썸네일 (그라데이션 + radial highlight)
+//  - 컬러: 8개 파스텔 chip
+//  - 사이즈 카테고리 삭제
+//  - 선택 상태 컬러 통일 (#EAF7F5 / #8ED9CC / #222), 크기·border 두께 고정
+//  - 상단에 선택된 필터 chip + 전체 해제
+// 기존 파일 구조 유지, mock 폴백 동작 그대로
 // ─────────────────────────────────────────────────────────────
+
+// 활성 시 통일 디자인
+const ACTIVE_BG = '#EAF7F5';
+const ACTIVE_BORDER = '#8ED9CC';
+const ACTIVE_TEXT = '#222222';
+const INACTIVE_BORDER = '#E5E5E5';
 
 const TONE_ROTATION: ThumbTone[] = [
   'pink',
@@ -68,42 +63,71 @@ function listingToRecent(row: Listing): RecentItem {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 카테고리 옵션 정의 (color/theme/size/condition는 lib/categories에서 import)
+// 카테고리 옵션
 // ─────────────────────────────────────────────────────────────
-type ShapeKey = 'all' | 'stud' | 'drop' | 'hoop' | 'chandelier' | 'cuff' | 'climber';
+type ShapeKey = 'stud' | 'drop' | 'hoop' | 'chandelier' | 'cuff' | 'etc';
 type MaterialKey =
   | 'all'
-  | 'crystal'
-  | 'pearl'
-  | 'silver'
   | 'gold'
+  | 'silver'
   | 'rose_gold'
-  | 'plated';
+  | 'pearl'
+  | 'crystal'
+  | 'stone'
+  | 'acrylic';
+type ColorKey =
+  | 'all'
+  | 'gold'
+  | 'silver'
+  | 'rose_gold'
+  | 'white'
+  | 'black'
+  | 'pink'
+  | 'blue'
+  | 'etc';
 type PriceKey = 'all' | 'under_30' | 'mid_30_50' | 'mid_50_100' | 'over_100';
 
-const SHAPE_LIST: { value: ShapeKey; label: string; icon: string }[] = [
-  { value: 'all', label: '전체', icon: '◇' },
-  { value: 'stud', label: '스터드', icon: '●' },
-  { value: 'drop', label: '드롭', icon: '◆' },
-  { value: 'hoop', label: '후프', icon: '◯' },
-  { value: 'chandelier', label: '샹들리에', icon: '✧' },
-  { value: 'cuff', label: '이어커프', icon: '∽' },
-  { value: 'climber', label: '클라이머', icon: '⤴' },
+const SHAPE_LIST: { value: ShapeKey; label: string }[] = [
+  { value: 'stud', label: '스터드' },
+  { value: 'drop', label: '드롭' },
+  { value: 'hoop', label: '후프' },
+  { value: 'chandelier', label: '샹들리에' },
+  { value: 'cuff', label: '이어커프' },
+  { value: 'etc', label: '기타' },
 ];
 
+// 실사 느낌 원형 썸네일 — 그라데이션 + 광택 highlight 조합
 const MATERIAL_LIST: {
   value: MaterialKey;
+  label: string;
+  bg: string;
+}[] = [
+  { value: 'all', label: '전체', bg: 'linear-gradient(135deg,#F5F5F5,#E8E8E8)' },
+  { value: 'gold', label: '골드', bg: 'linear-gradient(135deg,#F5D78A,#C9A055 70%,#9C7A38)' },
+  { value: 'silver', label: '실버', bg: 'linear-gradient(135deg,#F0F0F0,#C0C0C0 60%,#9A9A9A)' },
+  { value: 'rose_gold', label: '로즈골드', bg: 'linear-gradient(135deg,#F4D5C8,#D89F90 65%,#B47865)' },
+  { value: 'pearl', label: '진주', bg: 'linear-gradient(135deg,#FFFFFF,#F5EBDA 60%,#E0CFB1)' },
+  { value: 'crystal', label: '크리스탈', bg: 'linear-gradient(135deg,#F0F8FF,#CDE3F5 60%,#A4C8E5)' },
+  { value: 'stone', label: '원석', bg: 'linear-gradient(135deg,#C5CEDB,#7B8B9F 60%,#4D5C6E)' },
+  { value: 'acrylic', label: '아크릴', bg: 'linear-gradient(135deg,#FBC8DC,#FFD9B8,#C8E6C9)' },
+];
+
+// 컬러 chip — 파스텔톤 (단, 골드/실버/로즈골드는 메탈 톤 유지)
+const COLOR_LIST: {
+  value: ColorKey;
   label: string;
   swatch: string;
   border?: string;
 }[] = [
   { value: 'all', label: '전체', swatch: '#FFFFFF', border: '#E5E5E5' },
-  { value: 'crystal', label: '크리스탈', swatch: '#E5F0FF' },
-  { value: 'pearl', label: '펄', swatch: '#FFF8E5' },
-  { value: 'silver', label: '실버', swatch: '#D6D6D6' },
-  { value: 'gold', label: '골드', swatch: '#F5C26B' },
-  { value: 'rose_gold', label: '로즈골드', swatch: '#F4C2B7' },
-  { value: 'plated', label: '도금', swatch: '#E8DFD0' },
+  { value: 'gold', label: '골드', swatch: 'linear-gradient(135deg,#F5D78A,#D9B25C)' },
+  { value: 'silver', label: '실버', swatch: 'linear-gradient(135deg,#EAEAEA,#C0C0C0)' },
+  { value: 'rose_gold', label: '로즈골드', swatch: 'linear-gradient(135deg,#F4D5C8,#D89F90)' },
+  { value: 'white', label: '화이트', swatch: '#FAFAFA', border: '#E5E5E5' },
+  { value: 'black', label: '블랙', swatch: '#1E1B2E' },
+  { value: 'pink', label: '핑크', swatch: '#FBC8DC' },
+  { value: 'blue', label: '블루', swatch: '#C5DDF0' },
+  { value: 'etc', label: '기타', swatch: 'linear-gradient(135deg,#FBC8DC,#FFEFB5,#C8E6C9)' },
 ];
 
 const PRICE_LIST: { value: PriceKey; label: string }[] = [
@@ -114,29 +138,40 @@ const PRICE_LIST: { value: PriceKey; label: string }[] = [
   { value: 'over_100', label: '10만 ↑' },
 ];
 
-// ─────────────────────────────────────────────────────────────
-// 매칭 로직 (한·영 키워드 contains)
-// ─────────────────────────────────────────────────────────────
-const SHAPE_KEYWORDS: Record<Exclude<ShapeKey, 'all'>, string[]> = {
+// 매칭 키워드 — DB의 shape/detail 텍스트에서 contains 매칭
+const SHAPE_KEYWORDS: Record<ShapeKey, string[]> = {
   stud: ['스터드', 'stud'],
   drop: ['드롭', 'drop'],
   hoop: ['후프', 'hoop'],
   chandelier: ['샹들리에', 'chandelier'],
   cuff: ['커프', 'cuff'],
-  climber: ['클라이머', 'climber'],
+  etc: [], // '기타'는 위 카테고리에 안 들어가는 항목 (역매칭)
 };
 
 const MATERIAL_KEYWORDS: Record<Exclude<MaterialKey, 'all'>, string[]> = {
-  crystal: ['크리스탈', '크리스털', 'crystal'],
-  pearl: ['펄', '진주', 'pearl'],
-  silver: ['실버', '은', 'silver', '925'],
   gold: ['골드', '금', 'gold', '14k', '18k'],
+  silver: ['실버', '은', 'silver', '925'],
   rose_gold: ['로즈골드', 'rose'],
-  plated: ['도금', 'plat'],
+  pearl: ['펄', '진주', 'pearl'],
+  crystal: ['크리스탈', '크리스털', 'crystal'],
+  stone: ['원석', '보석', 'stone'],
+  acrylic: ['아크릴', 'acrylic', '플라스틱'],
+};
+
+const COLOR_KEYWORDS: Record<Exclude<ColorKey, 'all'>, string[]> = {
+  gold: ['골드', 'gold'],
+  silver: ['실버', 'silver'],
+  rose_gold: ['로즈', 'rose'],
+  white: ['화이트', '흰', 'white'],
+  black: ['블랙', '검정', 'black'],
+  pink: ['핑크', 'pink'],
+  blue: ['블루', '파랑', 'blue'],
+  etc: [],
 };
 
 function containsAny(haystack: string | null | undefined, needles: string[]): boolean {
   if (!haystack) return false;
+  if (needles.length === 0) return false;
   const lc = haystack.toLowerCase();
   return needles.some((n) => lc.includes(n.toLowerCase()));
 }
@@ -158,110 +193,89 @@ function priceMatches(price: number, range: PriceKey): boolean {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 카테고리 컴포넌트
+// UI atoms
 // ─────────────────────────────────────────────────────────────
 function CategoryRow({
   title,
-  hint,
   children,
 }: {
   title: string;
-  hint?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="px-5 lg:px-8 py-4 border-b border-aring-ink-100">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[11.5px] font-extrabold tracking-wider text-aring-ink-700 uppercase">
-          {title}
-        </h3>
-        {hint && (
-          <span className="text-[10px] font-semibold text-aring-ink-500">
-            {hint}
-          </span>
-        )}
-      </div>
+    <div className="px-5 py-4 border-b border-aring-ink-100">
+      <h3 className="text-[11.5px] font-extrabold tracking-wider text-aring-ink-700 uppercase mb-3">
+        {title}
+      </h3>
       {children}
     </div>
   );
 }
 
-// 아이콘 + 라벨 chip (모양/테마용)
-function IconChip({
-  icon,
+// 텍스트 pill — 모양·가격 등 (선택 시 통일 색상)
+function PillChip({
   label,
   isActive,
-  isDisabled,
   onClick,
 }: {
-  icon: string;
   label: string;
   isActive?: boolean;
-  isDisabled?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
-      onClick={isDisabled ? undefined : onClick}
-      disabled={isDisabled}
-      className={[
-        'flex flex-col items-center justify-center gap-1 w-[68px] py-2.5 rounded-tile border transition shrink-0',
-        isActive
-          ? 'bg-aring-ink-900 text-white border-aring-ink-900'
-          : isDisabled
-          ? 'bg-aring-ink-100/60 text-aring-ink-300 border-transparent cursor-not-allowed'
-          : 'bg-white text-aring-ink-900 border-aring-green-line active:scale-95',
-      ].join(' ')}
+      onClick={onClick}
+      className="shrink-0 inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition active:scale-95"
+      style={{
+        backgroundColor: isActive ? ACTIVE_BG : '#FFFFFF',
+        border: `1px solid ${isActive ? ACTIVE_BORDER : INACTIVE_BORDER}`,
+        color: isActive ? ACTIVE_TEXT : '#555555',
+      }}
     >
-      <span className="text-[18px] leading-none">{icon}</span>
-      <span className="text-[10px] font-bold">{label}</span>
+      {label}
     </button>
   );
 }
 
-// 컬러칩 (소재/컬러용)
-function SwatchChip({
-  swatch,
-  gradient,
-  border,
+// 실사 느낌 원형 썸네일 — 소재용
+function MaterialThumb({
+  bg,
   label,
   isActive,
-  isDisabled,
   onClick,
 }: {
-  swatch?: string;
-  gradient?: string;
-  border?: string;
+  bg: string;
   label: string;
   isActive?: boolean;
-  isDisabled?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
-      onClick={isDisabled ? undefined : onClick}
-      disabled={isDisabled}
-      className={[
-        'flex flex-col items-center gap-1 w-[58px] shrink-0',
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95 transition',
-      ].join(' ')}
+      onClick={onClick}
+      className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition"
     >
       <span
-        className={[
-          'w-9 h-9 rounded-full',
-          isActive ? 'ring-2 ring-aring-ink-900 ring-offset-2' : '',
-        ].join(' ')}
+        className="relative w-12 h-12 rounded-full overflow-hidden"
         style={{
-          background: gradient ?? swatch,
-          border: border ? `1px solid ${border}` : undefined,
+          background: bg,
+          boxShadow: isActive
+            ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF`
+            : `0 0 0 1px ${INACTIVE_BORDER}`,
         }}
-      />
+      >
+        {/* 광택 highlight — 실사 느낌 */}
+        <span
+          aria-hidden
+          className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)',
+          }}
+        />
+      </span>
       <span
-        className={[
-          'text-[10px] font-bold',
-          isActive ? 'text-aring-ink-900' : 'text-aring-ink-700',
-          isDisabled ? 'text-aring-ink-500' : '',
-        ].join(' ')}
+        className="text-[10.5px] font-bold"
+        style={{ color: isActive ? ACTIVE_TEXT : '#555' }}
       >
         {label}
       </span>
@@ -269,33 +283,73 @@ function SwatchChip({
   );
 }
 
-// 텍스트 토글 chip (사이드/가격/사이즈/상태/브랜드용)
-function TextChip({
+// 컬러칩 (원형) — 컬러 필터 전용
+function ColorSwatch({
+  swatch,
   label,
+  border,
   isActive,
-  isDisabled,
   onClick,
 }: {
+  swatch: string;
   label: string;
+  border?: string;
   isActive?: boolean;
-  isDisabled?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
-      onClick={isDisabled ? undefined : onClick}
-      disabled={isDisabled}
-      className={[
-        'shrink-0 inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition',
-        isActive
-          ? 'bg-aring-ink-900 text-white'
-          : isDisabled
-          ? 'bg-aring-ink-100/60 text-aring-ink-300 cursor-not-allowed'
-          : 'bg-white text-aring-ink-700 border border-aring-green-line active:scale-95',
-      ].join(' ')}
+      onClick={onClick}
+      className="flex flex-col items-center gap-1.5 w-[58px] shrink-0 active:scale-95 transition"
+    >
+      <span
+        className="w-9 h-9 rounded-full"
+        style={{
+          background: swatch,
+          border: border ? `1px solid ${border}` : undefined,
+          boxShadow: isActive
+            ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF`
+            : 'none',
+        }}
+      />
+      <span
+        className="text-[10.5px] font-bold"
+        style={{ color: isActive ? ACTIVE_TEXT : '#555' }}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
+// 선택된 필터 chip (X 버튼 포함)
+function SelectedChip({
+  label,
+  onRemove,
+}: {
+  label: string;
+  onRemove: () => void;
+}) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11.5px] font-bold"
+      style={{
+        backgroundColor: ACTIVE_BG,
+        border: `1px solid ${ACTIVE_BORDER}`,
+        color: ACTIVE_TEXT,
+      }}
     >
       {label}
-    </button>
+      <button
+        onClick={onRemove}
+        aria-label={`${label} 해제`}
+        className="inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-white/60 transition"
+      >
+        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </span>
   );
 }
 
@@ -306,17 +360,13 @@ export default function DiscoverPage() {
   const [items, setItems] = useState<RecentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 활성 필터
-  const [shape, setShape] = useState<ShapeKey>('all');
+  // 활성 필터 — 모양은 다중, 나머지는 단일
+  const [shape, setShape] = useState<ShapeKey[]>([]);
   const [material, setMaterial] = useState<MaterialKey>('all');
-  const [color, setColor] = useState<ColorKey | 'all'>('all');
-  const [theme, setTheme] = useState<ThemeKey | 'all'>('all');
-  const [itemSize, setItemSize] = useState<SizeKey | 'all'>('all');
-  const [condition, setCondition] = useState<ConditionKey | 'all'>('all');
+  const [color, setColor] = useState<ColorKey>('all');
   const [price, setPrice] = useState<PriceKey>('all');
   const [brand, setBrand] = useState<string>('all');
 
-  // 첫 진입 시 listings 전체 fetch (status=open)
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -348,7 +398,6 @@ export default function DiscoverPage() {
     };
   }, []);
 
-  // 등록된 브랜드 목록 — items에서 동적 추출 (top 10)
   const brandOptions = useMemo(() => {
     const map = new Map<string, number>();
     for (const it of items) {
@@ -361,55 +410,107 @@ export default function DiscoverPage() {
     return ['all', ...sorted];
   }, [items]);
 
-  // 필터링된 결과
   const filtered = useMemo(() => {
     return items.filter((it) => {
-      // shape — 한·영 키워드 매칭
-      if (shape !== 'all') {
-        if (!containsAny(it.name, SHAPE_KEYWORDS[shape])) return false;
+      // 모양 — 다중. 비어있으면 통과. 'etc'는 5개 카테고리 모두 hit 안 하는 경우.
+      if (shape.length > 0) {
+        const hitMain = shape.some((s) =>
+          s !== 'etc' ? containsAny(it.name, SHAPE_KEYWORDS[s]) : false
+        );
+        const wantsEtc = shape.includes('etc');
+        const isEtc = !SHAPE_LIST.slice(0, 5).some((s) =>
+          containsAny(it.name, SHAPE_KEYWORDS[s.value])
+        );
+        if (!(hitMain || (wantsEtc && isEtc))) return false;
       }
-      // material — name + story 모두 검사
+      // 소재
       if (material !== 'all') {
         const corpus = `${it.name} ${it.story ?? ''}`;
         if (!containsAny(corpus, MATERIAL_KEYWORDS[material])) return false;
       }
-      // color (정확 매칭, attribute 컬럼)
-      if (color !== 'all' && it.color !== color) return false;
-      // theme
-      if (theme !== 'all' && it.theme !== theme) return false;
-      // size
-      if (itemSize !== 'all' && it.item_size !== itemSize) return false;
-      // condition
-      if (condition !== 'all' && it.condition !== condition) return false;
-      // price
+      // 컬러 — DB color 컬럼 우선, 없으면 텍스트 contains 폴백
+      if (color !== 'all' && color !== 'etc') {
+        const hasDbColor = (it.color ?? null) !== null;
+        if (hasDbColor) {
+          if (it.color !== color) return false;
+        } else {
+          // DB 미지정 → keyword 매칭 폴백 (mock 호환)
+          const corpus = `${it.brand} ${it.name} ${it.story ?? ''}`;
+          if (!containsAny(corpus, COLOR_KEYWORDS[color])) return false;
+        }
+      } else if (color === 'etc') {
+        // '기타' = 어떤 색에도 정확 매칭 안 되는 항목
+        if (it.color !== null && it.color !== undefined) {
+          const known = ['gold', 'silver', 'rose_gold', 'white', 'black', 'pink', 'blue'];
+          if (known.includes(it.color)) return false;
+        }
+      }
+      // 가격
       if (price !== 'all' && !priceMatches(it.price ?? 0, price)) return false;
-      // brand
+      // 브랜드
       if (brand !== 'all' && it.brand !== brand) return false;
       return true;
     });
-  }, [items, shape, material, color, theme, itemSize, condition, price, brand]);
+  }, [items, shape, material, color, price, brand]);
 
-  // 활성 필터 개수 (초기화 버튼용)
-  const activeCount =
-    (shape !== 'all' ? 1 : 0) +
-    (material !== 'all' ? 1 : 0) +
-    (color !== 'all' ? 1 : 0) +
-    (theme !== 'all' ? 1 : 0) +
-    (itemSize !== 'all' ? 1 : 0) +
-    (condition !== 'all' ? 1 : 0) +
-    (price !== 'all' ? 1 : 0) +
-    (brand !== 'all' ? 1 : 0);
+  function toggleShape(v: ShapeKey) {
+    setShape((prev) =>
+      prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]
+    );
+  }
 
   function resetAll() {
-    setShape('all');
+    setShape([]);
     setMaterial('all');
     setColor('all');
-    setTheme('all');
-    setItemSize('all');
-    setCondition('all');
     setPrice('all');
     setBrand('all');
   }
+
+  // 선택된 필터 라벨 산출
+  const selectedChips: { id: string; label: string; onRemove: () => void }[] = [];
+  shape.forEach((s) => {
+    const opt = SHAPE_LIST.find((o) => o.value === s);
+    if (opt) {
+      selectedChips.push({
+        id: `shape:${s}`,
+        label: opt.label,
+        onRemove: () => toggleShape(s),
+      });
+    }
+  });
+  if (material !== 'all') {
+    const opt = MATERIAL_LIST.find((o) => o.value === material);
+    if (opt) selectedChips.push({
+      id: `material:${material}`,
+      label: opt.label,
+      onRemove: () => setMaterial('all'),
+    });
+  }
+  if (color !== 'all') {
+    const opt = COLOR_LIST.find((o) => o.value === color);
+    if (opt) selectedChips.push({
+      id: `color:${color}`,
+      label: opt.label,
+      onRemove: () => setColor('all'),
+    });
+  }
+  if (price !== 'all') {
+    const opt = PRICE_LIST.find((o) => o.value === price);
+    if (opt) selectedChips.push({
+      id: `price:${price}`,
+      label: opt.label,
+      onRemove: () => setPrice('all'),
+    });
+  }
+  if (brand !== 'all') {
+    selectedChips.push({
+      id: `brand:${brand}`,
+      label: brand,
+      onRemove: () => setBrand('all'),
+    });
+  }
+  const activeCount = selectedChips.length;
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
@@ -425,8 +526,8 @@ export default function DiscoverPage() {
           <TopNav />
 
           {/* 페이지 헤더 */}
-          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
-            <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
+          <div className="px-5 pt-3 pb-3">
+            <h1 className="text-[20px] font-extrabold tracking-tight text-aring-ink-900">
               탐색
             </h1>
             <p className="mt-0.5 text-[12px] text-aring-ink-500">
@@ -434,31 +535,44 @@ export default function DiscoverPage() {
             </p>
           </div>
 
+          {/* 선택된 필터 — 활성일 때만 노출 */}
+          {activeCount > 0 && (
+            <div className="px-5 pb-3 flex items-center gap-2 flex-wrap">
+              {selectedChips.map((c) => (
+                <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} />
+              ))}
+              <button
+                onClick={resetAll}
+                className="ml-auto text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
+              >
+                전체 해제
+              </button>
+            </div>
+          )}
+
           {/* 필터 영역 */}
           <div className="border-t border-aring-ink-100">
-            {/* 모양 */}
+            {/* 모양 — 다중 선택 텍스트 pill */}
             <CategoryRow title="모양">
-              <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-1 px-1">
+              <div className="flex gap-2 flex-wrap">
                 {SHAPE_LIST.map((opt) => (
-                  <IconChip
+                  <PillChip
                     key={opt.value}
-                    icon={opt.icon}
                     label={opt.label}
-                    isActive={shape === opt.value}
-                    onClick={() => setShape(opt.value)}
+                    isActive={shape.includes(opt.value)}
+                    onClick={() => toggleShape(opt.value)}
                   />
                 ))}
               </div>
             </CategoryRow>
 
-            {/* 소재 */}
+            {/* 소재 — 실사 느낌 원형 썸네일 */}
             <CategoryRow title="소재">
               <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
                 {MATERIAL_LIST.map((opt) => (
-                  <SwatchChip
+                  <MaterialThumb
                     key={opt.value}
-                    swatch={opt.swatch}
-                    border={opt.border}
+                    bg={opt.bg}
                     label={opt.label}
                     isActive={material === opt.value}
                     onClick={() => setMaterial(opt.value)}
@@ -467,84 +581,17 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            {/* 컬러 (활성) */}
+            {/* 컬러 — 8개 파스텔 swatch */}
             <CategoryRow title="컬러">
               <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
-                <SwatchChip
-                  swatch="#FFFFFF"
-                  border="#E5E5E5"
-                  label="전체"
-                  isActive={color === 'all'}
-                  onClick={() => setColor('all')}
-                />
-                {COLOR_OPTIONS.map((opt) => (
-                  <SwatchChip
+                {COLOR_LIST.map((opt) => (
+                  <ColorSwatch
                     key={opt.value}
                     swatch={opt.swatch}
-                    gradient={opt.gradient}
-                    border={opt.border}
                     label={opt.label}
+                    border={opt.border}
                     isActive={color === opt.value}
                     onClick={() => setColor(opt.value)}
-                  />
-                ))}
-              </div>
-            </CategoryRow>
-
-            {/* 테마 (활성) */}
-            <CategoryRow title="테마">
-              <div className="no-scrollbar flex gap-2 overflow-x-auto -mx-1 px-1">
-                <IconChip
-                  icon="◇"
-                  label="전체"
-                  isActive={theme === 'all'}
-                  onClick={() => setTheme('all')}
-                />
-                {THEME_OPTIONS.map((opt) => (
-                  <IconChip
-                    key={opt.value}
-                    icon={opt.icon}
-                    label={opt.label}
-                    isActive={theme === opt.value}
-                    onClick={() => setTheme(opt.value)}
-                  />
-                ))}
-              </div>
-            </CategoryRow>
-
-            {/* 사이즈 (활성) */}
-            <CategoryRow title="사이즈">
-              <div className="flex gap-2 flex-wrap">
-                <TextChip
-                  label="전체"
-                  isActive={itemSize === 'all'}
-                  onClick={() => setItemSize('all')}
-                />
-                {SIZE_OPTIONS.map((opt) => (
-                  <TextChip
-                    key={opt.value}
-                    label={opt.label}
-                    isActive={itemSize === opt.value}
-                    onClick={() => setItemSize(opt.value)}
-                  />
-                ))}
-              </div>
-            </CategoryRow>
-
-            {/* 상태 (활성) */}
-            <CategoryRow title="상태">
-              <div className="flex gap-2 flex-wrap">
-                <TextChip
-                  label="전체"
-                  isActive={condition === 'all'}
-                  onClick={() => setCondition('all')}
-                />
-                {CONDITION_OPTIONS.map((opt) => (
-                  <TextChip
-                    key={opt.value}
-                    label={opt.label}
-                    isActive={condition === opt.value}
-                    onClick={() => setCondition(opt.value)}
                   />
                 ))}
               </div>
@@ -554,7 +601,7 @@ export default function DiscoverPage() {
             <CategoryRow title="가격대">
               <div className="flex gap-2 flex-wrap">
                 {PRICE_LIST.map((opt) => (
-                  <TextChip
+                  <PillChip
                     key={opt.value}
                     label={opt.label}
                     isActive={price === opt.value}
@@ -568,7 +615,7 @@ export default function DiscoverPage() {
             <CategoryRow title="브랜드">
               <div className="flex gap-2 flex-wrap">
                 {brandOptions.map((b) => (
-                  <TextChip
+                  <PillChip
                     key={b}
                     label={b === 'all' ? '전체' : b}
                     isActive={brand === b}
@@ -579,14 +626,14 @@ export default function DiscoverPage() {
             </CategoryRow>
           </div>
 
-          {/* sticky summary bar */}
+          {/* sticky summary */}
           <div className="sticky top-0 z-20 glass-strong border-y border-aring-green-line">
-            <div className="flex items-center justify-between px-5 lg:px-8 py-3">
+            <div className="flex items-center justify-between px-5 py-3">
               <p className="text-[13px] font-extrabold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
                   <span className="ml-2 text-[11px] font-semibold text-aring-ink-500">
-                    · 필터 {activeCount}개 적용
+                    · 필터 {activeCount}개
                   </span>
                 )}
               </p>
@@ -602,9 +649,9 @@ export default function DiscoverPage() {
           </div>
 
           {/* 결과 그리드 */}
-          <div className="px-5 lg:px-8 pt-4">
+          <div className="px-5 pt-4">
             {loading ? (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
@@ -623,14 +670,19 @@ export default function DiscoverPage() {
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}
-                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] font-extrabold"
+                    style={{
+                      backgroundColor: ACTIVE_BG,
+                      border: `1px solid ${ACTIVE_BORDER}`,
+                      color: ACTIVE_TEXT,
+                    }}
                   >
                     필터 초기화
                   </button>
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {filtered.map((it) => (
                   <RecentItemCard key={it.id} it={it} />
                 ))}
