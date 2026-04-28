@@ -39,8 +39,14 @@ export async function POST(req: NextRequest) {
     const analysis = JSON.parse(cleaned);
 
     return NextResponse.json({ analysis });
-  } catch (err) {
+  } catch (err: any) {
     console.error('[aring] analyze error', err);
-    return NextResponse.json({ error: '분석 실패' }, { status: 500 });
+
+    return NextResponse.json(
+      {
+        error: '분석 실패',
+        detail: err?.message || String(err),
+      },
+      { status: 500 }
+    );
   }
-}
