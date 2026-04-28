@@ -46,7 +46,7 @@ const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
 // Types
 // ─────────────────────────────────────────────────────────────
 type Step = 'upload' | 'analyzing' | 'review';
-// AI는 형태·소재·디테일만 추정. 브랜드는 사용자가 직접 입력 (가장 잘 아니까)
+
 type Analysis = {
   shape: string;
   material: string;
@@ -59,7 +59,7 @@ const ANALYSIS_STEPS = [
   { key: 'detail', label: '디테일 매칭' },
 ] as const;
 
-// 추후 실제 AI API 응답으로 교체 (현재는 mock)
+// API 실패 시 폴백용 mock
 const MOCK_ANALYSIS: Analysis = {
   shape: '서클 / 스터드',
   material: '스털링 실버 + 진주',
@@ -93,22 +93,57 @@ export default function RegisterPage() {
     reader.readAsDataURL(file);
   };
 
-  const startAnalysis = () => {
+  // ── Gemini Vision API 호출 (MOCK → 실제 AI) ──────────────
+  const startAnalysis = async () => {
     if (!photo) return;
     setStep('analyzing');
     setProgress(0);
+
+    // 애니메이션 진행 (UI용)
     let i = 0;
     const id = setInterval(() => {
       i += 1;
       setProgress(i);
-      if (i >= ANALYSIS_STEPS.length) {
-        clearInterval(id);
+    }, 950);
+
+    try {
+      // base64에서 헤더 제거 (data:image/jpeg;base64, 부분)
+      const base64Data = photo.url.split(',')[1];
+      const mimeType = photo.url.split(';')[0].split(':')[1];
+
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64Data, mimeType }),
+      });
+
+      const data = await res.json();
+
+      clearInterval(id);
+      setProgress(ANALYSIS_STEPS.length);
+
+      if (data.analysis) {
+        setTimeout(() => {
+          setAnalysis(data.analysis);
+          setStep('review');
+        }, 700);
+      } else {
+        // API 실패 시 MOCK으로 폴백
         setTimeout(() => {
           setAnalysis(MOCK_ANALYSIS);
           setStep('review');
         }, 700);
       }
-    }, 950);
+    } catch (err) {
+      clearInterval(id);
+      console.error('[aring] startAnalysis error', err);
+      // 에러 시 MOCK으로 폴백
+      setProgress(ANALYSIS_STEPS.length);
+      setTimeout(() => {
+        setAnalysis(MOCK_ANALYSIS);
+        setStep('review');
+      }, 700);
+    }
   };
 
   const submit = async () => {
@@ -144,7 +179,7 @@ export default function RegisterPage() {
         .getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
-      // 3) Insert listing — 사용자 입력 brand + chip으로 선택한 shape/material 저장
+      // 3) Insert listing
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
@@ -160,7 +195,6 @@ export default function RegisterPage() {
       });
       if (dbErr) throw dbErr;
 
-      // 4) Redirect home — 실제로 등록한 짝이 표시되는지 확인
       router.push('/');
       router.refresh();
     } catch (err: unknown) {
@@ -229,7 +263,7 @@ export default function RegisterPage() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Step indicator (top, 3 phases)
+// Step indicator
 // ─────────────────────────────────────────────────────────────
 function StepIndicator({ current }: { current: Step }) {
   const labels = [
@@ -304,100 +338,49 @@ function UploadStep({
         AI가 브랜드·형태·소재·디테일을 분석해요.
       </p>
 
-      {/* Dropzone or preview */}
       {!photo ? (
         <label className="relative block aspect-[4/5] rounded-card bg-aring-grad-pastel overflow-hidden cursor-pointer active:scale-[0.99] transition">
-          {/* glow blobs */}
           <div aria-hidden className="absolute inset-0 pointer-events-none">
-            <div
-              className="aring-blob-a absolute -top-10 -left-10 w-[180px] h-[180px] rounded-full opacity-65"
-              style={{
-                background:
-                  'radial-gradient(circle, #FBC8DC 0%, transparent 70%)',
-                filter: 'blur(40px)',
-              }}
-            />
-            <div
-              className="aring-blob-b absolute bottom-0 -right-12 w-[200px] h-[200px] rounded-full opacity-55"
-              style={{
-                background:
-                  'radial-gradient(circle, #C5DDF0 0%, transparent 70%)',
-                filter: 'blur(48px)',
-              }}
-            />
-            <div
-              className="aring-blob-c absolute top-1/2 left-1/3 w-[160px] h-[160px] rounded-full opacity-50"
-              style={{
-                background:
-                  'radial-gradient(circle, #FFEFB5 0%, transparent 70%)',
-                filter: 'blur(44px)',
-              }}
-            />
+            <div className="aring-blob-a absolute -top-10 -left-10 w-[180px] h-[180px] rounded-full opacity-65" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
+            <div className="aring-blob-b absolute bottom-0 -right-12 w-[200px] h-[200px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
+            <div className="aring-blob-c absolute top-1/2 left-1/3 w-[160px] h-[160px] rounded-full opacity-50" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
           </div>
-
           <div className="relative h-full flex flex-col items-center justify-center gap-3">
             <div className="glass rounded-2xl px-7 py-7 flex flex-col items-center gap-3 shadow-card">
               <div className="w-14 h-14 rounded-full bg-white/80 flex items-center justify-center">
                 <IconCamera className="w-6 h-6 text-aring-ink-900" />
               </div>
               <div className="text-center">
-                <p className="text-[14px] font-extrabold text-aring-ink-900">
-                  사진 올리기
-                </p>
-                <p className="mt-1 text-[11px] text-aring-ink-500">
-                  JPG · PNG · 최대 10MB
-                </p>
+                <p className="text-[14px] font-extrabold text-aring-ink-900">사진 올리기</p>
+                <p className="mt-1 text-[11px] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
               </div>
             </div>
-            <p className="text-[10.5px] text-aring-ink-700 mt-1">
-              탭해서 갤러리 / 카메라 선택
-            </p>
+            <p className="text-[10.5px] text-aring-ink-700 mt-1">탭해서 갤러리 / 카메라 선택</p>
           </div>
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onPhoto}
-            className="hidden"
-          />
+          <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
         </label>
       ) : (
         <div className="relative aspect-[4/5] rounded-card overflow-hidden bg-aring-ink-100">
-          <img
-            src={photo}
-            alt="업로드한 한 짝"
-            className="w-full h-full object-cover"
-          />
+          <img src={photo} alt="업로드한 한 짝" className="w-full h-full object-cover" />
           <label className="absolute top-3 right-3 cursor-pointer">
             <span className="glass rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-900 shadow-card inline-flex items-center gap-1.5">
               <IconCamera className="w-3.5 h-3.5" />
               다시 선택
             </span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={onPhoto}
-              className="hidden"
-            />
+            <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
         </div>
       )}
 
-      {/* Tips */}
       <div className="mt-5 grid grid-cols-3 gap-2">
         {[
           { e: '☀️', t: '밝은 배경' },
           { e: '📐', t: '정면 촬영' },
           { e: '🔍', t: '디테일 가깝게' },
         ].map((tip) => (
-          <div
-            key={tip.t}
-            className="rounded-tile bg-aring-ink-100/70 px-3 py-3 text-center"
-          >
+          <div key={tip.t} className="rounded-tile bg-aring-ink-100/70 px-3 py-3 text-center">
             <div className="text-[18px] mb-1">{tip.e}</div>
-            <p className="text-[10.5px] font-bold text-aring-ink-700">
-              {tip.t}
-            </p>
+            <p className="text-[10.5px] font-bold text-aring-ink-700">{tip.t}</p>
           </div>
         ))}
       </div>
@@ -410,107 +393,40 @@ function UploadStep({
 }
 
 // ─────────────────────────────────────────────────────────────
-// Signature: AI Analyzing 4-step Frosted Modal
+// AI Analyzing Overlay
 // ─────────────────────────────────────────────────────────────
-function AnalyzingOverlay({
-  progress,
-  photo,
-}: {
-  progress: number;
-  photo: string;
-}) {
+function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string }) {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center px-5">
       <div className="absolute inset-0 bg-aring-grad-pastel" />
       <div aria-hidden className="absolute inset-0 pointer-events-none">
-        <div
-          className="aring-blob-a absolute top-1/4 -left-12 w-[260px] h-[260px] rounded-full opacity-65"
-          style={{
-            background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        <div
-          className="aring-blob-b absolute bottom-1/4 -right-12 w-[280px] h-[280px] rounded-full opacity-60"
-          style={{
-            background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        <div
-          className="aring-blob-c absolute top-1/2 left-1/3 w-[220px] h-[220px] rounded-full opacity-55"
-          style={{
-            background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
+        <div className="aring-blob-a absolute top-1/4 -left-12 w-[260px] h-[260px] rounded-full opacity-65" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="aring-blob-b absolute bottom-1/4 -right-12 w-[280px] h-[280px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="aring-blob-c absolute top-1/2 left-1/3 w-[220px] h-[220px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(60px)' }} />
       </div>
 
       <div className="relative glass-strong rounded-card p-6 w-full max-w-[360px] shadow-card">
-        {/* Photo preview */}
         <div className="w-20 h-20 rounded-tile overflow-hidden mx-auto mb-4 ring-2 ring-white/70 shadow-card">
           <img src={photo} alt="" className="w-full h-full object-cover" />
         </div>
-
         <div className="text-center mb-5">
-          <p className="text-[10px] font-extrabold tracking-[0.15em] text-aring-accent uppercase">
-            AI ANALYZING
-          </p>
-          <p className="mt-1 text-[16px] font-extrabold text-aring-ink-900">
-            짝의 단서를 찾는 중
-          </p>
+          <p className="text-[10px] font-extrabold tracking-[0.15em] text-aring-accent uppercase">AI ANALYZING</p>
+          <p className="mt-1 text-[16px] font-extrabold text-aring-ink-900">짝의 단서를 찾는 중</p>
         </div>
-
-        {/* 4-step progress */}
         <div className="space-y-3">
           {ANALYSIS_STEPS.map((s, i) => {
-            const state =
-              progress > i ? 'done' : progress === i ? 'active' : 'pending';
+            const state = progress > i ? 'done' : progress === i ? 'active' : 'pending';
             return (
               <div key={s.key} className="flex items-center gap-3">
-                <span
-                  className={[
-                    'relative flex w-7 h-7 items-center justify-center rounded-full shrink-0',
-                    state === 'done'
-                      ? 'bg-aring-ink-900 text-white'
-                      : state === 'active'
-                      ? 'bg-white'
-                      : 'bg-white/50',
-                  ].join(' ')}
-                >
-                  {state === 'active' && (
-                    <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent opacity-70" />
-                  )}
+                <span className={['relative flex w-7 h-7 items-center justify-center rounded-full shrink-0', state === 'done' ? 'bg-aring-ink-900 text-white' : state === 'active' ? 'bg-white' : 'bg-white/50'].join(' ')}>
+                  {state === 'active' && <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent opacity-70" />}
                   {state === 'done' && <IconCheck className="w-3.5 h-3.5" />}
-                  {state === 'active' && (
-                    <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
-                  )}
-                  {state === 'pending' && (
-                    <span className="text-[10px] font-bold text-aring-ink-500">
-                      {i + 1}
-                    </span>
-                  )}
+                  {state === 'active' && <span className="relative w-2 h-2 rounded-full bg-aring-accent" />}
+                  {state === 'pending' && <span className="text-[10px] font-bold text-aring-ink-500">{i + 1}</span>}
                 </span>
-                <p
-                  className={[
-                    'flex-1 text-[13px] font-bold',
-                    state === 'pending'
-                      ? 'text-aring-ink-500'
-                      : 'text-aring-ink-900',
-                  ].join(' ')}
-                >
-                  {s.label}
-                </p>
-                {state === 'done' && (
-                  <span className="text-[10px] font-extrabold text-aring-green">
-                    완료
-                  </span>
-                )}
-                {state === 'active' && (
-                  <span className="text-[10px] font-extrabold text-aring-accent">
-                    분석중
-                  </span>
-                )}
+                <p className={['flex-1 text-[13px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
+                {state === 'done' && <span className="text-[10px] font-extrabold text-aring-green">완료</span>}
+                {state === 'active' && <span className="text-[10px] font-extrabold text-aring-accent">분석중</span>}
               </div>
             );
           })}
@@ -521,60 +437,32 @@ function AnalyzingOverlay({
 }
 
 // ─────────────────────────────────────────────────────────────
-// Step 3 — Review (AI 결과 + 사용자 추가 정보)
+// Step 3 — Review
 // ─────────────────────────────────────────────────────────────
-// 활성/비활성 통일 디자인 (탐색과 동일)
 const ACTIVE_BG = '#EAF7F5';
 const ACTIVE_BORDER = '#8ED9CC';
 const ACTIVE_TEXT = '#222222';
 const INACTIVE_BORDER = '#E5E5E5';
 
 function ReviewStep({
-  photo,
-  analysis,
-  brand,
-  setBrand,
-  shapeKey,
-  setShapeKey,
-  materialKey,
-  setMaterialKey,
-  price,
-  setPrice,
-  story,
-  setStory,
-  region,
-  setRegion,
-  onSubmit,
-  submitting,
+  photo, analysis, brand, setBrand, shapeKey, setShapeKey,
+  materialKey, setMaterialKey, price, setPrice, story, setStory,
+  region, setRegion, onSubmit, submitting,
 }: {
-  photo: string;
-  analysis: Analysis;
-  brand: string;
-  setBrand: (s: string) => void;
-  shapeKey: ShapeKey | null;
-  setShapeKey: (v: ShapeKey | null) => void;
-  materialKey: MaterialKey | null;
-  setMaterialKey: (v: MaterialKey | null) => void;
-  price: string;
-  setPrice: (s: string) => void;
-  story: string;
-  setStory: (s: string) => void;
-  region: string;
-  setRegion: (s: string) => void;
-  onSubmit: () => void;
-  submitting: boolean;
+  photo: string; analysis: Analysis; brand: string; setBrand: (s: string) => void;
+  shapeKey: ShapeKey | null; setShapeKey: (v: ShapeKey | null) => void;
+  materialKey: MaterialKey | null; setMaterialKey: (v: MaterialKey | null) => void;
+  price: string; setPrice: (s: string) => void; story: string; setStory: (s: string) => void;
+  region: string; setRegion: (s: string) => void; onSubmit: () => void; submitting: boolean;
 }) {
   return (
     <div className="px-5 pb-32">
-      {/* AI 분석 카드 */}
       <div className="relative rounded-card overflow-hidden border border-aring-green-line bg-white mb-5 shadow-card">
         <div className="relative aspect-[4/3]">
           <img src={photo} alt="" className="w-full h-full object-cover" />
           <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 glass rounded-pill px-2.5 py-1 shadow-card">
             <span className="w-1.5 h-1.5 rounded-full bg-aring-accent" />
-            <span className="text-[10px] font-bold text-aring-ink-900">
-              AI 분석 완료
-            </span>
+            <span className="text-[10px] font-bold text-aring-ink-900">AI 분석 완료</span>
           </span>
         </div>
         <div className="p-4 grid grid-cols-3 gap-2">
@@ -584,105 +472,51 @@ function ReviewStep({
         </div>
       </div>
 
-      <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">
-        정보 추가
-      </h2>
+      <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">정보 추가</h2>
 
-      {/* 브랜드 — 사용자 직접 입력 (필수) */}
       <FieldLabel>브랜드</FieldLabel>
-      <Input
-        value={brand}
-        onChange={setBrand}
-        placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING"
-        maxLength={40}
-      />
+      <Input value={brand} onChange={setBrand} placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING" maxLength={40} />
 
-      {/* 모양 — 텍스트 pill (탐색과 동일 데이터 구조) */}
       <FieldLabel>모양</FieldLabel>
       <div className="flex gap-2 flex-wrap mb-5">
         {SHAPE_OPTIONS.map((opt) => {
           const active = shapeKey === opt.value;
           return (
-            <button
-              key={opt.value}
-              onClick={() => setShapeKey(active ? null : opt.value)}
+            <button key={opt.value} onClick={() => setShapeKey(active ? null : opt.value)}
               className="inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition active:scale-95"
-              style={{
-                backgroundColor: active ? ACTIVE_BG : '#FFFFFF',
-                border: `1px solid ${active ? ACTIVE_BORDER : INACTIVE_BORDER}`,
-                color: active ? ACTIVE_TEXT : '#555555',
-              }}
-            >
+              style={{ backgroundColor: active ? ACTIVE_BG : '#FFFFFF', border: `1px solid ${active ? ACTIVE_BORDER : INACTIVE_BORDER}`, color: active ? ACTIVE_TEXT : '#555555' }}>
               {opt.label}
             </button>
           );
         })}
       </div>
 
-      {/* 소재 — 실사 느낌 원형 썸네일 (탐색과 동일) */}
       <FieldLabel>소재</FieldLabel>
       <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
         {MATERIAL_OPTIONS.map((opt) => {
           const active = materialKey === opt.value;
           return (
-            <button
-              key={opt.value}
-              onClick={() => setMaterialKey(active ? null : opt.value)}
-              className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition"
-            >
-              <span
-                className="relative w-12 h-12 rounded-full overflow-hidden"
-                style={{
-                  background: opt.bg,
-                  boxShadow: active
-                    ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF`
-                    : `0 0 0 1px ${INACTIVE_BORDER}`,
-                }}
-              >
-                <span
-                  aria-hidden
-                  className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)',
-                  }}
-                />
+            <button key={opt.value} onClick={() => setMaterialKey(active ? null : opt.value)}
+              className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition">
+              <span className="relative w-12 h-12 rounded-full overflow-hidden"
+                style={{ background: opt.bg, boxShadow: active ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF` : `0 0 0 1px ${INACTIVE_BORDER}` }}>
+                <span aria-hidden className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
+                  style={{ background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)' }} />
               </span>
-              <span
-                className="text-[10.5px] font-bold"
-                style={{ color: active ? ACTIVE_TEXT : '#555' }}
-              >
-                {opt.label}
-              </span>
+              <span className="text-[10.5px] font-bold" style={{ color: active ? ACTIVE_TEXT : '#555' }}>{opt.label}</span>
             </button>
           );
         })}
       </div>
 
-      <FieldLabel>
-        가격 <span className="text-aring-ink-500 font-medium">(선택)</span>
-      </FieldLabel>
-      <Input
-        value={price}
-        onChange={setPrice}
-        placeholder="예: 50,000"
-        suffix="원"
-      />
+      <FieldLabel>가격 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
+      <Input value={price} onChange={setPrice} placeholder="예: 50,000" suffix="원" />
 
       <FieldLabel>한 줄 스토리</FieldLabel>
-      <Input
-        value={story}
-        onChange={setStory}
-        placeholder="예: 3년간 보관 / 여행 중 분실"
-        maxLength={30}
-      />
+      <Input value={story} onChange={setStory} placeholder="예: 3년간 보관 / 여행 중 분실" maxLength={30} />
 
       <FieldLabel>거래 지역</FieldLabel>
-      <Input
-        value={region}
-        onChange={setRegion}
-        placeholder="예: 서울 · 강남구"
-      />
+      <Input value={region} onChange={setRegion} placeholder="예: 서울 · 강남구" />
 
       <StickyCTA onClick={onSubmit} disabled={submitting}>
         {submitting ? '등록 중…' : '한 짝 등록하기'}
@@ -695,40 +529,17 @@ function ReviewStep({
 // Field helpers
 // ─────────────────────────────────────────────────────────────
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">
-      {children}
-    </label>
-  );
+  return <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
 }
 
-function Input({
-  value,
-  onChange,
-  placeholder,
-  suffix,
-  maxLength,
-}: {
-  value: string;
-  onChange: (s: string) => void;
-  placeholder?: string;
-  suffix?: string;
-  maxLength?: number;
+function Input({ value, onChange, placeholder, suffix, maxLength }: {
+  value: string; onChange: (s: string) => void; placeholder?: string; suffix?: string; maxLength?: number;
 }) {
   return (
     <div className="relative mb-4">
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition"
-      />
-      {suffix && (
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-aring-ink-500">
-          {suffix}
-        </span>
-      )}
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength}
+        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
+      {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-aring-ink-500">{suffix}</span>}
     </div>
   );
 }
@@ -736,12 +547,8 @@ function Input({
 function AnalysisField({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-tile bg-aring-ink-100/60 px-3 py-2.5">
-      <p className="text-[10px] font-extrabold tracking-wider text-aring-ink-500 uppercase">
-        {label}
-      </p>
-      <p className="mt-1 text-[12.5px] font-bold text-aring-ink-900 truncate">
-        {value}
-      </p>
+      <p className="text-[10px] font-extrabold tracking-wider text-aring-ink-500 uppercase">{label}</p>
+      <p className="mt-1 text-[12.5px] font-bold text-aring-ink-900 truncate">{value}</p>
     </div>
   );
 }
@@ -749,23 +556,14 @@ function AnalysisField({ label, value }: { label: string; value: string }) {
 // ─────────────────────────────────────────────────────────────
 // Sticky bottom CTA
 // ─────────────────────────────────────────────────────────────
-function StickyCTA({
-  onClick,
-  disabled,
-  children,
-}: {
-  onClick: () => void;
-  disabled: boolean;
-  children: React.ReactNode;
+function StickyCTA({ onClick, disabled, children }: {
+  onClick: () => void; disabled: boolean; children: React.ReactNode;
 }) {
   return (
     <div className="absolute left-0 right-0 bottom-0 z-30">
       <div className="mx-auto max-w-[440px] glass-strong border-t border-white/60 px-5 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
-        <button
-          onClick={onClick}
-          disabled={disabled}
-          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[14px] font-extrabold text-white shadow-cta active:scale-[0.99] transition"
-        >
+        <button onClick={onClick} disabled={disabled}
+          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[14px] font-extrabold text-white shadow-cta active:scale-[0.99] transition">
           {children}
         </button>
       </div>
