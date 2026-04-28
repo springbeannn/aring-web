@@ -13,7 +13,10 @@ export type MatchCard = {
   rightTone: ThumbTone;
   leftImage: string;
   rightImage: string;
-  viewCount?: number; // 정의되면 카드가 "조회 N회" 모드로 표시
+  // 오늘의 매칭 후보 카드 본문 4가지 정보
+  price?: number;
+  shape?: string;
+  viewCount?: number;
 };
 
 export type RecentItem = {

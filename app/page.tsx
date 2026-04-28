@@ -336,6 +336,8 @@ function listingToMatchCard(row: Listing): MatchCard {
     rightTone: tone,
     leftImage: row.photo_url,
     rightImage: row.photo_url,
+    price: row.price ?? undefined,
+    shape: row.shape ?? undefined,
     viewCount: row.view_count ?? 0,
   };
 }
@@ -379,7 +381,7 @@ function TodayMatchesSection() {
         more="전체보기"
         onMore={() => router.push('/popular')}
       />
-      <div className="no-scrollbar flex lg:grid lg:grid-cols-4 gap-3 lg:gap-4 overflow-x-auto lg:overflow-visible px-5 lg:px-8 pb-1">
+      <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
         {matches.map((m) => (
           <MatchCardItem key={m.id} m={m} />
         ))}
@@ -389,22 +391,21 @@ function TodayMatchesSection() {
 }
 
 function MatchCardItem({ m }: { m: MatchCard }) {
-  const isViewMode = typeof m.viewCount === 'number';
-  const cornerLabel = isViewMode ? `👁 ${m.viewCount}` : `${m.similarity}%`;
-  const inlineLabel = isViewMode
-    ? `조회 ${m.viewCount}회`
-    : `매칭 ${m.similarity}%`;
+  const priceText =
+    typeof m.price === 'number' && m.price > 0
+      ? formatKRW(m.price)
+      : '가격 협의';
+  const viewCountText =
+    typeof m.viewCount === 'number' ? `${m.viewCount}회` : '0회';
 
   return (
     <Link
       href={`/items/${m.id}`}
       onClick={log('today:tap', m.id)}
-      className="shrink-0 w-[78%] lg:w-auto flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition"
+      className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition"
     >
+      {/* 썸네일 — 코너 라벨 제거 */}
       <div className="relative w-[80px] h-[80px] shrink-0">
-        <span className="absolute -top-1.5 -left-1.5 z-10 rounded-pill glass-dark px-2 py-1 text-[10px] font-extrabold text-white shadow-chip">
-          {cornerLabel}
-        </span>
         <ThumbImage
           src={m.leftImage}
           fallback={m.leftEmoji}
@@ -414,22 +415,31 @@ function MatchCardItem({ m }: { m: MatchCard }) {
         />
       </div>
 
+      {/* 본문 — 4가지 정보만 */}
       <div className="flex-1 min-w-0">
-        <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500">
-          {m.brand}
+        {/* 1. 가격 (메인 강조) */}
+        <p className="text-[15px] font-extrabold text-aring-ink-900 truncate">
+          {priceText}
         </p>
-        <p className="mt-0.5 text-[14px] font-bold text-aring-ink-900 truncate">
-          {m.name}
-        </p>
-        <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-pill bg-aring-pastel-pink/40 px-2 py-1">
-          <IconSparkle className="w-3 h-3 text-aring-accent" />
-          <span className="text-[10.5px] font-bold text-aring-ink-900">
-            {inlineLabel}
+        {/* 2~4. 거래장소 / 조회수 / 형태 */}
+        <div className="mt-1.5 flex flex-col gap-1 text-[10.5px] text-aring-ink-500">
+          {m.region && (
+            <span className="inline-flex items-center gap-1 truncate">
+              <span aria-hidden>📍</span>
+              <span className="truncate">{m.region}</span>
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1">
+            <span aria-hidden>👁</span>
+            <span>조회 {viewCountText}</span>
           </span>
+          {m.shape && (
+            <span className="inline-flex items-center gap-1 truncate">
+              <span aria-hidden>◇</span>
+              <span className="truncate">{m.shape}</span>
+            </span>
+          )}
         </div>
-        {m.region && (
-          <p className="mt-1.5 text-[10.5px] text-aring-ink-500">{m.region}</p>
-        )}
       </div>
     </Link>
   );
