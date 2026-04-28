@@ -53,6 +53,9 @@ export type Listing = {
   item_size: SizeKey | null;
   condition: ConditionKey | null;
 
+  // 005_listings_view_count.sql — 인기 정렬용
+  view_count: number;
+
   status: 'open' | 'matched' | 'closed';
 };
 

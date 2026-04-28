@@ -5,7 +5,7 @@ export type MatchCard = {
   id: string;
   brand: string;
   name: string;
-  similarity: number; // 0-100
+  similarity: number; // 0-100 (mock 호환)
   region: string;
   leftEmoji: string;
   rightEmoji: string;
@@ -13,6 +13,7 @@ export type MatchCard = {
   rightTone: ThumbTone;
   leftImage: string;
   rightImage: string;
+  viewCount?: number; // 정의되면 카드가 "조회 N회" 모드로 표시
 };
 
 export type RecentItem = {

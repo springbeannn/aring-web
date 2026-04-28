@@ -315,19 +315,72 @@ function SectionHead({
 }
 
 // ─────────────────────────────────────────────────────────────
-// 5) 오늘의 매칭 후보
+// 5) 오늘의 매칭 후보 — 최근 7일 내 조회수 top 5
+//   Supabase fetch (실패 시 mock fallback)
+//   "전체보기" → /popular 라우팅
 // ─────────────────────────────────────────────────────────────
+function listingToMatchCard(row: Listing): MatchCard {
+  const tones: ThumbTone[] = ['pink', 'peach', 'butter', 'mint', 'sky', 'sage'];
+  let h = 0;
+  for (let i = 0; i < row.id.length; i++) h = (h * 31 + row.id.charCodeAt(i)) | 0;
+  const tone = tones[Math.abs(h) % tones.length];
+  return {
+    id: row.id,
+    brand: row.brand ?? '브랜드 미상',
+    name: row.detail ?? row.shape ?? '한 짝',
+    similarity: 0,
+    region: row.region ?? '',
+    leftEmoji: '◇',
+    rightEmoji: '◇',
+    leftTone: tone,
+    rightTone: tone,
+    leftImage: row.photo_url,
+    rightImage: row.photo_url,
+    viewCount: row.view_count ?? 0,
+  };
+}
+
 function TodayMatchesSection() {
+  const router = useRouter();
+  const [matches, setMatches] = useState<MatchCard[]>(todayMatches);
+
+  useEffect(() => {
+    if (!supabase) return;
+    let cancelled = false;
+    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    supabase
+      .from('listings')
+      .select('*')
+      .eq('status', 'open')
+      .gte('created_at', since)
+      .order('view_count', { ascending: false })
+      .limit(5)
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error('[aring] today matches fetch error', error);
+          return;
+        }
+        if (data && data.length > 0) {
+          setMatches((data as Listing[]).map(listingToMatchCard));
+        }
+        // data 비어있으면 mock 그대로 유지 (데모)
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="pt-2 pb-5">
       <SectionHead
         title="오늘의 매칭 후보"
-        sub="AI가 가장 가깝다고 판단한 짝"
+        sub="최근 일주일, 가장 많이 조회된 한 짝"
         more="전체보기"
-        onMore={log('today:more')}
+        onMore={() => router.push('/popular')}
       />
       <div className="no-scrollbar flex lg:grid lg:grid-cols-4 gap-3 lg:gap-4 overflow-x-auto lg:overflow-visible px-5 lg:px-8 pb-1">
-        {todayMatches.map((m) => (
+        {matches.map((m) => (
           <MatchCardItem key={m.id} m={m} />
         ))}
       </div>
@@ -336,15 +389,21 @@ function TodayMatchesSection() {
 }
 
 function MatchCardItem({ m }: { m: MatchCard }) {
+  const isViewMode = typeof m.viewCount === 'number';
+  const cornerLabel = isViewMode ? `👁 ${m.viewCount}` : `${m.similarity}%`;
+  const inlineLabel = isViewMode
+    ? `조회 ${m.viewCount}회`
+    : `매칭 ${m.similarity}%`;
+
   return (
-    <button
+    <Link
+      href={`/items/${m.id}`}
       onClick={log('today:tap', m.id)}
       className="shrink-0 w-[78%] lg:w-auto flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition"
     >
-      {/* 매칭 후보 — 실사 이미지 1개로 단순화 */}
       <div className="relative w-[80px] h-[80px] shrink-0">
         <span className="absolute -top-1.5 -left-1.5 z-10 rounded-pill glass-dark px-2 py-1 text-[10px] font-extrabold text-white shadow-chip">
-          {m.similarity}%
+          {cornerLabel}
         </span>
         <ThumbImage
           src={m.leftImage}
@@ -365,12 +424,14 @@ function MatchCardItem({ m }: { m: MatchCard }) {
         <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-pill bg-aring-pastel-pink/40 px-2 py-1">
           <IconSparkle className="w-3 h-3 text-aring-accent" />
           <span className="text-[10.5px] font-bold text-aring-ink-900">
-            매칭 {m.similarity}%
+            {inlineLabel}
           </span>
         </div>
-        <p className="mt-1.5 text-[10.5px] text-aring-ink-500">{m.region}</p>
+        {m.region && (
+          <p className="mt-1.5 text-[10.5px] text-aring-ink-500">{m.region}</p>
+        )}
       </div>
-    </button>
+    </Link>
   );
 }
 

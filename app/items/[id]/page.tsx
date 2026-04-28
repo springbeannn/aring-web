@@ -558,6 +558,16 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
 
       const item = listingToItemDetail(row as Listing);
 
+      // 2-1) 조회수 +1 (fire-and-forget — race condition은 demo 수준에서 무시)
+      const nextViewCount = ((row as Listing).view_count ?? 0) + 1;
+      supabase
+        .from('listings')
+        .update({ view_count: nextViewCount })
+        .eq('id', params.id)
+        .then(({ error: vcErr }) => {
+          if (vcErr) console.error('[aring] view_count update', vcErr);
+        });
+
       // 3) 비슷한 귀걸이 5건 (자기 제외, open 상태, 최신순)
       const { data: simRows } = await supabase
         .from('listings')
