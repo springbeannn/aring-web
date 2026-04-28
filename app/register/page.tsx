@@ -46,15 +46,14 @@ const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
 // Types
 // ─────────────────────────────────────────────────────────────
 type Step = 'upload' | 'analyzing' | 'review';
+// AI는 형태·소재·디테일만 추정. 브랜드는 사용자가 직접 입력 (가장 잘 아니까)
 type Analysis = {
-  brand: string;
   shape: string;
   material: string;
   detail: string;
 };
 
 const ANALYSIS_STEPS = [
-  { key: 'brand', label: '브랜드 식별' },
   { key: 'shape', label: '형태 분석' },
   { key: 'material', label: '소재 추출' },
   { key: 'detail', label: '디테일 매칭' },
@@ -62,7 +61,6 @@ const ANALYSIS_STEPS = [
 
 // 추후 실제 AI API 응답으로 교체 (현재는 mock)
 const MOCK_ANALYSIS: Analysis = {
-  brand: 'TIFFANY & CO.',
   shape: '서클 / 스터드',
   material: '스털링 실버 + 진주',
   detail: '6mm · 광택 마감 · T1 라인 추정',
@@ -79,6 +77,7 @@ export default function RegisterPage() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [progress, setProgress] = useState<number>(-1);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [brand, setBrand] = useState('');
   const [shapeKey, setShapeKey] = useState<ShapeKey | null>(null);
   const [materialKey, setMaterialKey] = useState<MaterialKey | null>(null);
   const [price, setPrice] = useState('');
@@ -118,7 +117,7 @@ export default function RegisterPage() {
     // env 미설정 — mock 폴백
     if (!isSupabaseConfigured || !supabase) {
       console.log('[aring]', 'register:submit (mock — supabase 미설정)', {
-        analysis, shapeKey, materialKey, price, story, region,
+        analysis, brand, shapeKey, materialKey, price, story, region,
       });
       alert(
         '등록 완료 (mock)\n\n.env.local 에 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY 를 설정하면 실제 DB에 저장됩니다.'
@@ -145,13 +144,12 @@ export default function RegisterPage() {
         .getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
-      // 3) Insert listing — 사용자가 chip으로 선택한 라벨이 shape/material로 저장
-      // (탐색에서 inferShapeKey / inferMaterialKey 가 정확 매칭으로 잡아냄)
+      // 3) Insert listing — 사용자 입력 brand + chip으로 선택한 shape/material 저장
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
         photo_path: path,
-        brand: analysis.brand,
+        brand: brand.trim() || '브랜드 미상',
         shape: shapeKey ? shapeLabel(shapeKey) : analysis.shape,
         material: materialKey ? materialLabel(materialKey) : analysis.material,
         detail: analysis.detail,
@@ -205,6 +203,8 @@ export default function RegisterPage() {
           <ReviewStep
             photo={photo.url}
             analysis={analysis}
+            brand={brand}
+            setBrand={setBrand}
             shapeKey={shapeKey}
             setShapeKey={setShapeKey}
             materialKey={materialKey}
@@ -532,6 +532,8 @@ const INACTIVE_BORDER = '#E5E5E5';
 function ReviewStep({
   photo,
   analysis,
+  brand,
+  setBrand,
   shapeKey,
   setShapeKey,
   materialKey,
@@ -547,6 +549,8 @@ function ReviewStep({
 }: {
   photo: string;
   analysis: Analysis;
+  brand: string;
+  setBrand: (s: string) => void;
   shapeKey: ShapeKey | null;
   setShapeKey: (v: ShapeKey | null) => void;
   materialKey: MaterialKey | null;
@@ -573,8 +577,7 @@ function ReviewStep({
             </span>
           </span>
         </div>
-        <div className="p-4 grid grid-cols-2 gap-3">
-          <AnalysisField label="브랜드" value={analysis.brand} />
+        <div className="p-4 grid grid-cols-3 gap-2">
           <AnalysisField label="형태" value={analysis.shape} />
           <AnalysisField label="소재" value={analysis.material} />
           <AnalysisField label="디테일" value={analysis.detail} />
@@ -584,6 +587,15 @@ function ReviewStep({
       <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">
         정보 추가
       </h2>
+
+      {/* 브랜드 — 사용자 직접 입력 (필수) */}
+      <FieldLabel>브랜드</FieldLabel>
+      <Input
+        value={brand}
+        onChange={setBrand}
+        placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING"
+        maxLength={40}
+      />
 
       {/* 모양 — 텍스트 pill (탐색과 동일 데이터 구조) */}
       <FieldLabel>모양</FieldLabel>
