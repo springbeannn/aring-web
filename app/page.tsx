@@ -46,7 +46,7 @@ const IconSparkle = ({ className = 'w-3 h-3' }: IconProps) => (
 );
 
 // ─────────────────────────────────────────────────────────────
-// 유명 브랜드 고정 10개 (원하는 브랜드로 변경 가능)
+// 유명 브랜드 고정 10개
 // ─────────────────────────────────────────────────────────────
 const FAMOUS_BRANDS = [
   'CHANEL', 'DIOR', 'CELINE', 'TIFFANY',
@@ -294,13 +294,12 @@ function RecentSection({ items }: { items: RecentItem[] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// BrandSection
+// BrandSection — 칩 클릭 시 /brands/[브랜드명] 으로 이동
 // ─────────────────────────────────────────────────────────────
-function BrandSection({ active, onSelect, brandCounts }: {
-  active: string;
-  onSelect: (b: string) => void;
+function BrandSection({ brandCounts }: {
   brandCounts: Record<string, number>;
 }) {
+  const router = useRouter();
   const famousSet = new Set(FAMOUS_BRANDS.map(b => b.toLowerCase()));
 
   const userBrands = useMemo(() =>
@@ -314,12 +313,19 @@ function BrandSection({ active, onSelect, brandCounts }: {
   const allBrands = ['전체', ...FAMOUS_BRANDS, ...userBrands];
   const totalCount = Object.values(brandCounts).reduce((a, b) => a + b, 0);
 
+  function handleClick(brand: string) {
+    if (brand === '전체') {
+      router.push('/products');
+    } else {
+      router.push(`/brands/${encodeURIComponent(brand)}`);
+    }
+  }
+
   return (
     <section className="pt-2 pb-5">
       <SectionHeader title="브랜드별 탐색" sub="가장 많이 등록된 브랜드" />
       <div className="flex flex-wrap gap-2 px-5 lg:px-8 pb-1">
         {allBrands.map(brand => {
-          const isActive = active === brand;
           const count = brand === '전체'
             ? totalCount
             : Object.entries(brandCounts).find(
@@ -329,17 +335,12 @@ function BrandSection({ active, onSelect, brandCounts }: {
           return (
             <button
               key={brand}
-              onClick={() => { onSelect(brand); console.log('[aring]', 'brand:select', brand); }}
-              className={[
-                'rounded-pill px-3.5 py-2 text-[12.5px] font-bold transition active:scale-95',
-                isActive
-                  ? 'bg-aring-ink-900 text-white shadow-chip'
-                  : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300',
-              ].join(' ')}
+              onClick={() => handleClick(brand)}
+              className="rounded-pill px-3.5 py-2 text-[12.5px] font-bold transition active:scale-95 bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300"
             >
               {brand}
               {count > 0 && (
-                <span className={['ml-1.5 text-[10px] font-extrabold', isActive ? 'text-white/60' : 'text-aring-ink-400'].join(' ')}>
+                <span className="ml-1.5 text-[10px] font-extrabold text-aring-ink-400">
                   {count}
                 </span>
               )}
@@ -406,7 +407,6 @@ function FindByPhotoCTA() {
 // 메인 페이지
 // ─────────────────────────────────────────────────────────────
 export default function HomePage() {
-  const [activeBrand, setActiveBrand] = useState('전체');
   const [allItems, setAllItems] = useState<RecentItem[]>(mockRecentItems);
   const [brandCounts, setBrandCounts] = useState<Record<string, number>>({});
 
@@ -426,7 +426,6 @@ export default function HomePage() {
 
         setAllItems(data.map((row, i) => listingToRecentItem(row as Listing, i)));
 
-        // 브랜드별 count 집계
         const counts: Record<string, number> = {};
         data.forEach(row => {
           const brand = (row.brand as string)?.trim();
@@ -438,14 +437,6 @@ export default function HomePage() {
     return () => { cancelled = true; };
   }, []);
 
-  // 브랜드 필터링
-  const filteredItems = useMemo(() => {
-    if (activeBrand === '전체') return allItems;
-    return allItems.filter(item =>
-      (item.brand ?? '').toLowerCase().includes(activeBrand.toLowerCase())
-    );
-  }, [allItems, activeBrand]);
-
   return (
     <main className="min-h-screen flex justify-center bg-white">
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
@@ -455,12 +446,8 @@ export default function HomePage() {
           <SearchBar />
           <HeroBanner />
           <TodayMatchSection />
-          <RecentSection items={filteredItems} />
-          <BrandSection
-            active={activeBrand}
-            onSelect={setActiveBrand}
-            brandCounts={brandCounts}
-          />
+          <RecentSection items={allItems} />
+          <BrandSection brandCounts={brandCounts} />
           <SuccessSection />
           <FindByPhotoCTA />
         </div>
