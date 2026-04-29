@@ -140,7 +140,7 @@ export default function PopularPage() {
             </Link>
             <div className="flex-1 min-w-0">
               <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
-                지금 인기있는 한 짝
+                오늘의 매칭 후보
               </h1>
               <p className="mt-0.5 text-[12px] text-aring-ink-500">
                 조회수 순으로 모았어요
