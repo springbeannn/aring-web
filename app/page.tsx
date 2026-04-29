@@ -101,22 +101,6 @@ function listingToMatchCard(row: Listing): MatchCard {
 }
 
 // ─────────────────────────────────────────────────────────────
-// StatusBar
-// ─────────────────────────────────────────────────────────────
-function StatusBar() {
-  return (
-    <div className="lg:hidden flex items-center justify-between px-5 pt-3 pb-1 text-[13px] font-semibold text-aring-ink-900">
-      <span>9:41</span>
-      <div className="flex items-center gap-1.5">
-        <span className="w-4 h-2.5 rounded-[2px] border border-aring-ink-900/70 relative">
-          <span className="absolute inset-[2px] right-[3px] bg-aring-ink-900 rounded-[1px]" />
-        </span>
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────
 // SearchBar
 // ─────────────────────────────────────────────────────────────
 function SearchBar() {
@@ -441,7 +425,6 @@ export default function HomePage() {
     <main className="min-h-screen flex justify-center bg-white">
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <div className="pb-28 lg:pb-12">
-          <StatusBar />
           <TopNav />
           <SearchBar />
           <HeroBanner />
