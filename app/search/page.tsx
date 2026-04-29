@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { thumbBg, type ThumbTone } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
-// ââââââââââââââââââââââââââââââââââââââââââââ
-// /search â íì¤í¸ ê²ì ê²°ê³¼ íì´ì§
-// ê²ì ëì: brand, shape, material, detail, color, story, region
-// ââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// /search Ã¢ÂÂ Ã­ÂÂÃ¬ÂÂ¤Ã­ÂÂ¸ ÃªÂ²ÂÃ¬ÂÂ ÃªÂ²Â°ÃªÂ³Â¼ Ã­ÂÂÃ¬ÂÂ´Ã¬Â§Â
+// ÃªÂ²ÂÃ¬ÂÂ Ã«ÂÂÃ¬ÂÂ: brand, shape, material, detail, color, story, region
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const PAGE_SIZE = 20;
 
@@ -24,7 +24,7 @@ function pickTone(seed: string): ThumbTone {
   return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
 }
 
-// ââ SVG Icons ââ
+// Ã¢ÂÂÃ¢ÂÂ SVG Icons Ã¢ÂÂÃ¢ÂÂ
 const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 12H5" />
@@ -39,7 +39,7 @@ const IconSearch = ({ className = 'w-4 h-4' }: { className?: string }) => (
   </svg>
 );
 
-// ââ Search Card ââ
+// Ã¢ÂÂÃ¢ÂÂ Search Card Ã¢ÂÂÃ¢ÂÂ
 function SearchCard({ row }: { row: Listing }) {
   const tone = pickTone(row.id);
   return (
@@ -47,12 +47,12 @@ function SearchCard({ row }: { row: Listing }) {
       href={`/items/${row.id}`}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
-      {/* ì¸ë¤ì¼ */}
+      {/* Ã¬ÂÂ¸Ã«ÂÂ¤Ã¬ÂÂ¼ */}
       <div className={`relative w-full aspect-square ${thumbBg(tone)} flex items-center justify-center overflow-hidden`}>
         {row.photo_url ? (
           <img
             src={row.photo_url}
-            alt={row.brand ?? 'ê·ê±¸ì´'}
+            alt={row.brand ?? 'ÃªÂ·ÂÃªÂ±Â¸Ã¬ÂÂ´'}
             className="w-full h-full object-cover"
             onError={(e) => {
               const target = e.currentTarget;
@@ -66,26 +66,26 @@ function SearchCard({ row }: { row: Listing }) {
           aria-hidden
           className="absolute inset-0 hidden items-center justify-center text-[42px]"
         >
-          â
+          Ã¢ÂÂ
         </span>
       </div>
 
-      {/* ë³¸ë¬¸ */}
+      {/* Ã«Â³Â¸Ã«Â¬Â¸ */}
       <div className="px-3 py-3">
         <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
-          {row.brand ?? 'ë¸ëë ë¯¸ì'}
+          {row.brand ?? 'Ã«Â¸ÂÃ«ÂÂÃ«ÂÂ Ã«Â¯Â¸Ã¬ÂÂ'}
         </p>
         <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
-          {row.detail ?? row.shape ?? 'í ì§'}
+          {row.detail ?? row.shape ?? 'Ã­ÂÂ Ã¬Â§Â'}
         </p>
         {row.story && (
           <p className="mt-1 text-[10.5px] text-aring-ink-500 truncate">
-            Â· {row.story}
+            ÃÂ· {row.story}
           </p>
         )}
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[12px] font-bold text-aring-ink-900">
-            {row.price ? `â©${row.price.toLocaleString('ko-KR')}` : 'ê°ê²© ë¯¸ì'}
+            {row.price ? `Ã¢ÂÂ©${row.price.toLocaleString('ko-KR')}` : 'ÃªÂ°ÂÃªÂ²Â© Ã«Â¯Â¸Ã¬ÂÂ'}
           </span>
         </div>
       </div>
@@ -93,7 +93,7 @@ function SearchCard({ row }: { row: Listing }) {
   );
 }
 
-// ââ Search Bar ââ
+// Ã¢ÂÂÃ¢ÂÂ Search Bar Ã¢ÂÂÃ¢ÂÂ
 function SearchInput({
   defaultValue,
   onSearch,
@@ -103,7 +103,7 @@ function SearchInput({
 }) {
   const [value, setValue] = useState(defaultValue ?? '');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     onSearch(value.trim());
   };
@@ -115,7 +115,7 @@ function SearchInput({
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="ë¸ëë, ëª¨ì, ì»¬ë¬ë¡ ê²ì"
+        placeholder="Ã«Â¸ÂÃ«ÂÂÃ«ÂÂ, Ã«ÂªÂ¨Ã¬ÂÂ, Ã¬Â»Â¬Ã«ÂÂ¬Ã«Â¡Â ÃªÂ²ÂÃ¬ÂÂ"
         className="flex-1 bg-transparent border-0 outline-none text-[14px] text-aring-ink-700 placeholder:text-aring-ink-500"
         autoFocus
       />
@@ -123,13 +123,13 @@ function SearchInput({
         type="submit"
         className="shrink-0 px-3 py-1 rounded-pill bg-aring-ink-900 text-white text-[12px] font-bold active:scale-95 transition"
       >
-        ê²ì
+        ÃªÂ²ÂÃ¬ÂÂ
       </button>
     </form>
   );
 }
 
-// ââ Main Page Inner ââ
+// Ã¢ÂÂÃ¢ÂÂ Main Page Inner Ã¢ÂÂÃ¢ÂÂ
 function SearchPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -176,7 +176,7 @@ function SearchPageInner() {
 
       const q = query.trim().toLowerCase();
 
-      // ì¬ë¬ íëë¥¼ ilikeë¡ ê²ì (OR ì¡°ê±´)
+      // Ã¬ÂÂ¬Ã«ÂÂ¬ Ã­ÂÂÃ«ÂÂÃ«Â¥Â¼ ilikeÃ«Â¡Â ÃªÂ²ÂÃ¬ÂÂ (OR Ã¬Â¡Â°ÃªÂ±Â´)
       const { data, error: fetchError, count } = await supabase
         .from('listings')
         .select('*', { count: 'exact' })
@@ -189,7 +189,7 @@ function SearchPageInner() {
       if (cancelled) return;
 
       if (fetchError) {
-        setError('ê²ì ì¤ ì¤ë¥ê° ë°ìíì´ì. ì ì í ë¤ì ìëí´ ì£¼ì¸ì.');
+        setError('ÃªÂ²ÂÃ¬ÂÂ Ã¬Â¤Â Ã¬ÂÂ¤Ã«Â¥ÂÃªÂ°Â Ã«Â°ÂÃ¬ÂÂÃ­ÂÂÃ¬ÂÂ´Ã¬ÂÂ. Ã¬ÂÂ Ã¬ÂÂ Ã­ÂÂ Ã«ÂÂ¤Ã¬ÂÂ Ã¬ÂÂÃ«ÂÂÃ­ÂÂ´ Ã¬Â£Â¼Ã¬ÂÂ¸Ã¬ÂÂ.');
         setLoading(false);
         return;
       }
@@ -204,7 +204,7 @@ function SearchPageInner() {
     return () => { cancelled = true; };
   }, [query]);
 
-  // ë ë³´ê¸°
+  // Ã«ÂÂ Ã«Â³Â´ÃªÂ¸Â°
   const handleLoadMore = async () => {
     if (!supabase || !query) return;
     const nextPage = page + 1;
@@ -240,79 +240,79 @@ function SearchPageInner() {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          {/* í¤ë */}
+          {/* Ã­ÂÂ¤Ã«ÂÂ */}
           <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-4 flex items-center gap-3">
             <button
               onClick={() => router.back()}
-              aria-label="ë¤ë¡ê°ê¸°"
+              aria-label="Ã«ÂÂ¤Ã«Â¡ÂÃªÂ°ÂÃªÂ¸Â°"
               className="lg:hidden w-9 h-9 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
             >
               <IconArrowLeft />
             </button>
             <div className="flex-1 min-w-0">
               <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
-                ê²ìê²°ê³¼
+                ÃªÂ²ÂÃ¬ÂÂÃªÂ²Â°ÃªÂ³Â¼
               </h1>
               {query && (
                 <p className="mt-0.5 text-[12px] text-aring-ink-500">
-                  &apos;{query}&apos; ê²ì ê²°ê³¼
+                  &apos;{query}&apos; ÃªÂ²ÂÃ¬ÂÂ ÃªÂ²Â°ÃªÂ³Â¼
                   {!loading && total > 0 && (
-                    <> Â· ì´ <span className="font-semibold">{total}</span>ê°</>
+                    <> ÃÂ· Ã¬Â´Â <span className="font-semibold">{total}</span>ÃªÂ°Â</>
                   )}
                 </p>
               )}
             </div>
           </div>
 
-          {/* ê²ìë° */}
+          {/* ÃªÂ²ÂÃ¬ÂÂÃ«Â°Â */}
           <SearchInput defaultValue={query} onSearch={handleSearch} />
 
-          {/* ë³¸ë¬¸ */}
+          {/* Ã«Â³Â¸Ã«Â¬Â¸ */}
           {!query ? (
-            /* ê²ìì´ ìì */
+            /* ÃªÂ²ÂÃ¬ÂÂÃ¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂ */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[15px] font-bold text-aring-ink-900">
-                ì°¾ê³  ì¶ì ê·ê±¸ì´ ì ë³´ë¥¼ ìë ¥í´ ì£¼ì¸ì
+                Ã¬Â°Â¾ÃªÂ³Â  Ã¬ÂÂ¶Ã¬ÂÂ ÃªÂ·ÂÃªÂ±Â¸Ã¬ÂÂ´ Ã¬Â ÂÃ«Â³Â´Ã«Â¥Â¼ Ã¬ÂÂÃ«Â Â¥Ã­ÂÂ´ Ã¬Â£Â¼Ã¬ÂÂ¸Ã¬ÂÂ
               </p>
               <p className="mt-2 text-[12px] text-aring-ink-500">
-                ë¸ëë, ëª¨ì, ì»¬ë¬ë¡ ê²ìí  ì ìì´ì
+                Ã«Â¸ÂÃ«ÂÂÃ«ÂÂ, Ã«ÂªÂ¨Ã¬ÂÂ, Ã¬Â»Â¬Ã«ÂÂ¬Ã«Â¡Â ÃªÂ²ÂÃ¬ÂÂÃ­ÂÂ  Ã¬ÂÂ Ã¬ÂÂÃ¬ÂÂ´Ã¬ÂÂ
               </p>
             </div>
           ) : loading ? (
-            /* ë¡ë© */
+            /* Ã«Â¡ÂÃ«ÂÂ© */
             <div className="px-5 lg:px-8 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[12px] text-aring-ink-500">ê²ì ì¤â¦</p>
+              <p className="mt-3 text-[12px] text-aring-ink-500">ÃªÂ²ÂÃ¬ÂÂ Ã¬Â¤ÂÃ¢ÂÂ¦</p>
             </div>
           ) : error ? (
-            /* ìë¬ */
+            /* Ã¬ÂÂÃ«ÂÂ¬ */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
               <button
                 onClick={() => handleSearch(query)}
                 className="mt-4 px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
               >
-                ë¤ì ìë
+                Ã«ÂÂ¤Ã¬ÂÂ Ã¬ÂÂÃ«ÂÂ
               </button>
             </div>
           ) : rows.length === 0 ? (
-            /* ê²°ê³¼ ìì */
+            /* ÃªÂ²Â°ÃªÂ³Â¼ Ã¬ÂÂÃ¬ÂÂ */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[15px] font-bold text-aring-ink-900">
-                ìì§ ë§ë ê·ê±¸ì´ë¥¼ ì°¾ì§ ëª»íì´ì
+                Ã¬ÂÂÃ¬Â§Â Ã«Â§ÂÃ«ÂÂ ÃªÂ·ÂÃªÂ±Â¸Ã¬ÂÂ´Ã«Â¥Â¼ Ã¬Â°Â¾Ã¬Â§Â Ã«ÂªÂ»Ã­ÂÂÃ¬ÂÂ´Ã¬ÂÂ
               </p>
               <p className="mt-2 text-[12px] text-aring-ink-500">
-                ë¤ë¥¸ ë¸ëëëªì´ë ì»¬ë¬, ëª¨ìì¼ë¡ ë¤ì ê²ìí´ ë³´ì¸ì
+                Ã«ÂÂ¤Ã«Â¥Â¸ Ã«Â¸ÂÃ«ÂÂÃ«ÂÂÃ«ÂªÂÃ¬ÂÂ´Ã«ÂÂ Ã¬Â»Â¬Ã«ÂÂ¬, Ã«ÂªÂ¨Ã¬ÂÂÃ¬ÂÂ¼Ã«Â¡Â Ã«ÂÂ¤Ã¬ÂÂ ÃªÂ²ÂÃ¬ÂÂÃ­ÂÂ´ Ã«Â³Â´Ã¬ÂÂ¸Ã¬ÂÂ
               </p>
               <Link
                 href="/register"
                 className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
               >
-                ê·ê±¸ì´ ë±ë¡íê¸°
+                ÃªÂ·ÂÃªÂ±Â¸Ã¬ÂÂ´ Ã«ÂÂ±Ã«Â¡ÂÃ­ÂÂÃªÂ¸Â°
               </Link>
             </div>
           ) : (
-            /* ê²°ê³¼ ìì */
+            /* ÃªÂ²Â°ÃªÂ³Â¼ Ã¬ÂÂÃ¬ÂÂ */
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
                 {rows.map((row) => (
@@ -325,7 +325,7 @@ function SearchPageInner() {
                     onClick={handleLoadMore}
                     className="w-full max-w-[320px] py-3 rounded-pill border border-aring-green-line text-[13px] font-bold text-aring-ink-700 bg-white active:scale-[0.99] transition hover:bg-aring-ink-100"
                   >
-                    ë ë³´ê¸°
+                    Ã«ÂÂ Ã«Â³Â´ÃªÂ¸Â°
                   </button>
                 </div>
               )}
@@ -338,7 +338,7 @@ function SearchPageInner() {
   );
 }
 
-// ââ Suspense Wrapper (useSearchParams íì) ââ
+// Ã¢ÂÂÃ¢ÂÂ Suspense Wrapper (useSearchParams Ã­ÂÂÃ¬ÂÂ) Ã¢ÂÂÃ¢ÂÂ
 export default function SearchPage() {
   return (
     <Suspense fallback={
