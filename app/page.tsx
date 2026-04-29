@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import {
   todayMatches,
   recentItems as mockRecentItems,
-  brands,
   successStory,
   formatKRW,
   thumbBg,
@@ -19,9 +18,9 @@ import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
 
-// ─────────────────────────────────────────────────────────────
-// 아이콘 (inline SVG · stroke 기반)
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ìì´ì½ (inline SVG Â· stroke ê¸°ë°)
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 type IconProps = { className?: string; strokeWidth?: number };
 
 const IconBell = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
@@ -102,15 +101,15 @@ const IconChevronDown = ({ className = 'w-3 h-3', strokeWidth = 2.4 }: IconProps
   </svg>
 );
 
-// ─────────────────────────────────────────────────────────────
-// 헬퍼
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// í¬í¼
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const log =
   (label: string, payload?: unknown) =>
   () =>
     console.log('[aring]', label, payload ?? '');
 
-// 실사 이미지 + emoji 폴백 + tone 배경 (border-2 white frame)
+// ì¤ì¬ ì´ë¯¸ì§ + emoji í´ë°± + tone ë°°ê²½ (border-2 white frame)
 function ThumbImage({
   src,
   fallback,
@@ -151,9 +150,9 @@ function ThumbImage({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 1) 상태바 (mock) — 모바일 폰 프레임에서만 노출
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 1) ìíë° (mock) â ëª¨ë°ì¼ í° íë ìììë§ ë¸ì¶
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function StatusBar() {
   return (
     <div className="lg:hidden flex items-center justify-between px-5 pt-3 pb-1 text-[13px] font-semibold text-aring-ink-900">
@@ -167,24 +166,24 @@ function StatusBar() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 2) 상단 네비 — components/Nav.tsx 의 TopNav 사용 (공통)
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 2) ìë¨ ë¤ë¹ â components/Nav.tsx ì TopNav ì¬ì© (ê³µíµ)
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
-// ─────────────────────────────────────────────────────────────
-// 3) 검색바
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 3) ê²ìë°
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function SearchBar() {
   return (
     <div className="mx-5 lg:mx-8 mb-5 lg:mb-7 lg:mt-5 flex items-center gap-2.5 rounded-pill bg-aring-ink-100 px-4 lg:px-5 py-3 lg:py-3.5 lg:max-w-[640px]">
       <IconSearch className="w-4 h-4 lg:w-5 lg:h-5 text-aring-ink-500" />
       <input
         className="flex-1 bg-transparent border-0 outline-none text-[14px] lg:text-[15px] text-aring-ink-700 placeholder:text-aring-ink-500"
-        placeholder="브랜드, 모양, 컬러로 검색"
+        placeholder="ë¸ëë, ëª¨ì, ì»¬ë¬ë¡ ê²ì"
       />
       <button
         onClick={log('search:camera')}
-        aria-label="사진으로 검색"
+        aria-label="ì¬ì§ì¼ë¡ ê²ì"
         className="w-7 h-7 rounded-full bg-aring-ink-900 flex items-center justify-center text-white active:scale-95 transition"
       >
         <IconCamera />
@@ -193,13 +192,13 @@ function SearchBar() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 4) 히어로 카드
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 4) íì´ë¡ ì¹´ë
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function HeroCard() {
   return (
     <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-5 lg:pt-12 pb-5 lg:pb-12 min-h-[260px] lg:min-h-[340px]">
-      {/* ── Pastel glow blobs (배경 레이어, blur + soft float) ── */}
+      {/* ââ Pastel glow blobs (ë°°ê²½ ë ì´ì´, blur + soft float) ââ */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div
           className="aring-blob-a absolute -top-12 -left-10 w-[200px] h-[200px] rounded-full opacity-70"
@@ -224,34 +223,34 @@ function HeroCard() {
         />
       </div>
 
-      {/* 배지 — frosted glass */}
+      {/* ë°°ì§ â frosted glass */}
       <span className="relative inline-flex items-center gap-1 rounded-pill glass px-2.5 py-1.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
         <IconSparkle className="w-3 h-3" />
-        AI MATCH · NEW
+        AI MATCH Â· NEW
       </span>
 
-      {/* Frosted Live Pill — 우상단 / "지금 매칭 중" 라이브 사인 */}
+      {/* Frosted Live Pill â ì°ìë¨ / "ì§ê¸ ë§¤ì¹­ ì¤" ë¼ì´ë¸ ì¬ì¸ */}
       <div className="absolute top-5 right-5 lg:top-8 lg:right-8 z-10 glass rounded-pill pl-2.5 pr-3 py-1.5 inline-flex items-center gap-2 shadow-card">
         <span className="relative flex w-2 h-2">
           <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent" />
           <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
         </span>
         <span className="text-[10px] font-bold text-aring-ink-900 tracking-wide">
-          지금 12명 매칭 중
+          ì§ê¸ 12ëª ë§¤ì¹­ ì¤
         </span>
       </div>
 
-      {/* 헤드라인 */}
+      {/* í¤ëë¼ì¸ */}
       <h1 className="relative mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
-        하나만 남은 귀걸이,
+        íëë§ ë¨ì ê·ê±¸ì´,
         <br />
-        <span className="grad-text-green">AI가 짝을 찾아드려요</span>
+        <span className="grad-text-green">AIê° ì§ì ì°¾ìëë ¤ì</span>
       </h1>
 
-      {/* 설명 */}
+      {/* ì¤ëª */}
       <p className="relative mt-2 lg:mt-4 text-[12.5px] lg:text-[15px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
-        사진 한 장이면 충분합니다. 브랜드·형태·소재·디테일까지 분석해
-        비슷하거나 정확히 맞는 짝을 연결합니다.
+        ì¬ì§ í ì¥ì´ë©´ ì¶©ë¶í©ëë¤. ë¸ëëÂ·ííÂ·ìì¬Â·ëíì¼ê¹ì§ ë¶ìí´
+        ë¹ì·íê±°ë ì íí ë§ë ì§ì ì°ê²°í©ëë¤.
       </p>
 
       {/* CTA */}
@@ -259,11 +258,11 @@ function HeroCard() {
         href="/register"
         className="relative mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-extrabold text-white shadow-cta active:scale-[0.98] transition"
       >
-        등록하기
+        ë±ë¡íê¸°
         <IconArrow className="w-3.5 h-3.5" />
       </Link>
 
-      {/* 일러스트 (귀걸이 ring) */}
+      {/* ì¼ë¬ì¤í¸ (ê·ê±¸ì´ ring) */}
       <div className="pointer-events-none absolute -right-4 -bottom-6 lg:right-10 lg:bottom-1/2 lg:translate-y-1/2 w-[170px] h-[170px] lg:w-[260px] lg:h-[260px] flex items-center justify-center">
         <div className="absolute inset-0 radial-halo rounded-full" />
         <div className="relative grad-ring w-[110px] h-[110px] lg:w-[180px] lg:h-[180px] rounded-full shadow-[0_12px_30px_rgba(107,127,232,.25)]">
@@ -280,9 +279,9 @@ function HeroCard() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 섹션 헤더 공통
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ì¹ì í¤ë ê³µíµ
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function SectionHead({
   title,
   sub,
@@ -314,11 +313,11 @@ function SectionHead({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 5) 오늘의 매칭 후보 — 최근 7일 내 조회수 top 5
-//   Supabase fetch (실패 시 mock fallback)
-//   "전체보기" → /popular 라우팅
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 5) ì¤ëì ë§¤ì¹­ íë³´ â ìµê·¼ 7ì¼ ë´ ì¡°íì top 5
+//   Supabase fetch (ì¤í¨ ì mock fallback)
+//   "ì ì²´ë³´ê¸°" â /popular ë¼ì°í
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function listingToMatchCard(row: Listing): MatchCard {
   const tones: ThumbTone[] = ['pink', 'peach', 'butter', 'mint', 'sky', 'sage'];
   let h = 0;
@@ -326,12 +325,12 @@ function listingToMatchCard(row: Listing): MatchCard {
   const tone = tones[Math.abs(h) % tones.length];
   return {
     id: row.id,
-    brand: row.brand ?? '브랜드 미상',
-    name: row.detail ?? row.shape ?? '한 짝',
+    brand: row.brand ?? 'ë¸ëë ë¯¸ì',
+    name: row.detail ?? row.shape ?? 'í ì§',
     similarity: 0,
     region: row.region ?? '',
-    leftEmoji: '◇',
-    rightEmoji: '◇',
+    leftEmoji: 'â',
+    rightEmoji: 'â',
     leftTone: tone,
     rightTone: tone,
     leftImage: row.photo_url,
@@ -366,8 +365,21 @@ function TodayMatchesSection() {
         if (data && data.length > 0) {
           setMatches((data as Listing[]).map(listingToMatchCard));
         }
-        // data 비어있으면 mock 그대로 유지 (데모)
+        // data ë¹ì´ìì¼ë©´ mock ê·¸ëë¡ ì ì§ (ë°ëª¨)
       });
+
+    // 브랜드 top 목록 fetch (top_brands 뷰)
+    supabase
+      .from('top_brands')
+      .select('brand_key, display_name, count')
+      .then(({ data }) => {
+        if (cancelled || !data) return;
+        setDbBrands(data.map((b: { brand_key: string; display_name: string; count: number }) => ({
+          key: b.brand_key,
+          label: b.display_name || b.brand_key,
+        })));
+      });
+
     return () => {
       cancelled = true;
     };
@@ -376,9 +388,9 @@ function TodayMatchesSection() {
   return (
     <section className="pt-2 pb-5">
       <SectionHead
-        title="오늘의 매칭 후보"
-        sub="최근 일주일, 가장 많이 조회된 한 짝"
-        more="전체보기"
+        title="ì¤ëì ë§¤ì¹­ íë³´"
+        sub="ìµê·¼ ì¼ì£¼ì¼, ê°ì¥ ë§ì´ ì¡°íë í ì§"
+        more="ì ì²´ë³´ê¸°"
         onMore={() => router.push('/popular')}
       />
       <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
@@ -394,9 +406,9 @@ function MatchCardItem({ m }: { m: MatchCard }) {
   const priceText =
     typeof m.price === 'number' && m.price > 0
       ? formatKRW(m.price)
-      : '가격 협의';
+      : 'ê°ê²© íì';
   const viewCountText =
-    typeof m.viewCount === 'number' ? `${m.viewCount}회` : '0회';
+    typeof m.viewCount === 'number' ? `${m.viewCount}í` : '0í';
 
   return (
     <Link
@@ -404,7 +416,7 @@ function MatchCardItem({ m }: { m: MatchCard }) {
       onClick={log('today:tap', m.id)}
       className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition"
     >
-      {/* 썸네일 — 코너 라벨 제거 */}
+      {/* ì¸ë¤ì¼ â ì½ë ë¼ë²¨ ì ê±° */}
       <div className="relative w-[80px] h-[80px] shrink-0">
         <ThumbImage
           src={m.leftImage}
@@ -415,27 +427,27 @@ function MatchCardItem({ m }: { m: MatchCard }) {
         />
       </div>
 
-      {/* 본문 — 4가지 정보만 */}
+      {/* ë³¸ë¬¸ â 4ê°ì§ ì ë³´ë§ */}
       <div className="flex-1 min-w-0">
-        {/* 1. 가격 (메인 강조) */}
+        {/* 1. ê°ê²© (ë©ì¸ ê°ì¡°) */}
         <p className="text-[15px] font-extrabold text-aring-ink-900 truncate">
           {priceText}
         </p>
-        {/* 2~4. 거래장소 / 조회수 / 형태 */}
+        {/* 2~4. ê±°ëì¥ì / ì¡°íì / íí */}
         <div className="mt-1.5 flex flex-col gap-1 text-[10.5px] text-aring-ink-500">
           {m.region && (
             <span className="inline-flex items-center gap-1 truncate">
-              <span aria-hidden>📍</span>
+              <span aria-hidden>ð</span>
               <span className="truncate">{m.region}</span>
             </span>
           )}
           <span className="inline-flex items-center gap-1">
-            <span aria-hidden>👁</span>
-            <span>조회 {viewCountText}</span>
+            <span aria-hidden>ð</span>
+            <span>ì¡°í {viewCountText}</span>
           </span>
           {m.shape && (
             <span className="inline-flex items-center gap-1 truncate">
-              <span aria-hidden>◇</span>
+              <span aria-hidden>â</span>
               <span className="truncate">{m.shape}</span>
             </span>
           )}
@@ -445,10 +457,10 @@ function MatchCardItem({ m }: { m: MatchCard }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 6) 최근 등록된 한 짝 — 공통 컴포넌트(useItemFilters + RecentItemCard)
-//    "더보기"는 /products 라우팅
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 6) ìµê·¼ ë±ë¡ë í ì§ â ê³µíµ ì»´í¬ëí¸(useItemFilters + RecentItemCard)
+//    "ëë³´ê¸°"ë /products ë¼ì°í
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function RecentItemsSection({ items }: { items: RecentItem[] }) {
   const router = useRouter();
   const { sort, setSort, side, setSide, filtered } = useItemFilters(items);
@@ -456,9 +468,9 @@ function RecentItemsSection({ items }: { items: RecentItem[] }) {
   return (
     <section className="pt-2 pb-5">
       <SectionHead
-        title="최근 등록된 한 짝"
-        sub="누군가의 잃어버린 반쪽이 될 수 있어요"
-        more="더보기"
+        title="ìµê·¼ ë±ë¡ë í ì§"
+        sub="ëêµ°ê°ì ìì´ë²ë¦° ë°ìª½ì´ ë  ì ìì´ì"
+        more="ëë³´ê¸°"
         onMore={() => router.push('/products')}
       />
 
@@ -472,10 +484,10 @@ function RecentItemsSection({ items }: { items: RecentItem[] }) {
       {filtered.length === 0 ? (
         <div className="px-5 lg:px-8 py-10 text-center">
           <p className="text-[13px] font-bold text-aring-ink-900">
-            조건에 맞는 한 짝이 없어요
+            ì¡°ê±´ì ë§ë í ì§ì´ ìì´ì
           </p>
           <p className="mt-1 text-[11.5px] text-aring-ink-500">
-            필터를 초기화하거나 다른 조건을 선택해 주세요
+            íí°ë¥¼ ì´ê¸°ííê±°ë ë¤ë¥¸ ì¡°ê±´ì ì íí´ ì£¼ì¸ì
           </p>
         </div>
       ) : (
@@ -489,21 +501,23 @@ function RecentItemsSection({ items }: { items: RecentItem[] }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 7) 브랜드별 탐색 — 칩
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 7) ë¸ëëë³ íì â ì¹©
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function BrandChips({
   active,
   onSelect,
+  dbBrands,
 }: {
   active: string;
   onSelect: (b: string) => void;
+  dbBrands: { key: string; label: string }[];
 }) {
   return (
     <section className="pt-2 pb-5">
       <SectionHead
-        title="브랜드별 탐색"
-        sub="가장 많이 등록된 브랜드"
+        title="ë¸ëëë³ íì"
+        sub="ê°ì¥ ë§ì´ ë±ë¡ë ë¸ëë"
       />
       <div className="flex flex-wrap gap-2 px-5 lg:px-8 pb-1">
         {brands.slice(0, 10).map((b) => {
@@ -531,7 +545,7 @@ function BrandChips({
             onClick={log('brand:more')}
             className="rounded-pill px-3.5 py-2 text-[12.5px] font-bold bg-aring-ink-100 text-aring-ink-500"
           >
-            + 더보기
+            + ëë³´ê¸°
           </button>
         )}
       </div>
@@ -539,15 +553,15 @@ function BrandChips({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 8) 인기 매칭 성공 사례
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 8) ì¸ê¸° ë§¤ì¹­ ì±ê³µ ì¬ë¡
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function SuccessStoryCard() {
   return (
     <section className="pt-2 pb-5">
-      <SectionHead title="매칭 성공 사례" sub="실제 짝을 찾은 이야기" />
+      <SectionHead title="ë§¤ì¹­ ì±ê³µ ì¬ë¡" sub="ì¤ì  ì§ì ì°¾ì ì´ì¼ê¸°" />
       <div className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-8">
-        {/* 장식 소프트 글로우 */}
+        {/* ì¥ì ìíí¸ ê¸ë¡ì° */}
         <div
           aria-hidden
           className="pointer-events-none absolute -right-12 -top-12 w-[180px] h-[180px] rounded-full opacity-30"
@@ -571,7 +585,7 @@ function SuccessStoryCard() {
         </span>
 
         <p className="relative mt-3 text-[14.5px] leading-[1.55] font-semibold text-white">
-          “{successStory.text}”
+          â{successStory.text}â
         </p>
         <p className="relative mt-2 text-[11.5px] text-white/70">
           {successStory.user}
@@ -598,9 +612,9 @@ function SuccessStoryCard() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 9) 하단 CTA — 사진으로 한 짝 찾기
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 9) íë¨ CTA â ì¬ì§ì¼ë¡ í ì§ ì°¾ê¸°
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function FindByPhotoCTA() {
   return (
     <section className="px-5 lg:px-8 pt-2 pb-7 lg:pb-12">
@@ -616,10 +630,10 @@ function FindByPhotoCTA() {
             FIND BY PHOTO
           </p>
           <p className="mt-0.5 text-[14px] font-bold text-aring-ink-900">
-            이 귀걸이와 비슷한 한 짝 찾기
+            ì´ ê·ê±¸ì´ì ë¹ì·í í ì§ ì°¾ê¸°
           </p>
           <p className="mt-0.5 text-[11px] text-aring-ink-500">
-            사진을 올리면 AI가 5초 안에 후보를 보여드려요
+            ì¬ì§ì ì¬ë¦¬ë©´ AIê° 5ì´ ìì íë³´ë¥¼ ë³´ì¬ëë ¤ì
           </p>
         </div>
         <span className="w-9 h-9 shrink-0 rounded-full bg-aring-ink-900 flex items-center justify-center text-white">
@@ -630,25 +644,25 @@ function FindByPhotoCTA() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 10) 하단 네비게이션 — components/Nav.tsx 의 BottomNav 사용 (공통)
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 10) íë¨ ë¤ë¹ê²ì´ì â components/Nav.tsx ì BottomNav ì¬ì© (ê³µíµ)
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
-// ─────────────────────────────────────────────────────────────
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // MAIN
-// ─────────────────────────────────────────────────────────────
-// Listing(DB row) → RecentItem(UI shape) 매핑
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Listing(DB row) â RecentItem(UI shape) ë§¤í
 const TONE_ROTATION: ThumbTone[] = ['pink', 'peach', 'butter', 'mint', 'sky', 'sage'];
 
 function listingToRecent(row: Listing, idx: number): RecentItem {
   return {
     id: row.id,
-    brand: row.brand ?? '브랜드 미상',
-    name: row.detail ?? row.shape ?? '한 짝',
+    brand: row.brand ?? 'ë¸ëë ë¯¸ì',
+    name: row.detail ?? row.shape ?? 'í ì§',
     price: row.price ?? 0,
     likes: 0,
     side: row.side,
-    emoji: '◇',
+    emoji: 'â',
     tone: TONE_ROTATION[idx % TONE_ROTATION.length],
     story: row.story ?? undefined,
     image: row.photo_url,
@@ -656,10 +670,11 @@ function listingToRecent(row: Listing, idx: number): RecentItem {
 }
 
 export default function HomePage() {
-  const [activeBrand, setActiveBrand] = useState('전체');
+  const [activeBrand, setActiveBrand] = useState('ì ì²´');
   const [items, setItems] = useState<RecentItem[]>(mockRecentItems);
+  const [dbBrands, setDbBrands] = useState<{ key: string; label: string }[]>([]);
 
-  // Supabase가 설정되어 있으면 실데이터 fetch — 아니면 mock 유지
+  // Supabaseê° ì¤ì ëì´ ìì¼ë©´ ì¤ë°ì´í° fetch â ìëë©´ mock ì ì§
   useEffect(() => {
     if (!supabase) return;
     let cancelled = false;
@@ -678,7 +693,7 @@ export default function HomePage() {
         if (data && data.length > 0) {
           setItems((data as Listing[]).map(listingToRecent));
         }
-        // data가 비어있으면 mock 그대로 유지 — 첫 등록 전까지의 데모 데이터
+        // dataê° ë¹ì´ìì¼ë©´ mock ê·¸ëë¡ ì ì§ â ì²« ë±ë¡ ì ê¹ì§ì ë°ëª¨ ë°ì´í°
       });
     return () => {
       cancelled = true;
@@ -702,7 +717,7 @@ export default function HomePage() {
           <HeroCard />
           <TodayMatchesSection />
           <RecentItemsSection items={items} />
-          <BrandChips active={activeBrand} onSelect={setActiveBrand} />
+          <BrandChips active={activeBrand} onSelect={setActiveBrand} dbBrands={dbBrands} />
           <SuccessStoryCard />
           <FindByPhotoCTA />
         </div>
