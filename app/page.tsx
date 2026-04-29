@@ -261,7 +261,7 @@ function RecentSection({ items }: { items: RecentItem[] }) {
   const { sort, setSort, side, setSide, filtered } = useItemFilters(items);
   return (
     <section className="pt-2 pb-5">
-      <SectionHeader title="최근 등록된 한 짝" sub="누군가의 잃어버린 반쪽이 될 수 있어요" more="더보기" onMore={() => router.push('/products')} />
+      <SectionHeader title="최근 등록된 한 짝" sub="짝을 찾아 완성하거나, 판매하세요" more="더보기" onMore={() => router.push('/products')} />
       <ItemFilterChips sort={sort} setSort={setSort} side={side} setSide={setSide} />
       {filtered.length === 0 ? (
         <div className="px-5 lg:px-8 py-10 text-center">
