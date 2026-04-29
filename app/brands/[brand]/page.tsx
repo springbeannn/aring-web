@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
@@ -14,18 +14,14 @@ import {
 import { supabase, type Listing } from '@/lib/supabase';
 
 // ─────────────────────────────────────────────────────────────
-// /products — 전체 한 짝 리스트 + 더보기 페이지네이션
+// /brands/[brand] — 브랜드별 한 짝 리스트
+// /products와 동일한 구성, 상단 제목만 브랜드명으로 표시
 // ─────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 12;
 
 const TONE_ROTATION: ThumbTone[] = [
-  'pink',
-  'peach',
-  'butter',
-  'mint',
-  'sky',
-  'sage',
+  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
 ];
 
 function listingToRecent(row: Listing, idx: number): RecentItem {
@@ -58,9 +54,9 @@ const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   </svg>
 );
 
-export default function ProductsPage() {
-  const searchParams = useSearchParams();
-  const brandFilter = searchParams.get('brand') ?? '';
+export default function BrandPage() {
+  const params = useParams();
+  const brandName = decodeURIComponent(params.brand as string);
 
   const [items, setItems] = useState<RecentItem[]>([]);
   const [page, setPage] = useState(0);
@@ -70,22 +66,20 @@ export default function ProductsPage() {
 
   const { sort, setSort, side, setSide, filtered: sortFiltered } = useItemFilters(items);
 
-  // 브랜드 쿼리파라미터 필터 적용
+  // 브랜드 필터 적용
   const filtered = useMemo(() => {
-    if (!brandFilter) return sortFiltered;
     return sortFiltered.filter(item =>
-      (item.brand ?? '').toLowerCase().includes(brandFilter.toLowerCase())
+      (item.brand ?? '').toLowerCase() === brandName.toLowerCase()
     );
-  }, [sortFiltered, brandFilter]);
+  }, [sortFiltered, brandName]);
 
-  // 첫 페이지 fetch
+  // 첫 페이지 fetch — 브랜드로 직접 쿼리
   useEffect(() => {
     let cancelled = false;
 
     async function loadFirst() {
       setLoading(true);
 
-      // Supabase 미설정 시 mock 폴백
       if (!supabase) {
         if (!cancelled) {
           setItems(mockRecentItems);
@@ -99,13 +93,14 @@ export default function ProductsPage() {
         .from('listings')
         .select('*')
         .eq('status', 'open')
+        .ilike('brand', brandName)
         .order('created_at', { ascending: false })
         .range(0, PAGE_SIZE - 1);
 
       if (cancelled) return;
 
       if (error) {
-        console.error('[aring] products fetch error', error);
+        console.error('[aring] brand fetch error', error);
         setError('상품을 불러오지 못했습니다');
         setLoading(false);
         return;
@@ -114,9 +109,8 @@ export default function ProductsPage() {
       const rows = (data ?? []) as Listing[];
       const fresh = rows.map((r, i) => listingToRecent(r, i));
 
-      // Supabase가 비어있으면 mock 폴백 (데모용)
       if (fresh.length === 0) {
-        setItems(mockRecentItems);
+        setItems([]);
         setHasMore(false);
       } else {
         setItems(fresh);
@@ -128,7 +122,7 @@ export default function ProductsPage() {
 
     loadFirst();
     return () => { cancelled = true; };
-  }, []);
+  }, [brandName]);
 
   async function loadMore() {
     if (!supabase || loading || !hasMore) return;
@@ -141,11 +135,12 @@ export default function ProductsPage() {
       .from('listings')
       .select('*')
       .eq('status', 'open')
+      .ilike('brand', brandName)
       .order('created_at', { ascending: false })
       .range(start, start + PAGE_SIZE - 1);
 
     if (error) {
-      console.error('[aring] products loadMore error', error);
+      console.error('[aring] brand loadMore error', error);
       setError('추가 데이터를 불러오지 못했습니다');
       setLoading(false);
       return;
@@ -160,12 +155,6 @@ export default function ProductsPage() {
     setLoading(false);
   }
 
-  // 헤더 타이틀
-  const pageTitle = brandFilter || '전체 한 짝';
-  const pageDesc = brandFilter
-    ? `${brandFilter} 브랜드 한 짝`
-    : '지금 매칭을 기다리는 모든 한 짝';
-
   return (
     <main className="min-h-screen flex justify-center bg-white">
       <div
@@ -179,26 +168,24 @@ export default function ProductsPage() {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          {/* 페이지 헤더 */}
+          {/* 페이지 헤더 — 제목만 브랜드명으로 */}
           <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-4 lg:pb-6 flex items-center gap-3">
             <Link
-              href="/"
-              aria-label="홈으로"
+              href="/discover"
+              aria-label="탐색으로"
               className="lg:hidden w-9 h-9 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
             >
               <IconArrowLeft />
             </Link>
             <div className="flex-1 min-w-0">
               <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
-                {pageTitle}
+                {brandName}
               </h1>
               <p className="mt-0.5 text-[12px] text-aring-ink-500">
-                {pageDesc}
+                {brandName} 브랜드 한 짝
                 {filtered.length > 0 && (
                   <>
-                    {' '}
-                    · <span className="font-semibold">{filtered.length}</span>
-                    개 등록
+                    {' '}· <span className="font-semibold">{filtered.length}</span>개 등록
                   </>
                 )}
               </p>
@@ -217,15 +204,11 @@ export default function ProductsPage() {
           {loading && items.length === 0 ? (
             <div className="px-5 lg:px-8 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[12px] text-aring-ink-500">
-                불러오는 중…
-              </p>
+              <p className="mt-3 text-[12px] text-aring-ink-500">불러오는 중…</p>
             </div>
           ) : error ? (
             <div className="px-5 lg:px-8 py-16 text-center">
-              <p className="text-[13px] font-bold text-aring-ink-900">
-                {error}
-              </p>
+              <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
@@ -236,11 +219,17 @@ export default function ProductsPage() {
           ) : filtered.length === 0 ? (
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[13px] font-bold text-aring-ink-900">
-                조건에 맞는 한 짝이 없어요
+                {brandName} 브랜드의 한 짝이 아직 없어요
               </p>
               <p className="mt-1 text-[11.5px] text-aring-ink-500">
-                필터를 초기화하거나 다른 조건을 선택해 주세요
+                첫 번째로 등록해 보세요
               </p>
+              <Link
+                href="/register"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+              >
+                한 짝 등록하기
+              </Link>
             </div>
           ) : (
             <>
@@ -250,7 +239,6 @@ export default function ProductsPage() {
                 ))}
               </div>
 
-              {/* 더보기 버튼 */}
               {hasMore && (
                 <div className="px-5 lg:px-8 mt-6">
                   <button

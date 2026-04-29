@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import {
@@ -157,12 +158,13 @@ function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void
 // MAIN
 // ─────────────────────────────────────────────────────────────
 export default function DiscoverPage() {
+  const router = useRouter(); // ← 추가
   const [items, setItems] = useState<RecentItem[]>([]);
   const [rawListings, setRawListings] = useState<Map<string, Listing>>(new Map());
   const [loading, setLoading] = useState(true);
 
-  const [shape, setShape] = useState<ShapeKey[]>([]); // 다중
-  const [material, setMaterial] = useState<MaterialKey | 'all'>('all'); // 단일
+  const [shape, setShape] = useState<ShapeKey[]>([]);
+  const [material, setMaterial] = useState<MaterialKey | 'all'>('all');
   const [price, setPrice] = useState<PriceKey>('all');
   const [brand, setBrand] = useState<string>('all');
 
@@ -209,7 +211,6 @@ export default function DiscoverPage() {
   const filtered = useMemo(() => {
     return items.filter((it) => {
       const row = rawListings.get(it.id);
-      // 모양 — DB freetext에서 ShapeKey 추론 후 정확 매칭. 'etc'는 추론 결과가 null이면 매칭
       if (shape.length > 0) {
         const inferred = inferShapeKey(row?.shape ?? it.name);
         const wantsEtc = shape.includes('etc');
@@ -217,7 +218,6 @@ export default function DiscoverPage() {
         const isEtc = inferred === null;
         if (!(hitSpecific || (wantsEtc && isEtc))) return false;
       }
-      // 소재 — 정확 매칭
       if (material !== 'all') {
         const inferred = inferMaterialKey(row?.material ?? `${it.name} ${it.story ?? ''}`);
         if (inferred !== material) return false;
@@ -239,7 +239,15 @@ export default function DiscoverPage() {
     setBrand('all');
   }
 
-  // 선택된 필터 chip 산출
+  // ← 수정: 브랜드 칩 클릭 핸들러
+  function handleBrandChipClick(b: string) {
+    if (b === 'all') {
+      setBrand('all');
+    } else {
+      router.push(`/brands/${encodeURIComponent(b)}`);
+    }
+  }
+
   const selectedChips: { id: string; label: string; onRemove: () => void }[] = [];
   shape.forEach((s) => {
     const opt = SHAPE_OPTIONS.find((o) => o.value === s);
@@ -284,7 +292,6 @@ export default function DiscoverPage() {
           )}
 
           <div className="border-t border-aring-ink-100">
-            {/* 모양 — 다중 선택 텍스트 pill */}
             <CategoryRow title="모양">
               <div className="flex gap-2 flex-wrap">
                 {SHAPE_OPTIONS.map((opt) => (
@@ -298,7 +305,6 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            {/* 소재 — 실사 느낌 원형 썸네일 */}
             <CategoryRow title="소재">
               <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
                 <MaterialThumb
@@ -319,7 +325,6 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            {/* 가격대 */}
             <CategoryRow title="가격대">
               <div className="flex gap-2 flex-wrap">
                 {PRICE_LIST.map((opt) => (
@@ -333,7 +338,7 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            {/* 브랜드 */}
+            {/* 브랜드 — 칩 클릭 시 /brands/[브랜드명] 으로 이동 */}
             <CategoryRow title="브랜드">
               <div className="flex gap-2 flex-wrap">
                 {brandOptions.map((b) => (
@@ -341,14 +346,13 @@ export default function DiscoverPage() {
                     key={b}
                     label={b === 'all' ? '전체' : b}
                     isActive={brand === b}
-                    onClick={() => setBrand(b)}
+                    onClick={() => handleBrandChipClick(b)} // ← 변경
                   />
                 ))}
               </div>
             </CategoryRow>
           </div>
 
-          {/* sticky summary */}
           <div className="sticky top-0 z-20 glass-strong border-y border-aring-green-line">
             <div className="flex items-center justify-between px-5 py-3">
               <p className="text-[13px] font-extrabold text-aring-ink-900">
