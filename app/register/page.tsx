@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -17,25 +16,23 @@ import {
   type ShapeKey,
   type MaterialKey,
 } from '@/lib/categories';
+import { normalizeBrand } from '@/lib/brandNormalizer';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
 // ─────────────────────────────────────────────────────────────
 type IconProps = { className?: string; strokeWidth?: number };
-
 const IconClose = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 6 6 18M6 6l12 12" />
   </svg>
 );
-
 const IconCamera = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
     <circle cx="12" cy="13" r="4" />
   </svg>
 );
-
 const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="m5 12 5 5 9-11" />
@@ -46,7 +43,6 @@ const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
 // Types
 // ─────────────────────────────────────────────────────────────
 type Step = 'upload' | 'analyzing' | 'review';
-
 type Analysis = {
   shape: string;
   material: string;
@@ -59,7 +55,6 @@ const ANALYSIS_STEPS = [
   { key: 'detail', label: '디테일 매칭' },
 ] as const;
 
-// API 실패 시 폴백용 mock
 const MOCK_ANALYSIS: Analysis = {
   shape: '서클 / 스터드',
   material: '스털링 실버 + 진주',
@@ -93,42 +88,32 @@ export default function RegisterPage() {
     reader.readAsDataURL(file);
   };
 
-  // ── Gemini Vision API 호출 (MOCK → 실제 AI) ──────────────
   const startAnalysis = async () => {
     if (!photo) return;
     setStep('analyzing');
     setProgress(0);
-
-    // 애니메이션 진행 (UI용)
     let i = 0;
     const id = setInterval(() => {
       i += 1;
       setProgress(i);
     }, 950);
-
     try {
-      // base64에서 헤더 제거 (data:image/jpeg;base64, 부분)
       const base64Data = photo.url.split(',')[1];
       const mimeType = photo.url.split(';')[0].split(':')[1];
-
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ imageBase64: base64Data, mimeType }),
       });
-
       const data = await res.json();
-
       clearInterval(id);
       setProgress(ANALYSIS_STEPS.length);
-
       if (data.analysis) {
         setTimeout(() => {
           setAnalysis(data.analysis);
           setStep('review');
         }, 700);
       } else {
-        // API 실패 시 MOCK으로 폴백
         setTimeout(() => {
           setAnalysis(MOCK_ANALYSIS);
           setStep('review');
@@ -137,7 +122,6 @@ export default function RegisterPage() {
     } catch (err) {
       clearInterval(id);
       console.error('[aring] startAnalysis error', err);
-      // 에러 시 MOCK으로 폴백
       setProgress(ANALYSIS_STEPS.length);
       setTimeout(() => {
         setAnalysis(MOCK_ANALYSIS);
@@ -148,43 +132,32 @@ export default function RegisterPage() {
 
   const submit = async () => {
     if (!photo || !analysis || submitting) return;
-
-    // env 미설정 — mock 폴백
     if (!isSupabaseConfigured || !supabase) {
-      console.log('[aring]', 'register:submit (mock — supabase 미설정)', {
-        analysis, brand, shapeKey, materialKey, price, story, region,
-      });
-      alert(
-        '등록 완료 (mock)\n\n.env.local 에 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY 를 설정하면 실제 DB에 저장됩니다.'
-      );
+      console.log('[aring]', 'register:submit (mock)', { analysis, brand, shapeKey, materialKey, price, story, region });
+      alert('등록 완료 (mock)');
       return;
     }
-
     setSubmitting(true);
     try {
-      // 1) Storage upload
       const path = buildPhotoPath(photo.file.name);
       const { error: upErr } = await supabase.storage
         .from(STORAGE_BUCKET)
-        .upload(path, photo.file, {
-          contentType: photo.file.type,
-          cacheControl: '3600',
-          upsert: false,
-        });
+        .upload(path, photo.file, { contentType: photo.file.type, cacheControl: '3600', upsert: false });
       if (upErr) throw upErr;
 
-      // 2) Public URL
-      const { data: urlData } = supabase.storage
-        .from(STORAGE_BUCKET)
-        .getPublicUrl(path);
+      const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
-      // 3) Insert listing
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
+      const brandInput = brand.trim() || '';
+      const brandKey = normalizeBrand(brandInput);
+
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
         photo_path: path,
-        brand: brand.trim() || '브랜드 미상',
+        brand: brandInput || '브랜드 미상',
+        brand_input: brandInput || null,
+        brand_key: brandKey || '',
         shape: shapeKey ? shapeLabel(shapeKey) : analysis.shape,
         material: materialKey ? materialLabel(materialKey) : analysis.material,
         detail: analysis.detail,
@@ -194,7 +167,6 @@ export default function RegisterPage() {
         region: region || null,
       });
       if (dbErr) throw dbErr;
-
       router.push('/');
       router.refresh();
     } catch (err: unknown) {
@@ -208,31 +180,17 @@ export default function RegisterPage() {
   return (
     <main className="min-h-screen flex justify-center bg-white">
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone">
-        {/* Top bar */}
         <header className="relative z-20 flex items-center justify-between px-5 pt-4 pb-3">
-          <Link
-            href="/"
-            aria-label="닫기"
-            className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
-          >
+          <Link href="/" aria-label="닫기" className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
             <IconClose />
           </Link>
-          <div className="text-[14px] font-extrabold text-aring-ink-900">
-            한 짝 등록
-          </div>
+          <div className="text-[14px] font-extrabold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
-
         <StepIndicator current={step} />
-
         {step === 'upload' && (
-          <UploadStep
-            photo={photo?.url ?? null}
-            onPhoto={handlePhoto}
-            onAnalyze={startAnalysis}
-          />
+          <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} />
         )}
-
         {step === 'review' && analysis && photo && (
           <ReviewStep
             photo={photo.url}
@@ -253,7 +211,6 @@ export default function RegisterPage() {
             submitting={submitting}
           />
         )}
-
         {step === 'analyzing' && photo && (
           <AnalyzingOverlay progress={progress} photo={photo.url} />
         )}
@@ -273,38 +230,21 @@ function StepIndicator({ current }: { current: Step }) {
   ];
   const order = ['upload', 'analyzing', 'review'] as Step[];
   const idx = order.indexOf(current);
-
   return (
     <div className="px-5 mb-5 flex items-center gap-2">
       {labels.map((l, i) => (
         <div key={l.key} className="flex-1 flex items-center gap-2">
-          <span
-            className={[
-              'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold transition shrink-0',
-              i < idx
-                ? 'bg-aring-ink-900 text-white'
-                : i === idx
-                ? 'bg-aring-ink-900 text-white shadow-cta'
-                : 'bg-aring-ink-100 text-aring-ink-500',
-            ].join(' ')}
-          >
+          <span className={[
+            'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold transition shrink-0',
+            i < idx ? 'bg-aring-ink-900 text-white' : i === idx ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-500',
+          ].join(' ')}>
             {i < idx ? <IconCheck className="w-3 h-3" /> : i + 1}
           </span>
-          <span
-            className={[
-              'text-[11.5px] font-bold whitespace-nowrap',
-              i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500',
-            ].join(' ')}
-          >
+          <span className={['text-[11.5px] font-bold whitespace-nowrap', i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500'].join(' ')}>
             {l.label}
           </span>
           {i < labels.length - 1 && (
-            <span
-              className={[
-                'flex-1 h-px ml-1',
-                i < idx ? 'bg-aring-ink-900' : 'bg-aring-ink-100',
-              ].join(' ')}
-            />
+            <span className={['flex-1 h-px ml-1', i < idx ? 'bg-aring-ink-900' : 'bg-aring-ink-100'].join(' ')} />
           )}
         </div>
       ))}
@@ -315,29 +255,21 @@ function StepIndicator({ current }: { current: Step }) {
 // ─────────────────────────────────────────────────────────────
 // Step 1 — Upload
 // ─────────────────────────────────────────────────────────────
-function UploadStep({
-  photo,
-  onPhoto,
-  onAnalyze,
-}: {
+function UploadStep({ photo, onPhoto, onAnalyze }: {
   photo: string | null;
   onPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAnalyze: () => void;
 }) {
   return (
     <div className="px-5 pb-32">
-      <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">
-        남은 한 짝의
-      </h1>
+      <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
       <h1 className="text-[22px] font-extrabold tracking-tight leading-[1.3] mb-2">
         <span className="grad-text-green">사진을 올려주세요</span>
       </h1>
       <p className="text-[12.5px] text-aring-ink-500 mb-5 leading-[1.55]">
-        밝은 배경에서 정면으로 찍은 사진이 가장 정확합니다.
-        <br />
+        밝은 배경에서 정면으로 찍은 사진이 가장 정확합니다.<br />
         AI가 브랜드·형태·소재·디테일을 분석해요.
       </p>
-
       {!photo ? (
         <label className="relative block aspect-[4/5] rounded-card bg-aring-grad-pastel overflow-hidden cursor-pointer active:scale-[0.99] transition">
           <div aria-hidden className="absolute inset-0 pointer-events-none">
@@ -364,27 +296,20 @@ function UploadStep({
           <img src={photo} alt="업로드한 한 짝" className="w-full h-full object-cover" />
           <label className="absolute top-3 right-3 cursor-pointer">
             <span className="glass rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-900 shadow-card inline-flex items-center gap-1.5">
-              <IconCamera className="w-3.5 h-3.5" />
-              다시 선택
+              <IconCamera className="w-3.5 h-3.5" /> 다시 선택
             </span>
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
         </div>
       )}
-
       <div className="mt-5 grid grid-cols-3 gap-2">
-        {[
-          { e: '☀️', t: '밝은 배경' },
-          { e: '📐', t: '정면 촬영' },
-          { e: '🔍', t: '디테일 가깝게' },
-        ].map((tip) => (
+        {[{ e: '☀️', t: '밝은 배경' }, { e: '📐', t: '정면 촬영' }, { e: '🔍', t: '디테일 가깝게' }].map((tip) => (
           <div key={tip.t} className="rounded-tile bg-aring-ink-100/70 px-3 py-3 text-center">
             <div className="text-[18px] mb-1">{tip.e}</div>
             <p className="text-[10.5px] font-bold text-aring-ink-700">{tip.t}</p>
           </div>
         ))}
       </div>
-
       <StickyCTA onClick={onAnalyze} disabled={!photo}>
         {photo ? 'AI 분석 시작하기' : '사진을 먼저 올려주세요'}
       </StickyCTA>
@@ -404,7 +329,6 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
         <div className="aring-blob-b absolute bottom-1/4 -right-12 w-[280px] h-[280px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <div className="aring-blob-c absolute top-1/2 left-1/3 w-[220px] h-[220px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(60px)' }} />
       </div>
-
       <div className="relative glass-strong rounded-card p-6 w-full max-w-[360px] shadow-card">
         <div className="w-20 h-20 rounded-tile overflow-hidden mx-auto mb-4 ring-2 ring-white/70 shadow-card">
           <img src={photo} alt="" className="w-full h-full object-cover" />
@@ -444,16 +368,23 @@ const ACTIVE_BORDER = '#8ED9CC';
 const ACTIVE_TEXT = '#222222';
 const INACTIVE_BORDER = '#E5E5E5';
 
-function ReviewStep({
-  photo, analysis, brand, setBrand, shapeKey, setShapeKey,
-  materialKey, setMaterialKey, price, setPrice, story, setStory,
-  region, setRegion, onSubmit, submitting,
-}: {
-  photo: string; analysis: Analysis; brand: string; setBrand: (s: string) => void;
-  shapeKey: ShapeKey | null; setShapeKey: (v: ShapeKey | null) => void;
-  materialKey: MaterialKey | null; setMaterialKey: (v: MaterialKey | null) => void;
-  price: string; setPrice: (s: string) => void; story: string; setStory: (s: string) => void;
-  region: string; setRegion: (s: string) => void; onSubmit: () => void; submitting: boolean;
+function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, materialKey, setMaterialKey, price, setPrice, story, setStory, region, setRegion, onSubmit, submitting }: {
+  photo: string;
+  analysis: Analysis;
+  brand: string;
+  setBrand: (s: string) => void;
+  shapeKey: ShapeKey | null;
+  setShapeKey: (v: ShapeKey | null) => void;
+  materialKey: MaterialKey | null;
+  setMaterialKey: (v: MaterialKey | null) => void;
+  price: string;
+  setPrice: (s: string) => void;
+  story: string;
+  setStory: (s: string) => void;
+  region: string;
+  setRegion: (s: string) => void;
+  onSubmit: () => void;
+  submitting: boolean;
 }) {
   return (
     <div className="px-5 pb-32">
@@ -471,12 +402,9 @@ function ReviewStep({
           <AnalysisField label="디테일" value={analysis.detail} />
         </div>
       </div>
-
       <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">정보 추가</h2>
-
       <FieldLabel>브랜드</FieldLabel>
       <Input value={brand} onChange={setBrand} placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING" maxLength={40} />
-
       <FieldLabel>모양</FieldLabel>
       <div className="flex gap-2 flex-wrap mb-5">
         {SHAPE_OPTIONS.map((opt) => {
@@ -490,7 +418,6 @@ function ReviewStep({
           );
         })}
       </div>
-
       <FieldLabel>소재</FieldLabel>
       <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
         {MATERIAL_OPTIONS.map((opt) => {
@@ -508,16 +435,12 @@ function ReviewStep({
           );
         })}
       </div>
-
       <FieldLabel>가격 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
       <Input value={price} onChange={setPrice} placeholder="예: 50,000" suffix="원" />
-
       <FieldLabel>한 줄 스토리</FieldLabel>
       <Input value={story} onChange={setStory} placeholder="예: 3년간 보관 / 여행 중 분실" maxLength={30} />
-
       <FieldLabel>거래 지역</FieldLabel>
       <Input value={region} onChange={setRegion} placeholder="예: 서울 · 강남구" />
-
       <StickyCTA onClick={onSubmit} disabled={submitting}>
         {submitting ? '등록 중…' : '한 짝 등록하기'}
       </StickyCTA>
@@ -533,7 +456,11 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function Input({ value, onChange, placeholder, suffix, maxLength }: {
-  value: string; onChange: (s: string) => void; placeholder?: string; suffix?: string; maxLength?: number;
+  value: string;
+  onChange: (s: string) => void;
+  placeholder?: string;
+  suffix?: string;
+  maxLength?: number;
 }) {
   return (
     <div className="relative mb-4">
@@ -557,7 +484,9 @@ function AnalysisField({ label, value }: { label: string; value: string }) {
 // Sticky bottom CTA
 // ─────────────────────────────────────────────────────────────
 function StickyCTA({ onClick, disabled, children }: {
-  onClick: () => void; disabled: boolean; children: React.ReactNode;
+  onClick: () => void;
+  disabled: boolean;
+  children: React.ReactNode;
 }) {
   return (
     <div className="absolute left-0 right-0 bottom-0 z-30">
