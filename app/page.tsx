@@ -446,7 +446,7 @@ export default function HomePage() {
           <SearchBar />
           <HeroBanner />
           <TodayMatchSection />
-          <RecentSection items={allItems} />
+          <RecentSection items={allItems.slice(0, 10)} />
           <BrandSection brandCounts={brandCounts} />
           <SuccessSection />
           <FindByPhotoCTA />
