@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { thumbBg, type ThumbTone } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
-// ────────────────────────────────────────────
-// /search – 텍스트 검색 결과 페이지
-// 검색 대상: brand, shape, material, detail, color, story, region
-// ────────────────────────────────────────────
+// ââââââââââââââââââââââââââââââââââââââââââââ
+// /search â íì¤í¸ ê²ì ê²°ê³¼ íì´ì§
+// ê²ì ëì: brand, shape, material, detail, color, story, region
+// ââââââââââââââââââââââââââââââââââââââââââââ
 
 const PAGE_SIZE = 20;
 
@@ -24,7 +24,7 @@ function pickTone(seed: string): ThumbTone {
   return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
 }
 
-// ── SVG Icons ──
+// ââ SVG Icons ââ
 const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 12H5" />
@@ -39,7 +39,7 @@ const IconSearch = ({ className = 'w-4 h-4' }: { className?: string }) => (
   </svg>
 );
 
-// ── Search Card ──
+// ââ Search Card ââ
 function SearchCard({ row }: { row: Listing }) {
   const tone = pickTone(row.id);
   return (
@@ -47,12 +47,12 @@ function SearchCard({ row }: { row: Listing }) {
       href={`/items/${row.id}`}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
-      {/* 썸네일 */}
+      {/* ì¸ë¤ì¼ */}
       <div className={`relative w-full aspect-square ${thumbBg(tone)} flex items-center justify-center overflow-hidden`}>
         {row.photo_url ? (
           <img
             src={row.photo_url}
-            alt={row.brand ?? '귀걸이'}
+            alt={row.brand ?? 'ê·ê±¸ì´'}
             className="w-full h-full object-cover"
             onError={(e) => {
               const target = e.currentTarget;
@@ -66,26 +66,26 @@ function SearchCard({ row }: { row: Listing }) {
           aria-hidden
           className="absolute inset-0 hidden items-center justify-center text-[42px]"
         >
-          ◇
+          â
         </span>
       </div>
 
-      {/* 본문 */}
+      {/* ë³¸ë¬¸ */}
       <div className="px-3 py-3">
         <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
-          {row.brand ?? '브랜드 미상'}
+          {row.brand ?? 'ë¸ëë ë¯¸ì'}
         </p>
         <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
-          {row.detail ?? row.shape ?? '한 짝'}
+          {row.detail ?? row.shape ?? 'í ì§'}
         </p>
         {row.story && (
           <p className="mt-1 text-[10.5px] text-aring-ink-500 truncate">
-            · {row.story}
+            Â· {row.story}
           </p>
         )}
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[12px] font-bold text-aring-ink-900">
-            {row.price ? `₩${row.price.toLocaleString('ko-KR')}` : '가격 미상'}
+            {row.price ? `â©${row.price.toLocaleString('ko-KR')}` : 'ê°ê²© ë¯¸ì'}
           </span>
         </div>
       </div>
@@ -93,7 +93,7 @@ function SearchCard({ row }: { row: Listing }) {
   );
 }
 
-// ── Search Bar ──
+// ââ Search Bar ââ
 function SearchInput({
   defaultValue,
   onSearch,
@@ -115,7 +115,7 @@ function SearchInput({
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="브랜드, 모양, 컬러로 검색"
+        placeholder="ë¸ëë, ëª¨ì, ì»¬ë¬ë¡ ê²ì"
         className="flex-1 bg-transparent border-0 outline-none text-[14px] text-aring-ink-700 placeholder:text-aring-ink-500"
         autoFocus
       />
@@ -123,13 +123,13 @@ function SearchInput({
         type="submit"
         className="shrink-0 px-3 py-1 rounded-pill bg-aring-ink-900 text-white text-[12px] font-bold active:scale-95 transition"
       >
-        검색
+        ê²ì
       </button>
     </form>
   );
 }
 
-// ── Main Page Inner ──
+// ââ Main Page Inner ââ
 function SearchPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -176,7 +176,7 @@ function SearchPageInner() {
 
       const q = query.trim().toLowerCase();
 
-      // 여러 필드를 ilike로 검색 (OR 조건)
+      // ì¬ë¬ íëë¥¼ ilikeë¡ ê²ì (OR ì¡°ê±´)
       const { data, error: fetchError, count } = await supabase
         .from('listings')
         .select('*', { count: 'exact' })
@@ -189,7 +189,7 @@ function SearchPageInner() {
       if (cancelled) return;
 
       if (fetchError) {
-        setError('검색 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.');
+        setError('ê²ì ì¤ ì¤ë¥ê° ë°ìíì´ì. ì ì í ë¤ì ìëí´ ì£¼ì¸ì.');
         setLoading(false);
         return;
       }
@@ -204,7 +204,7 @@ function SearchPageInner() {
     return () => { cancelled = true; };
   }, [query]);
 
-  // 더 보기
+  // ë ë³´ê¸°
   const handleLoadMore = async () => {
     if (!supabase || !query) return;
     const nextPage = page + 1;
@@ -240,79 +240,79 @@ function SearchPageInner() {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          {/* 헤더 */}
+          {/* í¤ë */}
           <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-4 flex items-center gap-3">
             <button
               onClick={() => router.back()}
-              aria-label="뒤로가기"
+              aria-label="ë¤ë¡ê°ê¸°"
               className="lg:hidden w-9 h-9 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
             >
               <IconArrowLeft />
             </button>
             <div className="flex-1 min-w-0">
               <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
-                검색결과
+                ê²ìê²°ê³¼
               </h1>
               {query && (
                 <p className="mt-0.5 text-[12px] text-aring-ink-500">
-                  &apos;{query}&apos; 검색 결과
+                  &apos;{query}&apos; ê²ì ê²°ê³¼
                   {!loading && total > 0 && (
-                    <> · 총 <span className="font-semibold">{total}</span>개</>
+                    <> Â· ì´ <span className="font-semibold">{total}</span>ê°</>
                   )}
                 </p>
               )}
             </div>
           </div>
 
-          {/* 검색바 */}
+          {/* ê²ìë° */}
           <SearchInput defaultValue={query} onSearch={handleSearch} />
 
-          {/* 본문 */}
+          {/* ë³¸ë¬¸ */}
           {!query ? (
-            /* 검색어 없음 */
+            /* ê²ìì´ ìì */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[15px] font-bold text-aring-ink-900">
-                찾고 싶은 귀걸이 정보를 입력해 주세요
+                ì°¾ê³  ì¶ì ê·ê±¸ì´ ì ë³´ë¥¼ ìë ¥í´ ì£¼ì¸ì
               </p>
               <p className="mt-2 text-[12px] text-aring-ink-500">
-                브랜드, 모양, 컬러로 검색할 수 있어요
+                ë¸ëë, ëª¨ì, ì»¬ë¬ë¡ ê²ìí  ì ìì´ì
               </p>
             </div>
           ) : loading ? (
-            /* 로딩 */
+            /* ë¡ë© */
             <div className="px-5 lg:px-8 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[12px] text-aring-ink-500">검색 중…</p>
+              <p className="mt-3 text-[12px] text-aring-ink-500">ê²ì ì¤â¦</p>
             </div>
           ) : error ? (
-            /* 에러 */
+            /* ìë¬ */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
               <button
                 onClick={() => handleSearch(query)}
                 className="mt-4 px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
               >
-                다시 시도
+                ë¤ì ìë
               </button>
             </div>
           ) : rows.length === 0 ? (
-            /* 결과 없음 */
+            /* ê²°ê³¼ ìì */
             <div className="px-5 lg:px-8 py-16 text-center">
               <p className="text-[15px] font-bold text-aring-ink-900">
-                아직 맞는 귀걸이를 찾지 못했어요
+                ìì§ ë§ë ê·ê±¸ì´ë¥¼ ì°¾ì§ ëª»íì´ì
               </p>
               <p className="mt-2 text-[12px] text-aring-ink-500">
-                다른 브랜드명이나 컬러, 모양으로 다시 검색해 보세요
+                ë¤ë¥¸ ë¸ëëëªì´ë ì»¬ë¬, ëª¨ìì¼ë¡ ë¤ì ê²ìí´ ë³´ì¸ì
               </p>
               <Link
                 href="/register"
                 className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
               >
-                귀걸이 등록하기
+                ê·ê±¸ì´ ë±ë¡íê¸°
               </Link>
             </div>
           ) : (
-            /* 결과 있음 */
+            /* ê²°ê³¼ ìì */
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
                 {rows.map((row) => (
@@ -325,7 +325,7 @@ function SearchPageInner() {
                     onClick={handleLoadMore}
                     className="w-full max-w-[320px] py-3 rounded-pill border border-aring-green-line text-[13px] font-bold text-aring-ink-700 bg-white active:scale-[0.99] transition hover:bg-aring-ink-100"
                   >
-                    더 보기
+                    ë ë³´ê¸°
                   </button>
                 </div>
               )}
@@ -338,7 +338,7 @@ function SearchPageInner() {
   );
 }
 
-// ── Suspense Wrapper (useSearchParams 필요) ──
+// ââ Suspense Wrapper (useSearchParams íì) ââ
 export default function SearchPage() {
   return (
     <Suspense fallback={
