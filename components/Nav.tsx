@@ -83,7 +83,7 @@ export function TopNav() {
                             </div>
                     </div>
                     <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-              </>>
+              </>
             );
 }
 
