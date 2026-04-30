@@ -17,7 +17,6 @@ import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
-import { createClient } from '@/lib/supabase/server'
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘
@@ -129,12 +128,15 @@ function SearchBar() {
 // ─────────────────────────────────────────────────────────────
 // HeroBanner
 // ─────────────────────────────────────────────────────────────
-async function HeroBanner() {
-  const supabase = await createClient()
-  const { count } = await supabase
-    .from('items')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'open')
+function HeroBanner() {   // async 제거된 상태
+  // ↓ 여기에 넣기 (함수 열리고 바로 첫 줄)
+  const [count, setCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    fetch('/api/open-count')
+      .then(res => res.json())
+      .then(data => setCount(data.count))
+  }, [])
   return (
     <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-5 lg:pt-12 pb-5 lg:pb-12 min-h-[260px] lg:min-h-[340px]">
       <div aria-hidden className="pointer-events-none absolute inset-0">
