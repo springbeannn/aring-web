@@ -128,4 +128,4 @@ export function BottomNav({ active }: { active?: Tab }) {
                     </div>
               </nav>
             );
-}</></svg>
+}
