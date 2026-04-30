@@ -105,6 +105,6 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                 </Link>
                       </div>
               </div>
-        </>>
+        </>
       );
 }
