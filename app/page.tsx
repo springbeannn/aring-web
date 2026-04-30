@@ -17,6 +17,7 @@ import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
+import { FilterBar, useFilterBar } from '@/components/FilterBar';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘
@@ -266,15 +267,15 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
 // ─────────────────────────────────────────────────────────────
 function RecentSection({ items }: { items: RecentItem[] }) {
   const router = useRouter();
-  const { sort, setSort, side, setSide, filtered } = useItemFilters(items);
+  const { sortOption, setSortOption, priceRange, setPriceRange, filtered } = useFilterBar(items);
   return (
     <section className="pt-2 pb-5">
       <SectionHeader title="최근 등록된 한 짝" sub="짝을 찾아 완성하거나, 판매하세요" more="더보기" onMore={() => router.push('/products')} />
-      <ItemFilterChips sort={sort} setSort={setSort} side={side} setSide={setSide} />
+      <FilterBar sortOption={sortOption} onSortChange={setSortOption} priceRange={priceRange} onPriceChange={setPriceRange} />
       {filtered.length === 0 ? (
         <div className="px-5 lg:px-8 py-10 text-center">
           <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-          <p className="mt-1 text-[11.5px] text-aring-ink-500">필터를 초기화하거나 다른 조건을 선택해 주세요</p>
+          <p className="mt-1 text-[11.5px] text-aring-ink-500">다른 가격대로 찾아보거나 직접 등록해보세요.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
