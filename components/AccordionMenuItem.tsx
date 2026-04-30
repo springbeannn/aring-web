@@ -56,4 +56,4 @@ export default function AccordionMenuItem({ id, label, items, isActive, onToggle
                     </div>
               </div>
             );
-}</button>
+}
