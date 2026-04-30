@@ -60,28 +60,28 @@ export function TopNav() {
                     <div className="flex items-center justify-between px-5 lg:px-8 pt-2 lg:pt-5 pb-3.5 lg:pb-5 lg:border-b lg:border-aring-green-line">
                             <div className="flex items-center gap-8">
                                       <Link className="flex items-baseline gap-1" href="/">
-                                                  <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>span>
+                                                  <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
                                                   <sup className="text-[10px] font-medium text-aring-ink-500">한 짝의 짝</sup>sup>
-                                      </Link>Link>
+                                      </Link>
                                       <nav className="hidden lg:flex items-center gap-1">
                                           {desktopMenu.map((m) => (
                                 <Link key={m.key} href={m.href} className="px-3.5 py-2 rounded-pill text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100 transition">
                                     {m.label}
-                                </Link>Link>
+                                </Link>
                               ))}
-                                      </nav>nav>
-                            </div>div>
+                                      </nav>
+                            </div>
                             <div className="flex items-center gap-2.5">
                                       <Link href="/register" aria-label="한 짝 등록" className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] font-extrabold text-white shadow-cta active:scale-95 transition">
                                                   <IconPlus className="w-4 h-4" strokeWidth={2.4} />
                                                   한 짝 등록
-                                      </Link>Link>
+                                      </Link>
                                       <button aria-label="로그인" className="relative w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
                                                   <IconUser />
-                                      </button>button>
+                                      </button>
                                       <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
-                            </div>div>
-                    </div>div>
+                            </div>
+                    </div>
                     <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
               </>>
             );
@@ -97,9 +97,9 @@ export function BottomNav({ active }: { active?: Tab }) {
                                         <span aria-label={dot === 'unread' ? '읽지 않은 알림' : '새 항목'} className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
                                       )}
                                     {icon}
-                                          <span>{label}</span>span>
-                                </div>div>
-                        </Link>Link>
+                                          <span>{label}</span>
+                                </div>
+                        </Link>
                       );
       };
     
@@ -114,18 +114,18 @@ export function BottomNav({ active }: { active?: Tab }) {
                                         >
                                       <IconPlus />
                                       <span aria-hidden className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
-                            </Link>Link>
+                            </Link>
                             <div className="flex items-stretch px-2 pt-2 pb-2">
                                 {item('home', '홈', '/', <IconHome />)}
                                 {item('discover', '탐색', '/discover', <IconCompass />)}
                                       <div className="flex-1 flex flex-col items-center gap-1 py-2 select-none">
                                                   <IconPlus />
-                                                  <span className="text-[10.5px]">등록</span>span>
-                                      </div>div>
+                                                  <span className="text-[10.5px]">등록</span>
+                                      </div>
                                 {item('chat', '댓글', '/comments', <IconComments />, 'unread')}
                                 {item('my', 'MY', '/my', <IconUser />, 'new')}
-                            </div>div>
-                    </div>div>
-              </nav>nav>
+                            </div>
+                    </div>
+              </nav>
             );
 }</></svg>
