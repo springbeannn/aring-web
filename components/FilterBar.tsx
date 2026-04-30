@@ -241,4 +241,4 @@ export function useFilterBar<T extends FilterableItem>(items: T[]) {
           });
   
     return { sortOption, setSortOption, priceRange, setPriceRange, filtered };
-}</svg>
+}
