@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import AccordionMenuItem from './AccordionMenuItem';
 
 const MENU_DATA = [
-  { id: 'menu1', label: '메뉴 1', children: [{ id: 'menu1-1', label: '메뉴 1-1' }, { id: 'menu1-2', label: '메뉴 1-2' }] },
-  { id: 'menu2', label: '메뉴 2', children: [{ id: 'menu2-1', label: '메뉴 2-1' }, { id: 'menu2-2', label: '메뉴 2-2' }] },
-  { id: 'menu3', label: '메뉴 3', children: [{ id: 'menu3-1', label: '메뉴 3-1' }, { id: 'menu3-2', label: '메뉴 3-2' }] },
-  { id: 'menu4', label: '메뉴 4', children: [{ id: 'menu4-1', label: '메뉴 4-1' }, { id: 'menu4-2', label: '메뉴 4-2' }] },
-  { id: 'menu5', label: '메뉴 5', children: [{ id: 'menu5-1', label: '메뉴 5-1' }, { id: 'menu5-2', label: '메뉴 5-2' }] },
+  { id: 'menu1', label: '메뉴 1', items: [{ id: 'menu1-1', label: '메뉴 1-1' }, { id: 'menu1-2', label: '메뉴 1-2' }] },
+  { id: 'menu2', label: '메뉴 2', items: [{ id: 'menu2-1', label: '메뉴 2-1' }, { id: 'menu2-2', label: '메뉴 2-2' }] },
+  { id: 'menu3', label: '메뉴 3', items: [{ id: 'menu3-1', label: '메뉴 3-1' }, { id: 'menu3-2', label: '메뉴 3-2' }] },
+  { id: 'menu4', label: '메뉴 4', items: [{ id: 'menu4-1', label: '메뉴 4-1' }, { id: 'menu4-2', label: '메뉴 4-2' }] },
+  { id: 'menu5', label: '메뉴 5', items: [{ id: 'menu5-1', label: '메뉴 5-1' }, { id: 'menu5-2', label: '메뉴 5-2' }] },
   ];
 
 interface SideMenuProps {
@@ -61,8 +61,8 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                 </button>button>
                       </div>div>
                       <nav aria-label="사이트 메뉴" className="flex-1 overflow-y-auto overflow-x-hidden py-2 pb-8">
-                        {MENU_DATA.map((item) => (
-                                    <AccordionMenuItem key={item.id} id={item.id} label={item.label} children={item.children} isActive={activeMenuId === item.id} onToggle={toggleAccordion} />
+                        {MENU_DATA.map((menu) => (
+                                    <AccordionMenuItem key={menu.id} id={menu.id} label={menu.label} items={menu.items} isActive={activeMenuId === menu.id} onToggle={toggleAccordion} />
                                   ))}
                       </nav>nav>
                       <div className="px-6 pt-4 pb-6 border-t border-[rgb(229,229,229)] flex-shrink-0">
