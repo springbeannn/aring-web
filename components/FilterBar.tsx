@@ -239,6 +239,8 @@ export function useFilterBar<T extends FilterableItem>(items: T[]) {
                   const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
                   return sortOption === 'latest' ? dateB - dateA : dateA - dateB;
           });
-  
+
+      return { sortOption, setSortOption, priceRange, setPriceRange, filtered };
+}
     return { sortOption, setSortOption, priceRange, setPriceRange, filtered };
 }
