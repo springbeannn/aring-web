@@ -46,7 +46,7 @@ export default function HamburgerButton({ isOpen, onClick }: HamburgerButtonProp
                                                                 transition: 'transform 0.25s ease',
                                                 }}
                                               />
-                        </g>g>
+                        </g>
                 </svg>
           </button>
         );
