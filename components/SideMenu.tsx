@@ -62,9 +62,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 {/* 헤더 */}
                       <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgb(229,229,229)] flex-shrink-0">
                                 <div className="flex items-baseline gap-1">
-                                            <span className="text-[22px] font-black tracking-tight text-aring-green leading-none">aring</span>span>
+                                            <span className="text-[22px] font-black tracking-tight text-aring-green leading-none">aring</span>
                                             <sup className="text-[10px] font-medium text-aring-ink-500">한 짝의 짝</sup>sup>
-                                </div>div>
+                                </div>
                                 <button
                                               onClick={onClose}
                                               aria-label="메뉴 닫기"
@@ -73,9 +73,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                           <line x1="18" y1="6" x2="6" y2="18" />
                                                           <line x1="6" y1="6" x2="18" y2="18" />
-                                            </svg>svg>
-                                </button>button>
-                      </div>div>
+                                            </svg>
+                                </button>
+                      </div>
               
                 {/* 메뉴 목록 */}
                       <nav aria-label="사이트 메뉴" className="flex-1 overflow-y-auto py-4">
@@ -87,9 +87,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                                     className="flex items-center px-6 py-4 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition border-b border-[rgb(243,243,245)] last:border-none"
                                                   >
                                       {item.label}
-                                    </Link>Link>
+                                    </Link>
                                   ))}
-                      </nav>nav>
+                      </nav>
               
                 {/* 하단 CTA */}
                       <div className="px-6 pt-4 pb-6 border-t border-[rgb(229,229,229)] flex-shrink-0">
@@ -100,11 +100,11 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                             >
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                                                           <path d="M12 5v14M5 12h14" />
-                                            </svg>svg>
+                                            </svg>
                                             등록하기
-                                </Link>Link>
-                      </div>div>
-              </div>div>
+                                </Link>
+                      </div>
+              </div>
         </>>
       );
 }
