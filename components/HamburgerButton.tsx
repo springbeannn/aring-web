@@ -50,4 +50,4 @@ export default function HamburgerButton({ isOpen, onClick }: HamburgerButtonProp
                 </svg>
           </button>
         );
-}</button>
+}
