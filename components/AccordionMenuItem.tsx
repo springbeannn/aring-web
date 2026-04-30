@@ -28,14 +28,14 @@ export default function AccordionMenuItem({ id, label, items, isActive, onToggle
                                             />
                                 <span className={`text-[15px] font-bold transition-colors ${isActive ? 'text-aring-green' : 'text-aring-ink-900'}`}>
                                     {label}
-                                </span>span>
+                                </span>
                                 <svg
                                               className={`w-[18px] h-[18px] flex-shrink-0 transition-all duration-[250ms] ${isActive ? 'text-aring-green rotate-180' : 'text-aring-ink-500'}`}
                                               viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                                             >
                                           <polyline points="6 9 12 15 18 9" />
-                                </svg>svg>
-                        </button>button>
+                                </svg>
+                        </button>
                     <div
                                 id={`submenu-${id}`}
                                 role="region"
@@ -50,10 +50,10 @@ export default function AccordionMenuItem({ id, label, items, isActive, onToggle
                                                               >
                                                             <span className="w-1 h-1 rounded-full bg-aring-accent flex-shrink-0" />
                                                   {item.label}
-                                              </button>button>
+                                              </button>
                                             ))}
-                            </div>div>
-                    </div>div>
-              </div>div>
+                            </div>
+                    </div>
+              </div>
             );
 }</button>
