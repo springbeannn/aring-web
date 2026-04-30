@@ -17,7 +17,6 @@ import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
-import { FilterBar, useFilterBar } from '@/components/FilterBar';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘
