@@ -5,13 +5,12 @@ import type React from 'react';
 import { useState } from 'react';
 import HamburgerButton from './HamburgerButton';
 import SideMenu from './SideMenu';
-
 export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
 
 type IconProps = { className?: string; strokeWidth?: number };
 
 const IconComments = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
-      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+      <svg className={classNae} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" />
           <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
       </svg>
@@ -104,7 +103,7 @@ export function BottomNav({ active }: { active?: Tab }) {
       };
     
       return (
-              <nav className="absolute left-0 right-0 bottom-0 z-30 lg:hidden">
+              <nav className="fixed left-0 right-0 bottom-0 z-30 lg:hidden">
                     <div className="relative mx-auto max-w-[440px] glass-strong border-t border-[rgb(229,229,229)]">
                             <Link
                                           href="/register"
@@ -115,7 +114,7 @@ export function BottomNav({ active }: { active?: Tab }) {
                                       <IconPlus />
                                       <span aria-hidden className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
                             </Link>
-                            <div className="flex items-stretch px-2 pt-2 pb-2">
+                            <div className="flex items-stretch px-2 pt-2 style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))' }}>
                                 {item('home', '홈', '/', <IconHome />)}
                                 {item('discover', '탐색', '/discover', <IconCompass />)}
                                       <div className="flex-1 flex flex-col items-center gap-1 py-2 select-none">
