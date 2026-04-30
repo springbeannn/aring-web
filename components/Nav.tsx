@@ -14,34 +14,34 @@ const IconComments = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) =
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" />
           <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
-      </svg>svg>
+      </svg>
     );
 
 const IconHome = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 9.5 12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.5z" />
           <path d="M9 22V12h6v10" />
-      </svg>svg>
+      </svg>
     );
 
 const IconCompass = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="10" />
           <path d="m16 8-2 6-6 2 2-6 6-2z" />
-      </svg>svg>
+      </svg>
     );
 
 const IconUser = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
-      </svg>svg>
+      </svg>
     );
 
 const IconPlus = ({ className = 'w-4 h-4', strokeWidth = 2.4 }: IconProps) => (
       <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 5v14M5 12h14" />
-      </svg>svg>
+      </svg>
     );
 
 const desktopMenu = [
