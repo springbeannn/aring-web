@@ -17,6 +17,7 @@ import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
+import { createClient } from '@/lib/supabase/server'
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘
@@ -128,7 +129,12 @@ function SearchBar() {
 // ─────────────────────────────────────────────────────────────
 // HeroBanner
 // ─────────────────────────────────────────────────────────────
-function HeroBanner() {
+async function HeroBanner() {
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from('items')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'open')
   return (
     <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-5 lg:pt-12 pb-5 lg:pb-12 min-h-[260px] lg:min-h-[340px]">
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -144,7 +150,7 @@ function HeroBanner() {
           <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent" />
           <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
         </span>
-        <span className="text-[10px] font-bold text-aring-ink-900 tracking-wide">지금 12명 매칭 중</span>
+        <span className="text-[10px] font-bold text-aring-ink-900 tracking-wide">지금 {count ?? 0}개 매칭 중</span>
       </div>
       <h1 className="relative mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
         하나만 남은 귀걸이,<br />
