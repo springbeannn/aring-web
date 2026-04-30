@@ -47,7 +47,7 @@ export default function HamburgerButton({ isOpen, onClick }: HamburgerButtonProp
                                                 }}
                                               />
                         </g>g>
-                </svg>svg>
-          </button>button>
+                </svg>
+          </button>
         );
 }</button>
