@@ -12,20 +12,12 @@ export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
 
 type IconProps = { className?: string; strokeWidth?: number };
 
-const IconBell = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
+const IconMenu = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    <path d="M4 6h16M4 12h16M4 18h16" />
   </svg>
 );
 
-const IconChat = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-  </svg>
-);
-
-// 두 말풍선 겹친 댓글 리스트 느낌 — 하단 탭 "댓글" 전용
 const IconComments = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" />
@@ -65,7 +57,7 @@ const log =
     console.log('[aring]', label, payload ?? '');
 
 // ─────────────────────────────────────────────────────────────
-// TopNav — 로고 / 데스크탑 메뉴 / 등록 CTA / 알림 / 채팅
+// TopNav — 로고 / 데스크탑 메뉴 / 등록 CTA / 로그인 / 메뉴
 // ─────────────────────────────────────────────────────────────
 export function TopNav() {
   const desktopMenu: { key: Tab; label: string; href: string }[] = [
@@ -110,19 +102,18 @@ export function TopNav() {
           한 짝 등록
         </Link>
         <button
-          onClick={log('topnav:bell')}
-          aria-label="알림"
+          onClick={log('topnav:login')}
+          aria-label="로그인"
           className="relative w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
         >
-          <IconBell />
-          <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-aring-accent ring-2 ring-white" />
+          <IconUser />
         </button>
         <button
-          onClick={log('topnav:chat')}
-          aria-label="채팅"
+          onClick={log('topnav:menu')}
+          aria-label="메뉴"
           className="relative w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
         >
-          <IconChat />
+          <IconMenu />
         </button>
       </div>
     </div>
