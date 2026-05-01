@@ -149,17 +149,15 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
   );
 }
 
-function SelectedChip({ label, onRemove, isMaterial }: { label: string; onRemove: () => void; isMaterial?: boolean }) {
+function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11.5px] font-bold"
-      style={isMaterial ? {
-        background: 'linear-gradient(135deg, rgba(251,200,220,0.25) 0%, rgba(197,221,240,0.25) 50%, rgba(200,230,201,0.25) 100%)',
-        border: '1.5px solid transparent',
-        backgroundClip: 'padding-box',
-        outline: '1.5px solid rgba(197,221,240,0.8)',
-        color: '#222222',
-      } : { backgroundColor: ACTIVE_BG, border: `1px solid ${ACTIVE_BORDER}`, color: ACTIVE_TEXT }}
+      style={{
+        background: 'linear-gradient(135deg, rgba(251,200,220,0.2) 0%, rgba(197,221,240,0.2) 50%, rgba(200,230,201,0.2) 100%)',
+        outline: '1.5px solid rgba(197,221,240,0.85)',
+        color: '#1e1b2e',
+      }}
     >
       {label}
       <button onClick={onRemove} aria-label={`${label} 해제`} className="inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-white/60 transition">
@@ -260,14 +258,14 @@ export default function DiscoverPage() {
     setBrand(b);
   }
 
-  const selectedChips: { id: string; label: string; onRemove: () => void; isMaterial?: boolean }[] = [];
+  const selectedChips: { id: string; label: string; onRemove: () => void }[] = [];
   shape.forEach((s) => {
     const opt = SHAPE_OPTIONS.find((o) => o.value === s);
     if (opt) selectedChips.push({ id: `shape:${s}`, label: opt.label, onRemove: () => toggleShape(s) });
   });
   if (material !== 'all') {
     const opt = MATERIAL_OPTIONS.find((o) => o.value === material);
-    if (opt) selectedChips.push({ id: `material:${material}`, label: opt.label, onRemove: () => setMaterial('all'), isMaterial: true });
+    if (opt) selectedChips.push({ id: `material:${material}`, label: opt.label, onRemove: () => setMaterial('all') });
   }
   if (price !== 'all') {
     const opt = PRICE_LIST.find((o) => o.value === price);
@@ -292,7 +290,7 @@ export default function DiscoverPage() {
           {activeCount > 0 && (
             <div className="px-5 pb-3 flex items-center gap-2 flex-wrap">
               {selectedChips.map((c) => (
-                <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} isMaterial={c.isMaterial} />
+                <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} />
               ))}
               <button
                 onClick={resetAll}
