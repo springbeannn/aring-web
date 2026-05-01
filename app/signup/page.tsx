@@ -3,14 +3,30 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { TopNav } from '@/components/Nav';
+import { signInWithOAuth } from '@/lib/auth';
 
 export default function SignupPage() {
   const router = useRouter();
+
+  const handleKakao = async () => {
+    const { error } = await signInWithOAuth('kakao');
+    if (error) alert(error);
+  };
+
+  const handleGoogle = async () => {
+    const { error } = await signInWithOAuth('google');
+    if (error) alert(error);
+  };
+
+  const handleNaver = () => {
+    alert('서비스 준비 중입니다.');
+  };
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <TopNav />
+
         <div className="px-5 pt-4 pb-24 lg:max-w-[480px] lg:mx-auto">
 
           <div className="mb-7 text-center">
@@ -20,6 +36,7 @@ export default function SignupPage() {
 
           <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
             <button
+              onClick={handleKakao}
               className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#3C1E1E] transition active:scale-95 whitespace-nowrap"
               style={{ background: '#FEE500' }}
             >
@@ -33,6 +50,7 @@ export default function SignupPage() {
             </button>
 
             <button
+              onClick={handleNaver}
               className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
               style={{ background: '#03C75A' }}
             >
@@ -42,7 +60,10 @@ export default function SignupPage() {
               네이버로 계속하기
             </button>
 
-            <button className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
+            <button
+              onClick={handleGoogle}
+              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap"
+            >
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -72,7 +93,7 @@ export default function SignupPage() {
 
           <p className="mt-4 text-center text-[12.5px] text-aring-ink-500">
             이미 계정이 있으신가요?{' '}
-            <Link href="/" className="font-bold text-aring-ink-900 underline">로그인</Link>
+            <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
           </p>
 
         </div>
