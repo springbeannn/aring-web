@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { TopNav } from '@/components/Nav';
@@ -14,11 +14,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data }) => {
-      if (data.user) router.replace('/');
-    });
-  }, [router]);
 
   const handleEmailLogin = async () => {
     if (!email.trim() || !password.trim()) {
