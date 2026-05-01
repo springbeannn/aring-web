@@ -158,7 +158,7 @@ function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void
 // MAIN
 // ─────────────────────────────────────────────────────────────
 export default function DiscoverPage() {
-  const router = useRouter(); // ← 추가
+  const router = useRouter();
   const [items, setItems] = useState<RecentItem[]>([]);
   const [rawListings, setRawListings] = useState<Map<string, Listing>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -239,7 +239,6 @@ export default function DiscoverPage() {
     setBrand('all');
   }
 
-  // ← 수정: 브랜드 칩 클릭 핸들러
   function handleBrandChipClick(b: string) {
     if (b === 'all') {
       setBrand('all');
@@ -346,7 +345,7 @@ export default function DiscoverPage() {
                     key={b}
                     label={b === 'all' ? '전체' : b}
                     isActive={brand === b}
-                    onClick={() => handleBrandChipClick(b)} // ← 변경
+                    onClick={() => handleBrandChipClick(b)}
                   />
                 ))}
               </div>
