@@ -11,7 +11,7 @@ export const isSupabaseConfigured = Boolean(url && anonKey);
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
   ? createClient(url!, anonKey!, {
-      auth: { persistSession: false }, // MVP — auth 추가 시 true
+      auth: { persistSession: true }, // MVP — auth 추가 시 true
     })
   : null;
 

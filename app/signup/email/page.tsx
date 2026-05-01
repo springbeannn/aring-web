@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { TopNav } from '@/components/Nav';
+import { signUpWithEmail } from '@/lib/auth';
 
 const IconCheck = ({ checked }: { checked: boolean }) => (
   <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full border-2 transition ${checked ? 'bg-aring-ink-900 border-aring-ink-900' : 'border-aring-ink-300 bg-white'}`}>
@@ -23,6 +24,7 @@ export default function SignupEmailPage() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [terms, setTerms] = useState({ age: false, service: false, privacy: false, marketing: false });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const allRequired = terms.age && terms.service && terms.privacy;
   const allChecked = allRequired && terms.marketing;
@@ -34,23 +36,35 @@ export default function SignupEmailPage() {
 
   const isFormValid = () => {
     if (!email.trim() || !email.includes('@')) return false;
-    if (!password.trim()) return false;
+    if (!password.trim() || password.length < 6) return false;
     if (password !== passwordConfirm) return false;
     if (!nickname.trim() || nickname.trim().length < 2) return false;
     if (!allRequired) return false;
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors: Record<string, string> = {};
     if (!email.trim() || !email.includes('@')) newErrors.email = '올바른 이메일 주소를 입력해주세요';
     if (!password.trim()) newErrors.password = '비밀번호를 입력해주세요';
+    else if (password.length < 6) newErrors.password = '비밀번호는 6자 이상이어야 합니다';
     if (password !== passwordConfirm) newErrors.passwordConfirm = '비밀번호가 일치하지 않아요';
     if (!nickname.trim()) newErrors.nickname = '닉네임을 입력해주세요';
     else if (nickname.trim().length < 2) newErrors.nickname = '닉네임은 2자 이상이어야 해요';
     if (!allRequired) newErrors.terms = '필수 약관에 동의해야 가입할 수 있어요';
     setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) router.push('/');
+    if (Object.keys(newErrors).length > 0) return;
+
+    setLoading(true);
+    const { error } = await signUpWithEmail(email, password, nickname);
+    setLoading(false);
+
+    if (error) {
+      setErrors({ submit: error });
+      return;
+    }
+
+    router.push('/');
   };
 
   return (
@@ -65,25 +79,29 @@ export default function SignupEmailPage() {
 
           <div className="flex flex-col gap-3 mb-5">
             <div>
-              <input type="email" placeholder="이메일" style={{ background: "linear-gradient(to right, rgba(255,236,210,0.4), rgba(255,210,220,0.4))" }} value={email} onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
+              <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora"
+                style={{ background: 'linear-gradient(to right, rgba(235,218,210,0.5), rgba(225,205,212,0.5))' }} />
               {errors.email && <p className="mt-1 text-[11.5px] text-red-500">{errors.email}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.4), rgba(220,215,250,0.4))" }} value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
+              <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora"
+                style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }} />
               {errors.password && <p className="mt-1 text-[11.5px] text-red-500">{errors.password}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호 확인" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.4), rgba(220,215,250,0.4))" }} value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
+              <input type="password" placeholder="비밀번호 확인" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora"
+                style={{ background: 'linear-gradient(to right, rgba(210,235,255,0.4), rgba(210,245,235,0.4))' }} />
               {errors.passwordConfirm && <p className="mt-1 text-[11.5px] text-red-500">{errors.passwordConfirm}</p>}
             </div>
           </div>
 
           <div className="mb-5">
-            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)} style={{ background: "linear-gradient(to right, rgba(255,253,210,0.4), rgba(255,236,210,0.4))" }}
-              className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
+            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora"
+              style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }} />
             {errors.nickname && <p className="mt-1.5 text-[11.5px] text-red-500">{errors.nickname}</p>}
           </div>
 
@@ -109,15 +127,16 @@ export default function SignupEmailPage() {
           </div>
 
           {errors.terms && <p className="mb-3 text-[11.5px] text-red-500 text-center">{errors.terms}</p>}
+          {errors.submit && <p className="mb-3 text-[12px] text-red-500 text-center">{errors.submit}</p>}
 
-          <button onClick={handleSubmit} disabled={!isFormValid()}
-            className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${isFormValid() ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
-            가입하기
+          <button onClick={handleSubmit} disabled={!isFormValid() || loading}
+            className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${isFormValid() && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
+            {loading ? '가입 중...' : '가입하기'}
           </button>
 
           <p className="mt-4 text-center text-[12.5px] text-aring-ink-500">
             이미 계정이 있으신가요?{' '}
-            <Link href="/" className="font-bold text-aring-ink-900 underline">로그인</Link>
+            <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
           </p>
 
         </div>
