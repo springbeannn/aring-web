@@ -115,10 +115,10 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition"
+      className="flex flex-col items-center gap-0.5 w-[44px] shrink-0 active:scale-95 transition"
     >
       <span
-        className="relative w-12 h-12 rounded-full"
+        className="relative w-8 h-8 rounded-full"
         style={isActive ? {
           padding: '2px',
           background: 'linear-gradient(135deg, rgba(251,200,220,0.9) 0%, rgba(197,221,240,0.9) 50%, rgba(200,230,201,0.9) 100%)',
@@ -142,7 +142,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[10.5px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[9.5px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
@@ -316,7 +316,7 @@ export default function DiscoverPage() {
             </CategoryRow>
 
             <CategoryRow title="소재">
-              <div className="no-scrollbar flex gap-[3px] overflow-x-auto pr-8">
+              <div className="no-scrollbar flex gap-[2px] overflow-x-auto pr-8">
                 <MaterialThumb
                   bg="linear-gradient(135deg,#F5F5F5,#E8E8E8)"
                   label="전체"
