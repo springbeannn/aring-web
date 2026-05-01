@@ -65,17 +65,17 @@ export default function SignupEmailPage() {
 
           <div className="flex flex-col gap-3 mb-5">
             <div>
-              <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)}
+              <input type="email" placeholder="이메일" style={{ backgroundColor: "rgba(255, 218, 218, 0.7)" }} value={email} onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
               {errors.email && <p className="mt-1 text-[11.5px] text-red-500">{errors.email}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)}
+              <input type="password" placeholder="비밀번호" style={{ backgroundColor: "rgba(218, 240, 220, 0.7)" }} value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
               {errors.password && <p className="mt-1 text-[11.5px] text-red-500">{errors.password}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호 확인" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
+              <input type="password" placeholder="비밀번호 확인" style={{ backgroundColor: "rgba(218, 240, 220, 0.7)" }} value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
                 className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
               {errors.passwordConfirm && <p className="mt-1 text-[11.5px] text-red-500">{errors.passwordConfirm}</p>}
             </div>
