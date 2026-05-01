@@ -8,14 +8,14 @@ import { signInWithOAuth } from '@/lib/auth';
 export default function SignupPage() {
   const router = useRouter();
 
-  const handleKakao = async () => {
-    const { error } = await signInWithOAuth('kakao');
-    if (error) alert(error);
+  const handleKakao = () => {
+    alert('서비스 준비 중입니다.');
+
   };
 
   const handleGoogle = async () => {
     const { error } = await signInWithOAuth('google');
-    if (error) alert(error);
+
   };
 
   const handleNaver = () => {
