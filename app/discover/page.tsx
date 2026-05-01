@@ -257,11 +257,7 @@ export default function DiscoverPage() {
   }
 
   function handleBrandChipClick(b: string) {
-    if (b === 'all') {
-      setBrand('all');
-    } else {
-      router.push(`/brands/${encodeURIComponent(b)}`);
-    }
+    setBrand(b);
   }
 
   const selectedChips: { id: string; label: string; onRemove: () => void; isMaterial?: boolean }[] = [];
