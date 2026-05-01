@@ -58,22 +58,26 @@ function listingToRecent(row: Listing): RecentItem {
 // ─────────────────────────────────────────────────────────────
 // 가격 / 브랜드 옵션
 // ─────────────────────────────────────────────────────────────
-type PriceKey = 'all' | 'under_30' | 'mid_30_50' | 'mid_50_100' | 'over_100';
+type PriceKey = 'all' | 'under_10' | 'mid_10_30' | 'mid_30_70' | 'mid_70_150' | 'over_150' | 'negotiable';
 
 const PRICE_LIST: { value: PriceKey; label: string }[] = [
   { value: 'all', label: '전체' },
-  { value: 'under_30', label: '3만 ↓' },
-  { value: 'mid_30_50', label: '3~5만' },
-  { value: 'mid_50_100', label: '5~10만' },
-  { value: 'over_100', label: '10만 ↑' },
+  { value: 'under_10', label: '~1만원' },
+  { value: 'mid_10_30', label: '1~3만원' },
+  { value: 'mid_30_70', label: '3~7만원' },
+  { value: 'mid_70_150', label: '7~15만원' },
+  { value: 'over_150', label: '15만원~' },
+  { value: 'negotiable', label: '가격미정/협의필요' },
 ];
 
 function priceMatches(price: number, range: PriceKey): boolean {
   switch (range) {
-    case 'under_30': return price > 0 && price < 30000;
-    case 'mid_30_50': return price >= 30000 && price < 50000;
-    case 'mid_50_100': return price >= 50000 && price < 100000;
-    case 'over_100': return price >= 100000;
+    case 'under_10':   return price > 0 && price < 10000;
+    case 'mid_10_30':  return price >= 10000 && price < 30000;
+    case 'mid_30_70':  return price >= 30000 && price < 70000;
+    case 'mid_70_150': return price >= 70000 && price < 150000;
+case 'over_150':   return price >= 150000;
+case 'negotiable': return price === 0 || price == null;
     default: return true;
   }
 }
