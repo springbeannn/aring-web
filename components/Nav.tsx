@@ -7,7 +7,7 @@ import { useState } from 'react';
 import HamburgerButton from './HamburgerButton';
 import SideMenu from './SideMenu';
 
-export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
+export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my' | 'search';
 
 type IconProps = { className?: string; strokeWidth?: number };
 
@@ -42,6 +42,13 @@ const IconUser = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
 const IconPlus = ({ className = 'w-4 h-4', strokeWidth = 2.4 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
+const IconSearch = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
   </svg>
 );
 
@@ -100,8 +107,12 @@ export function BottomNav({ active }: { active?: Tab }) {
   const item = (key: Tab, label: string, href: string, icon: React.ReactNode, dot?: 'unread' | 'new') => {
     const isActive = active === key;
     return (
-      <Link href={href} className={`flex-1 text-[12px] lg:text-[13px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}>
-        <div className="flex flex-col items-center gap-1 py-2 relative">
+      <Link
+        href={href}
+        aria-label={label}
+        className={`flex-1 text-[11px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}
+      >
+        <div className="flex flex-col items-center gap-0.5 py-2 relative">
           {dot && (
             <span
               aria-label={dot === 'unread' ? '읽지 않은 알림' : '새 항목'}
@@ -110,15 +121,16 @@ export function BottomNav({ active }: { active?: Tab }) {
             />
           )}
           {icon}
-          <span>{label}</span>
+          <span className="text-[10px]">{label}</span>
         </div>
       </Link>
     );
   };
 
   return (
-    <nav className="fixed left-0 right-0 bottom-0 z-30 lg:hidden">
+    <nav className="fixed left-0 right-0 bottom-0 z-30 lg:hidden" aria-label="하단 메뉴">
       <div className="relative mx-auto max-w-[440px] glass-strong border-t border-[rgb(229,229,229)]">
+        {/* 가운데 등록 플로팅 버튼 */}
         <Link
           href="/register"
           aria-label="한 짝 등록하기"
@@ -128,15 +140,22 @@ export function BottomNav({ active }: { active?: Tab }) {
           <IconPlus />
           <span aria-hidden className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
         </Link>
-        <div className="flex items-stretch px-2 pt-2 pb-2">
-          {item('home', '홈', '/', <IconHome />)}
-          {item('discover', '탐색', '/discover', <IconCompass />)}
-          <div className="flex-1 flex flex-col items-center gap-1 py-2 select-none">
-            <IconPlus />
-            <span className="text-[10.5px]">등록</span>
+
+        <div className="flex items-stretch px-1 pt-2 pb-2 pb-safe">
+          {/* 좌측: 홈, 탐색 */}
+          {item('home', '홈', '/', <IconHome className="w-[22px] h-[22px]" />)}
+          {item('discover', '탐색', '/discover', <IconCompass className="w-[22px] h-[22px]" />)}
+
+          {/* 가운데: 등록 자리 (플로팅 버튼 공간) */}
+          <div className="flex-1 flex flex-col items-center gap-0.5 py-2 select-none opacity-0 pointer-events-none" aria-hidden>
+            <IconPlus className="w-[22px] h-[22px]" />
+            <span className="text-[10px]">등록</span>
           </div>
-          {item('chat', '댓글', '/comments', <IconComments />, 'unread')}
-          {item('my', 'MY', '/my', <IconUser />, 'new')}
+
+          {/* 우측: 댓글, 검색, MY */}
+          {item('chat', '댓글', '/comments', <IconComments className="w-[22px] h-[22px]" />, 'unread')}
+          {item('search', '검색', '/search', <IconSearch className="w-[22px] h-[22px]" />)}
+          {item('my', 'MY', '/my', <IconUser className="w-[22px] h-[22px]" />, 'new')}
         </div>
       </div>
     </nav>

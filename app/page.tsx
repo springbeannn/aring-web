@@ -115,7 +115,7 @@ function SearchBar() {
       }}
       className="mx-5 lg:mx-8 mb-5 lg:mb-7 lg:mt-5 flex items-center gap-2.5 rounded-pill bg-aring-ink-100 px-4 lg:px-5 py-3 lg:py-3.5 lg:max-w-[640px]"
     >
-      <IconSearch className="w-4 h-4 lg:w-5 lg:h-5 text-aring-ink-500" />
+      <IconSearch className="w-4 h-4 lg:w-5 lg:h-5 text-aring-ink-400 shrink-0" />
       <input
         type="search" value={query} onChange={e => setQuery(e.target.value)}
         className="flex-1 bg-transparent border-0 outline-none text-[14px] lg:text-[15px] text-aring-ink-700 placeholder:text-aring-ink-500"
