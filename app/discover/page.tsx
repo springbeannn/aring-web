@@ -396,7 +396,7 @@ export default function DiscoverPage() {
                   <button
                     onClick={resetAll}
                     className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] font-extrabold"
-                    style={{ backgroundColor: ACTIVE_BG, border: `1px solid ${ACTIVE_BORDER}`, color: ACTIVE_TEXT }}
+                    style={{ background: 'linear-gradient(135deg, rgba(251,200,220,0.2) 0%, rgba(197,221,240,0.2) 50%, rgba(200,230,201,0.2) 100%)', outline: '1.5px solid rgba(197,221,240,0.85)', color: '#1e1b2e' }}
                   >
                     필터 초기화
                   </button>
