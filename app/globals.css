@@ -136,3 +136,16 @@ button {
 .aring-blob-a { animation: aring-blob-a 9s ease-in-out infinite; }
 .aring-blob-b { animation: aring-blob-b 11s ease-in-out infinite; }
 .aring-blob-c { animation: aring-blob-c 10s ease-in-out infinite; }
+
+/* === Signup 페이지 반응형 보완 === */
+@media (max-width: 639px) {
+  /* 소셜 버튼 컨테이너 중앙 정렬 */
+  .signup-social-btns {
+    align-items: center;
+  }
+  /* 소셜 버튼 60% 너비 */
+  .signup-social-btns > button {
+    width: 60%;
+    white-space: nowrap;
+  }
+}
