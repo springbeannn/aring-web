@@ -65,25 +65,25 @@ export default function SignupEmailPage() {
 
           <div className="flex flex-col gap-3 mb-5">
             <div>
-              <input type="email" placeholder="이메일" style={{ background: "linear-gradient(to right, rgba(255,236,210,0.8), rgba(255,210,220,0.8))" }} value={email} onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
+              <input type="email" placeholder="이메일" style={{ background: "linear-gradient(to right, rgba(255,236,210,0.4), rgba(255,210,220,0.4))" }} value={email} onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
               {errors.email && <p className="mt-1 text-[11.5px] text-red-500">{errors.email}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.8), rgba(220,215,250,0.8))" }} value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
+              <input type="password" placeholder="비밀번호" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.4), rgba(220,215,250,0.4))" }} value={password} onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
               {errors.password && <p className="mt-1 text-[11.5px] text-red-500">{errors.password}</p>}
             </div>
             <div>
-              <input type="password" placeholder="비밀번호 확인" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.8), rgba(220,215,250,0.8))" }} value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
+              <input type="password" placeholder="비밀번호 확인" style={{ background: "linear-gradient(to right, rgba(210,245,235,0.4), rgba(220,215,250,0.4))" }} value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
               {errors.passwordConfirm && <p className="mt-1 text-[11.5px] text-red-500">{errors.passwordConfirm}</p>}
             </div>
           </div>
 
           <div className="mb-5">
-            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)} style={{ background: "linear-gradient(to right, rgba(255,253,210,0.8), rgba(255,236,210,0.8))" }}
-              className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
+            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)} style={{ background: "linear-gradient(to right, rgba(255,253,210,0.4), rgba(255,236,210,0.4))" }}
+              className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition input-aurora" />
             {errors.nickname && <p className="mt-1.5 text-[11.5px] text-red-500">{errors.nickname}</p>}
           </div>
 
