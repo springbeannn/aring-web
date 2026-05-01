@@ -114,7 +114,7 @@ export function BottomNav({ active }: { active?: Tab }) {
                                       <IconPlus />
                                       <span aria-hidden className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
                             </Link>
-                            <div className="flex items-stretch px-2 pt-2 style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))' }}>
+                            <div className="flex items-stretch px-2 pt-2 pb-2">
                                 {item('home', '홈', '/', <IconHome />)}
                                 {item('discover', '탐색', '/discover', <IconCompass />)}
                                       <div className="flex-1 flex flex-col items-center gap-1 py-2 select-none">
