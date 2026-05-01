@@ -49,9 +49,9 @@ const IconSparkle = ({ className = 'w-3 h-3' }: IconProps) => (
 // 유명 브랜드 고정 10개
 // ─────────────────────────────────────────────────────────────
 const FAMOUS_BRANDS = [
-  'CHANEL', 'DIOR', 'CELINE', 'TIFFANY',
-  'SWAROVSKI', 'MIU MIU', 'NUMBERING', 'AGMES',
-  'VIVIENNE WESTWOOD', 'DIDIERBOU',
+  
+  
+  
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -310,7 +310,7 @@ function BrandSection({ brandCounts }: {
     Object.entries(brandCounts)
       .filter(([brand]) => brand && brand !== '브랜드 미상' && !famousSet.has(brand.toLowerCase()))
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 6)
+      .slice(0, 15)
       .map(([brand]) => brand),
   [brandCounts]);
 
