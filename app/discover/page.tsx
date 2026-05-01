@@ -87,8 +87,8 @@ case 'negotiable': return price === 0 || price == null;
 // ─────────────────────────────────────────────────────────────
 function CategoryRow({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="px-5 py-4 border-b border-aring-ink-100">
-      <h3 className="text-[11.5px] font-extrabold tracking-wider text-aring-ink-700 uppercase mb-3">
+    <div className="px-5 py-3 border-b border-aring-ink-100">
+      <h3 className="text-[11px] font-extrabold tracking-wider text-aring-ink-700 uppercase mb-2">
         {title}
       </h3>
       {children}
@@ -100,7 +100,7 @@ function PillChip({ label, isActive, onClick }: { label: string; isActive?: bool
   return (
     <button
       onClick={onClick}
-      className={`rounded-pill px-3.5 py-2 text-[12.5px] font-bold transition active:scale-95 ${
+      className={`rounded-pill px-3.5 py-1.5 text-[12.5px] font-bold transition active:scale-95 ${
         isActive
           ? 'bg-aring-ink-900 text-white border border-transparent'
           : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300'
@@ -282,7 +282,7 @@ export default function DiscoverPage() {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          <div className="px-5 pt-3 pb-3">
+          <div className="px-5 pt-2 pb-2">
             <h1 className="text-[20px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
             <p className="mt-0.5 text-[12px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
@@ -316,7 +316,7 @@ export default function DiscoverPage() {
             </CategoryRow>
 
             <CategoryRow title="소재">
-              <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-1 px-1">
+              <div className="no-scrollbar flex gap-1.5 overflow-x-auto -mx-1 px-1">
                 <MaterialThumb
                   bg="linear-gradient(135deg,#F5F5F5,#E8E8E8)"
                   label="전체"
