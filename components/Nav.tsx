@@ -10,7 +10,7 @@ export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
 type IconProps = { className?: string; strokeWidth?: number };
 
 const IconComments = ({ className = 'w-5 h-5', strokeWidth = 1.8 }: IconProps) => (
-      <svg className={classNae} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" />
           <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
       </svg>
