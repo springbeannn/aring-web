@@ -118,21 +118,29 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
       className="flex flex-col items-center gap-1.5 w-[64px] shrink-0 active:scale-95 transition"
     >
       <span
-        className="relative w-12 h-12 rounded-full overflow-hidden"
-        style={{
-          background: bg,
-          boxShadow: isActive
-            ? `0 0 0 2px ${ACTIVE_BORDER}, 0 0 0 4px #FFFFFF`
-            : `0 0 0 1px ${INACTIVE_BORDER}`,
+        className="relative w-12 h-12 rounded-full"
+        style={isActive ? {
+          padding: '2px',
+          background: 'linear-gradient(135deg, rgba(251,200,220,0.9) 0%, rgba(197,221,240,0.9) 50%, rgba(200,230,201,0.9) 100%)',
+          boxShadow: 'none',
+        } : {
+          padding: '1px',
+          background: '#E5E5E5',
+          boxShadow: 'none',
         }}
       >
         <span
-          aria-hidden
-          className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
-          style={{
-            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)',
-          }}
-        />
+          className="block w-full h-full rounded-full overflow-hidden"
+          style={{ background: bg }}
+        >
+          <span
+            aria-hidden
+            className="absolute top-1.5 left-2 w-3 h-3 rounded-full opacity-60"
+            style={{
+              background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 70%)',
+            }}
+          />
+        </span>
       </span>
       <span className="text-[10.5px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
@@ -141,11 +149,17 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
   );
 }
 
-function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+function SelectedChip({ label, onRemove, isMaterial }: { label: string; onRemove: () => void; isMaterial?: boolean }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11.5px] font-bold"
-      style={{ backgroundColor: ACTIVE_BG, border: `1px solid ${ACTIVE_BORDER}`, color: ACTIVE_TEXT }}
+      style={isMaterial ? {
+        background: 'linear-gradient(135deg, rgba(251,200,220,0.25) 0%, rgba(197,221,240,0.25) 50%, rgba(200,230,201,0.25) 100%)',
+        border: '1.5px solid transparent',
+        backgroundClip: 'padding-box',
+        outline: '1.5px solid rgba(197,221,240,0.8)',
+        color: '#222222',
+      } : { backgroundColor: ACTIVE_BG, border: `1px solid ${ACTIVE_BORDER}`, color: ACTIVE_TEXT }}
     >
       {label}
       <button onClick={onRemove} aria-label={`${label} 해제`} className="inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-white/60 transition">
@@ -250,14 +264,14 @@ export default function DiscoverPage() {
     }
   }
 
-  const selectedChips: { id: string; label: string; onRemove: () => void }[] = [];
+  const selectedChips: { id: string; label: string; onRemove: () => void; isMaterial?: boolean }[] = [];
   shape.forEach((s) => {
     const opt = SHAPE_OPTIONS.find((o) => o.value === s);
     if (opt) selectedChips.push({ id: `shape:${s}`, label: opt.label, onRemove: () => toggleShape(s) });
   });
   if (material !== 'all') {
     const opt = MATERIAL_OPTIONS.find((o) => o.value === material);
-    if (opt) selectedChips.push({ id: `material:${material}`, label: opt.label, onRemove: () => setMaterial('all') });
+    if (opt) selectedChips.push({ id: `material:${material}`, label: opt.label, onRemove: () => setMaterial('all'), isMaterial: true });
   }
   if (price !== 'all') {
     const opt = PRICE_LIST.find((o) => o.value === price);
@@ -282,7 +296,7 @@ export default function DiscoverPage() {
           {activeCount > 0 && (
             <div className="px-5 pb-3 flex items-center gap-2 flex-wrap">
               {selectedChips.map((c) => (
-                <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} />
+                <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} isMaterial={c.isMaterial} />
               ))}
               <button
                 onClick={resetAll}
