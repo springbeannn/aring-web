@@ -90,7 +90,7 @@ export function BottomNav({ active }: { active?: Tab }) {
       const item = (key: Tab, label: string, href: string, icon: React.ReactNode, dot?: 'unread' | 'new') => {
               const isActive = active === key;
               return (
-                        <Link href={href} className={`text-[12px] lg:text-[13px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}>
+                        <Link href={href} className={`flex-1 text-[12px] lg:text-[13px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}>
                                 <div className="flex flex-col items-center gap-1 py-2 relative">
                                     {dot && (
                                         <span aria-label={dot === 'unread' ? '읽지 않은 알림' : '새 항목'} className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
