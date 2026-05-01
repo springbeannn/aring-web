@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
@@ -174,6 +174,68 @@ function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void
 // ─────────────────────────────────────────────────────────────
 export default function DiscoverPage() {
   const router = useRouter();
+  const materialScrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = materialScrollRef.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let cancelled = false;
+    const onTouch = () => { cancelled = true; };
+    el.addEventListener('touchstart', onTouch, { once: true });
+
+    // spring easing: 오른쪽으로 살짝 오버슈트 후 스냅백
+    const springOut = (t: number) => {
+      // easeOutBack: 끝에서 살짝 튀어나갔다 정착
+      const c1 = 1.70158;
+      const c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    };
+    const springBack = (t: number) => {
+      // easeInOutBack: 돌아올 때 쫀득하게
+      const c1 = 1.70158;
+      const c2 = c1 * 1.525;
+      return t < 0.5
+        ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+        : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (2 * t - 2) + c2) + 2) / 2;
+    };
+
+    const animate = (
+      from: number, to: number, duration: number,
+      easeFn: (t: number) => number,
+      onDone?: () => void
+    ) => {
+      const start = performance.now();
+      const step = (now: number) => {
+        if (cancelled) return;
+        const t = Math.min((now - start) / duration, 1);
+        el.scrollLeft = from + (to - from) * easeFn(t);
+        if (t < 1) requestAnimationFrame(step);
+        else onDone?.();
+      };
+      requestAnimationFrame(step);
+    };
+
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      // 오른쪽으로 spring 슬라이드 (600ms)
+      animate(0, maxScroll, 600, springOut, () => {
+        if (cancelled) return;
+        // 잠깐 머문 후
+        setTimeout(() => {
+          if (cancelled) return;
+          // 다시 왼쪽으로 쫀득하게 스냅백 (700ms)
+          animate(maxScroll, 0, 700, springBack);
+        }, 350);
+      });
+    }, 500);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      el.removeEventListener('touchstart', onTouch);
+    };
+  }, []);
   const [items, setItems] = useState<RecentItem[]>([]);
   const [rawListings, setRawListings] = useState<Map<string, Listing>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -316,7 +378,7 @@ export default function DiscoverPage() {
             </CategoryRow>
 
             <CategoryRow title="소재">
-              <div className="no-scrollbar flex gap-[2px] overflow-x-auto pr-8">
+              <div ref={materialScrollRef} className="no-scrollbar flex gap-[2px] overflow-x-auto pr-8">
                 <MaterialThumb
                   bg="linear-gradient(135deg,#F5F5F5,#E8E8E8)"
                   label="전체"
