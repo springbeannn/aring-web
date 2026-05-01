@@ -82,11 +82,13 @@ export default function SignupEmailPage() {
           </div>
 
           <div className="mb-5">
-            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)} style={{ backgroundColor: "rgba(255, 253, 231, 0.4)" }}
+            <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)} style={{ backgroundColor: "rgba(255, 253, 231, 0.7)" }}
               className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
             {errors.nickname && <p className="mt-1.5 text-[11.5px] text-red-500">{errors.nickname}</p>}
           </div>
 
+          <p className="mb-2 text-[13px] font-bold text-aring-ink-700">약관동의</p>
+          <p className="mb-2 text-[13px] font-bold text-aring-ink-700">약관동의</p>
           <div className="mb-6 rounded-2xl border border-aring-ink-100 overflow-hidden">
             <button onClick={toggleAll} className="w-full flex items-center gap-3 px-4 py-3.5 bg-aring-ink-50 border-b border-aring-ink-100">
               <IconCheck checked={allChecked} />
