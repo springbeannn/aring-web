@@ -69,9 +69,9 @@ export default function SignupPage() {
           {/* ✅ 수정: items-center sm:items-stretch 추가 → 모바일 중앙 정렬 */}
           <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
 
-            {/* ✅ 수정: w-[60%] sm:w-full whitespace-nowrap */}
+            {/* ✅ 수정: w-[69%] sm:w-full whitespace-nowrap */}
             <button
-              className="w-[60%] sm:w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-bold text-[14px] text-[#3C1E1E] transition active:scale-95 whitespace-nowrap"
+              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#3C1E1E] transition active:scale-95 whitespace-nowrap"
               style={{ background: '#FEE500' }}
             >
               <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
@@ -83,9 +83,9 @@ export default function SignupPage() {
               카카오톡으로 계속하기
             </button>
 
-            {/* ✅ 수정: w-[60%] sm:w-full whitespace-nowrap */}
+            {/* ✅ 수정: w-[69%] sm:w-full whitespace-nowrap */}
             <button
-              className="w-[60%] sm:w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
+              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
               style={{ background: '#03C75A' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
@@ -94,8 +94,8 @@ export default function SignupPage() {
               네이버로 계속하기
             </button>
 
-            {/* ✅ 수정: w-[60%] sm:w-full whitespace-nowrap */}
-            <button className="w-[60%] sm:w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
+            {/* ✅ 수정: w-[69%] sm:w-full whitespace-nowrap */}
+            <button className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -112,10 +112,10 @@ export default function SignupPage() {
             <div className="flex-1 h-px bg-aring-ink-100" />
           </div>
 
-          {/* ✅ 수정: w-[60%] sm:w-full whitespace-nowrap mx-auto */}
+          {/* ✅ 수정: w-[69%] sm:w-full whitespace-nowrap mx-auto */}
           <button
             onClick={() => setShowEmail((v) => !v)}
-            className="w-[60%] sm:w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-[14px] text-aring-ink-700 border border-aring-ink-200 bg-white transition active:scale-95 mb-5 whitespace-nowrap mx-auto"
+            className="w-[69%] sm:w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-700 border border-aring-ink-200 bg-white transition active:scale-95 mb-5 whitespace-nowrap mx-auto"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -144,7 +144,7 @@ export default function SignupPage() {
 
           <div className="mb-5">
             <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname} onChange={(e) => setNickname(e.target.value)}
-              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
+              className="w-full px-4 py-2.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 bg-white outline-none focus:border-aring-ink-500 transition" />
             {errors.nickname && <p className="mt-1.5 text-[11.5px] text-red-500">{errors.nickname}</p>}
           </div>
 
