@@ -100,12 +100,11 @@ function PillChip({ label, isActive, onClick }: { label: string; isActive?: bool
   return (
     <button
       onClick={onClick}
-      className="shrink-0 inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition active:scale-95"
-      style={{
-        backgroundColor: isActive ? ACTIVE_BG : '#FFFFFF',
-        border: `1px solid ${isActive ? ACTIVE_BORDER : INACTIVE_BORDER}`,
-        color: isActive ? ACTIVE_TEXT : '#555555',
-      }}
+      className={`rounded-pill px-3.5 py-2 text-[12.5px] font-bold transition active:scale-95 ${
+        isActive
+          ? 'bg-aring-ink-900 text-white border border-transparent'
+          : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300'
+      }`}
     >
       {label}
     </button>
