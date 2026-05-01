@@ -316,7 +316,7 @@ export default function DiscoverPage() {
             </CategoryRow>
 
             <CategoryRow title="소재">
-              <div className="no-scrollbar flex gap-1.5 overflow-x-auto -mx-1 px-1">
+              <div className="no-scrollbar flex gap-[3px] overflow-x-auto -mx-1 px-1">
                 <MaterialThumb
                   bg="linear-gradient(135deg,#F5F5F5,#E8E8E8)"
                   label="전체"
