@@ -88,7 +88,6 @@ export default function SignupEmailPage() {
           </div>
 
           <p className="mb-2 text-[13px] font-bold text-aring-ink-700">약관동의</p>
-          <p className="mb-2 text-[13px] font-bold text-aring-ink-700">약관동의</p>
           <div className="mb-6 rounded-2xl border border-aring-ink-100 overflow-hidden">
             <button onClick={toggleAll} className="w-full flex items-center gap-3 px-4 py-3.5 bg-aring-ink-50 border-b border-aring-ink-100">
               <IconCheck checked={allChecked} />
