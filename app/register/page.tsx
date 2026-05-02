@@ -437,8 +437,30 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
       </div>
       <FieldLabel>가격 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
       <Input value={price} onChange={setPrice} placeholder="예: 50,000" suffix="원" />
-      <FieldLabel>한 줄 스토리</FieldLabel>
-      <Input value={story} onChange={setStory} placeholder="예: 3년간 보관 / 여행 중 분실" maxLength={30} />
+      <FieldLabel>등록자 한마디 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
+      <div className="relative mb-1">
+        <textarea
+          value={story}
+          onChange={(e) => setStory(e.target.value.slice(0, 1000))}
+          placeholder="이 귀걸이에 담긴 이야기를 자유롭게 적어주세요."
+          maxLength={1000}
+          rows={4}
+          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
+        />
+      </div>
+      <div className="flex justify-end mb-2">
+        <span className={['text-[11px] font-medium tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
+          {story.length} / 1000
+        </span>
+      </div>
+      <div className="mb-5 rounded-tile bg-aring-ink-100/60 px-4 py-3 space-y-1.5">
+        <p className="text-[11px] text-aring-ink-500 leading-[1.6]">
+          따뜻한 마음을 담아 작성해 주세요. 욕설, 비하 표현, 타인의 개인정보가 포함된 내용은 작성할 수 없습니다.
+        </p>
+        <p className="text-[10.5px] text-aring-ink-400 leading-[1.6]">
+          개인정보 노출, 타인 비방, 부적절한 표현 등 서비스 운영 기준에 맞지 않는 글은 관리자 판단에 따라 별도 안내 없이 삭제될 수 있습니다.
+        </p>
+      </div>
       <FieldLabel>거래 지역</FieldLabel>
       <Input value={region} onChange={setRegion} placeholder="예: 서울 · 강남구" />
       <StickyCTA onClick={onSubmit} disabled={submitting}>
