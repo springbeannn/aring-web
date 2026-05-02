@@ -11,6 +11,7 @@ import {
   type ItemDetail,
   type ItemSummary,
   type ThumbTone,
+    readLikedIds, writeLikedIds,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
@@ -239,17 +240,6 @@ function GallerySection({
 // ─────────────────────────────────────────────────────────────
 // 3) 핵심 정보 헤더
 // ─────────────────────────────────────────────────────────────
-const LIKED_KEY = 'aring_liked_product_ids';
-
-function readLikedIds(): string[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    return JSON.parse(localStorage.getItem(LIKED_KEY) ?? '[]') as string[];
-  } catch {
-    return [];
-  }
-}
-
 function HeaderInfo({ item }: { item: ItemDetail }) {
   const [liked, setLiked] = useState(false);
 
@@ -263,7 +253,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
     const next = ids.includes(item.id)
       ? ids.filter((id) => id !== item.id)
       : [...ids, item.id];
-    localStorage.setItem(LIKED_KEY, JSON.stringify(next));
+        writeLikedIds(next);
     setLiked(next.includes(item.id));
     log('detail:like', { id: item.id, liked: next.includes(item.id) })();
   }
