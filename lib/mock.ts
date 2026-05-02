@@ -36,6 +36,7 @@ export type RecentItem = {
   theme?: import('@/lib/supabase').ThemeKey | null;
   item_size?: import('@/lib/supabase').SizeKey | null;
   condition?: import('@/lib/supabase').ConditionKey | null;
+    viewCount?: number;
 };
 
 // Pastel design system — 2026-04-25 update
@@ -365,4 +366,22 @@ export function getItemSummary(id: string): ItemSummary | null {
     };
   }
   return null;
+}
+
+
+// ─── localStorage liked helpers ───────────────────────────────────────────
+export const LIKED_KEY = 'aring_liked_product_ids';
+
+export function readLikedIds(): string[] {
+    if (typeof window === 'undefined') return [];
+    try {
+          return JSON.parse(localStorage.getItem(LIKED_KEY) ?? '[]') as string[];
+    } catch {
+          return [];
+    }
+}
+
+export function writeLikedIds(ids: string[]): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(LIKED_KEY, JSON.stringify(ids));
 }
