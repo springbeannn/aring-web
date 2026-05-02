@@ -92,7 +92,7 @@ function pickTone(seed: string, idx = 0): ThumbTone {
   return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
 }
 
-function listingToItemDetail(row: Listing): ItemDetail {
+function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } {
   const detailTags = row.detail
     ? row.detail.split(/[,·\s]+/).filter(Boolean).slice(0, 5)
     : [];
@@ -539,7 +539,7 @@ function NotFoundScreen() {
 // ─────────────────────────────────────────────────────────────
 // MAIN
 // ─────────────────────────────────────────────────────────────
-type LoadState = { status: 'loading' } | { status: 'ok'; item: ItemDetail; similars: ItemSummary[] } | { status: 'not-found' };
+type LoadState = { status: 'loading' } | { status: 'ok'; item: ItemDetail & { viewCount?: number }; similars: ItemSummary[] } | { status: 'not-found' };
 
 export default function ItemDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
