@@ -102,7 +102,7 @@ function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } 
     brand: row.brand ?? '브랜드 미상',
     name: row.detail ?? row.shape ?? '한 짝',
     price: row.price ?? 0,
-    likes: 0,
+    likes: (row as any).likes_count ?? 0,
     viewCount: row.view_count ?? 0,
     side: row.side,
     emoji: '◇',
