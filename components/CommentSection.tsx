@@ -33,15 +33,24 @@ function fallbackUuid(): string {
 }
 
 function relativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return '방금';
-  if (min < 60) return `${min}분 전`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}시간 전`;
-  const day = Math.floor(hr / 24);
-  if (day < 7) return `${day}일 전`;
-  return new Date(iso).toLocaleDateString('ko-KR');
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    if (diff < 0) return '방금 전';
+    const min = Math.floor(diff / 60000);
+    if (min < 1) return '방금 전';
+    if (min < 60) return min + '분 전';
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return hr + '시간 전';
+    const day = Math.floor(hr / 24);
+    if (day < 7) return day + '일 전';
+    const week = Math.floor(day / 7);
+    if (day < 30) return week + '주 전';
+    const month = Math.floor(day / 30);
+    if (day < 365) return month + '개월 전';
+    return Math.floor(day / 365) + '년 전';
+  } catch {
+    return '방금 전';
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -69,7 +78,7 @@ export function CommentSection({
   useEffect(() => {
     setCurrentUserId(getOrCreateAnonId());
     const cached = localStorage.getItem(ANON_NICK_KEY);
-    if (cached) setNickname(cached);
+    setNickname(cached && cached.trim() ? cached.trim() : 'aring 사용자');
   }, []);
 
   // 댓글 fetch
@@ -106,7 +115,7 @@ export function CommentSection({
       alert('Supabase 연결이 필요합니다');
       return;
     }
-    const trimmedNick = nickname.trim();
+    const trimmedNick = nickname.trim() || 'aring 사용자';
     const trimmedMsg = message.trim();
     if (!trimmedNick || !trimmedMsg || submitting) return;
 
@@ -189,14 +198,6 @@ export function CommentSection({
 
       {/* 입력 폼 */}
       <div className="mx-5 lg:mx-8 rounded-tile border border-aring-green-line bg-white p-3 mb-4">
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          placeholder="닉네임"
-          maxLength={20}
-          className="w-full px-3 py-2 rounded-pill bg-aring-ink-100 text-[13px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none mb-2"
-        />
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
