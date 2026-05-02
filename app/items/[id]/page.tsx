@@ -102,6 +102,7 @@ function listingToItemDetail(row: Listing): ItemDetail {
     name: row.detail ?? row.shape ?? '한 짝',
     price: row.price ?? 0,
     likes: 0,
+    viewCount: row.view_count ?? 0,
     side: row.side,
     emoji: '◇',
     tone: pickTone(row.id),
@@ -277,7 +278,15 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
         <p className="text-[22px] lg:text-[26px] font-extrabold text-aring-ink-900">
           {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
         </p>
-        <button
+        <div className="flex items-center gap-3">
+            <div className="inline-flex items-center gap-1 text-aring-ink-400">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <span className="text-[12px] font-semibold">{item.viewCount ?? 0}</span>
+            </div>
+            <button
           onClick={toggle}
           aria-label="찜하기"
           className={[
@@ -290,6 +299,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
           <IconHeart className="w-3.5 h-3.5" filled={liked} />
           {item.likes + (liked ? 1 : 0)}
         </button>
+          </div>
       </div>
     </section>
   );
@@ -352,19 +362,31 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
       <h2 className="text-[14px] font-extrabold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
-      <p className="text-[13.5px] leading-[1.6] text-aring-ink-700">{story}</p>
+      <p className="text-[13.5px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
       <p className="mt-2 text-[11px] text-aring-ink-500">{ago}</p>
     </section>
   );
 }
 
 function relativeTime(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  if (days <= 0) return '오늘 등록';
-  if (days === 1) return '어제 등록';
-  if (days < 7) return `${days}일 전 등록`;
-  return new Date(iso).toLocaleDateString('ko-KR');
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    if (diff < 0) return '방금 전';
+    const min = Math.floor(diff / 60000);
+    if (min < 1) return '방금 전';
+    if (min < 60) return min + '분 전';
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return hr + '시간 전';
+    const day = Math.floor(hr / 24);
+    if (day < 7) return day + '일 전';
+    const week = Math.floor(day / 7);
+    if (day < 30) return week + '주 전';
+    const month = Math.floor(day / 30);
+    if (day < 365) return month + '개월 전';
+    return Math.floor(day / 365) + '년 전';
+  } catch {
+    return '방금 전';
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
