@@ -207,7 +207,7 @@ export function CommentSection({
               : '거래·상태·매칭 관련 문의를 남겨보세요'
           }
           rows={3}
-          maxLength={500}
+          maxLength={1000}
           className="w-full px-3 py-2 rounded-tile bg-aring-ink-100 text-[13px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none resize-none"
         />
         <div className="mt-2 flex items-center gap-2">
@@ -220,7 +220,7 @@ export function CommentSection({
             </button>
           )}
           <span className="text-[10.5px] text-aring-ink-500 ml-auto">
-            {message.length}/500
+            {message.length}/1000
           </span>
           <button
             onClick={submit}
@@ -349,7 +349,7 @@ function CommentItem({
               value={editingMessage}
               onChange={(e) => onChangeEdit(e.target.value)}
               rows={2}
-              maxLength={500}
+              maxLength={1000}
               autoFocus
               className="w-full px-3 py-2 rounded-tile bg-aring-ink-100 text-[13px] text-aring-ink-900 outline-none resize-none"
             />
