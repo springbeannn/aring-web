@@ -227,7 +227,8 @@ export type ItemDetail = RecentItem & {
     material: string;  // "은", "크리스탈", "골드"
     color: string;
     details: string[]; // 태그형 ["데일리", "오피스"]
-  };
+  
+  viewCount?: number;};
   seller: {
     nickname: string;
     rating: number; // 0-5
