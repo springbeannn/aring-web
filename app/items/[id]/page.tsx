@@ -604,7 +604,7 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
         listingToSummary(r as Listing, i)
       );
 
-      setState({ status: 'ok', item, similars });
+      setState({ status: 'ok', item: { ...item, viewCount: nextViewCount }, similars });
     }
 
     load();
