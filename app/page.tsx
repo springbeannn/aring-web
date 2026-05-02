@@ -73,7 +73,7 @@ function listingToRecentItem(row: Listing, idx: number): RecentItem {
     brand: row.brand ?? '브랜드 미상',
     name: (row.detail ?? row.shape ?? '한 짝'),
     price: row.price ?? 0,
-    likes: 0,
+    likes: (row as any).likes_count ?? 0,
     side: (row.side ?? 'L') as 'L' | 'R',
     emoji: '◇',
     tone: TONES[idx % TONES.length],
