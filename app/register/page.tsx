@@ -213,7 +213,7 @@ export default function RegisterPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error('[aring] register:submit error', err);
-      alert(`등록 실패: ${msg}`);
+      alert('등록 실패: ' + msg);
       setSubmitting(false);
     }
   };
