@@ -122,7 +122,7 @@ export function BottomNav({ active }: { active?: Tab }) {
 
   return (
     <nav className="fixed left-0 right-0 bottom-0 z-30 lg:hidden" aria-label="하단 메뉴">
-      <div className="relative mx-auto max-w-[440px] bg-aring-grad-pastel/80 backdrop-blur-sm border-t border-white/40">
+      <div className="relative mx-auto max-w-[440px] bg-white/90 backdrop-blur-sm border-t border-aring-green-line/60">
         <Link
           href="/register"
           aria-label="한 짝 등록하기"
