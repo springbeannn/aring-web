@@ -138,7 +138,7 @@ function HeroBanner() {   // async 제거된 상태
       .then(data => setCount(data.count))
   }, [])
   return (
-    <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-5 lg:pt-12 pb-5 lg:pb-12 min-h-[260px] lg:min-h-[340px]">
+    <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-2.5 lg:pt-6 pb-2.5 lg:pb-6 min-h-[220px] lg:min-h-[280px]">
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="aring-blob-a absolute -top-12 -left-10 w-[200px] h-[200px] rounded-full opacity-70" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
         <div className="aring-blob-b absolute top-1/3 -right-14 w-[220px] h-[220px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
@@ -154,14 +154,14 @@ function HeroBanner() {   // async 제거된 상태
         </span>
         <span className="text-[10px] font-bold text-aring-ink-900 tracking-wide">지금 {count ?? 0}개 매칭 중</span>
       </div>
-      <h1 className="relative mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
+      <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
         하나만 남은 귀걸이,<br />
         <span className="grad-text-green">AI가 짝을 찾아드려요</span>
       </h1>
-      <p className="relative mt-2 lg:mt-4 text-[12.5px] lg:text-[15px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
+      <p className="relative z-10 mt-2 lg:mt-4 text-[12.5px] lg:text-[15px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
         사진 한 장이면 충분합니다. 브랜드·형태·소재·디테일까지 분석해 비슷하거나 정확히 맞는 짝을 연결합니다.
       </p>
-      <Link href="/register" className="relative mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-extrabold text-white shadow-cta active:scale-[0.98] transition">
+      <Link href="/register" className="relative z-10 mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-extrabold text-white shadow-cta active:scale-[0.98] transition">
         등록하기<IconArrow className="w-3.5 h-3.5" />
       </Link>
       <div className="pointer-events-none absolute -right-4 -bottom-6 lg:right-10 lg:bottom-1/2 lg:translate-y-1/2 w-[170px] h-[170px] lg:w-[260px] lg:h-[260px] flex items-center justify-center">
@@ -254,7 +254,7 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
         <div className="mt-1.5 flex flex-col gap-1 text-[10.5px] text-aring-ink-500">
           {m.region && <span className="inline-flex items-center gap-1 truncate"><span aria-hidden>📍</span><span className="truncate">{m.region}</span></span>}
           <span className="inline-flex items-center gap-1"><span aria-hidden>👁</span><span>조회 {viewLabel}</span></span>
-          {m.shape && <span className="inline-flex items-center gap-1 truncate"><span aria-hidden>◇</span><span className="truncate">{m.shape}</span></span>}
+
         </div>
       </div>
     </Link>
@@ -340,7 +340,7 @@ function BrandSection({ brandCounts }: {
             <button
               key={brand}
               onClick={() => handleClick(brand)}
-              className="rounded-pill px-3.5 py-2 text-[12.5px] font-bold transition active:scale-95 bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300"
+              className="rounded-pill px-2 py-1 text-[12px] font-bold transition active:scale-95 bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300"
             >
               {brand}
               {count > 0 && (
@@ -449,7 +449,7 @@ export default function HomePage() {
           <SearchBar />
           <HeroBanner />
           <TodayMatchSection />
-          <RecentSection items={allItems.slice(0, 10)} />
+          <RecentSection items={allItems.slice(0, 12)} />
           <BrandSection brandCounts={brandCounts} />
           <SuccessSection />
           <FindByPhotoCTA />
