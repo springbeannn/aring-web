@@ -305,7 +305,7 @@ export default function CommentsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen flex justify-center bg-aring-grad-pastel">
+    <main className="min-h-screen flex justify-center bg-aring-bg-comments">
       <div
         className="
           relative w-full max-w-[440px] bg-white overflow-hidden
