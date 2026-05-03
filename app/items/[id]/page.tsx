@@ -144,7 +144,21 @@ function listingToSummary(row: Listing, idx: number): ItemSummary {
 // 1) 갤러리 위 floating 액션 (back / share / more)
 //    공통 TopNav가 항상 떠있으므로, back 버튼은 갤러리 위에 floating으로 배치
 // ─────────────────────────────────────────────────────────────
-function GalleryFloatingActions({ onBack }: { onBack: () => void }) {
+function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => void; isOwner: boolean; itemId: string }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleDelete() {
+    setMenuOpen(false);
+    if (!supabase) return;
+    const confirmed = window.confirm('정말 삭제할까요? 삭제된 상품은 복구할 수 없어요.');
+    if (!confirmed) return;
+    const { error } = await supabase.from('listings').delete().eq('id', itemId);
+    if (error) { alert('삭제에 실패했어요. 다시 시도해 주세요.'); return; }
+    router.push('/my');
+    router.refresh();
+  }
+
   return (
     <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
       <button
@@ -162,13 +176,43 @@ function GalleryFloatingActions({ onBack }: { onBack: () => void }) {
         >
           <IconShare />
         </button>
-        <button
-          onClick={log('detail:more')}
-          aria-label="더보기"
-          className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
-        >
-          <IconMore />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="더보기"
+            className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+          >
+            <IconMore />
+          </button>
+          {menuOpen && (
+            <div className="absolute top-full right-0 mt-1.5 z-50 min-w-[140px] rounded-2xl bg-white border border-aring-green-line shadow-card overflow-hidden">
+              {isOwner && (
+                <>
+                  <button
+                    onClick={() => { setMenuOpen(false); router.push(`/items/${itemId}/edit`); }}
+                    className="w-full text-left px-4 py-3 text-[13px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition"
+                  >
+                    ✏️ 수정하기
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="w-full text-left px-4 py-3 text-[13px] font-semibold text-red-400 hover:bg-red-50 transition border-t border-aring-ink-100"
+                  >
+                    🗑️ 삭제하기
+                  </button>
+                </>
+              )}
+              {!isOwner && (
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-4 py-3 text-[13px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition"
+                >
+                  🚨 신고하기
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -181,10 +225,14 @@ function GallerySection({
   images,
   tone,
   onBack,
+  isOwner,
+  itemId,
 }: {
   images: string[];
   tone: ItemDetail['tone'];
   onBack: () => void;
+  isOwner?: boolean;
+  itemId?: string;
 }) {
   const [active, setActive] = useState(0);
   const showDots = images.length > 1;
@@ -196,7 +244,7 @@ function GallerySection({
         style={{ background: thumbBg(tone) }}
       >
         {/* 갤러리 floating 액션 (back / share / more) */}
-        <GalleryFloatingActions onBack={onBack} />
+        <GalleryFloatingActions onBack={onBack} isOwner={isOwner ?? false} itemId={itemId ?? ''} />
 
         <div
           className="flex h-full transition-transform duration-300 ease-out"
@@ -534,6 +582,7 @@ type LoadState = { status: 'loading' } | { status: 'ok'; item: ItemDetail & { vi
 export default function ItemDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [state, setState] = useState<LoadState>({ status: 'loading' });
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -593,6 +642,12 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
       );
 
       setState({ status: 'ok', item: { ...item, viewCount: nextViewCount }, similars });
+
+      // 4) 소유자 여부 체크
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id && session.user.id === row.user_id) {
+        setIsOwner(true);
+      }
     }
 
     load();
@@ -623,6 +678,8 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
             images={item.images}
             tone={item.tone}
             onBack={() => router.back()}
+            isOwner={isOwner}
+            itemId={item.id}
           />
           <HeaderInfo item={item} />
           <AIAnalysisCard ai={item.ai} />
