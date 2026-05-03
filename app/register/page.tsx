@@ -161,6 +161,15 @@ export default function RegisterPage() {
 
     setSubmitting(true);
     try {
+      // 로그인 유저 ID 가져오기
+      const { data: { session } } = await supabase!.auth.getSession();
+      const userId = session?.user?.id;
+      if (!userId) {
+        alert('로그인이 필요합니다.');
+        setSubmitting(false);
+        return;
+      }
+
       const path = buildPhotoPath(photo.file.name);
       const { error: upErr } = await supabase.storage
         .from(STORAGE_BUCKET)
@@ -181,6 +190,7 @@ export default function RegisterPage() {
       const finalColor = (aiColor || null) as import('@/lib/supabase').ColorKey | null;
 
       const { error: dbErr } = await supabase.from('listings').insert({
+        user_id: userId,
         photo_url,
         photo_path: path,
         brand: brandInput || '브랜드 미상',
