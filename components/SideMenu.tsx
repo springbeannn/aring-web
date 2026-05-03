@@ -84,7 +84,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                                     key={item.href}
                                                     href={item.href}
                                                     onClick={onClose}
-                                                    className="flex items-center px-6 py-4 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition border-b border-[rgb(243,243,245)] last:border-none"
+                                                    className="flex items-center px-6 py-4 text-[17px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition border-b border-[rgb(243,243,245)] last:border-none"
                                                   >
                                       {item.label}
                                     </Link>

@@ -101,7 +101,7 @@ function PillChip({ label, isActive, onClick }: { label: string; isActive?: bool
   return (
     <button
       onClick={onClick}
-      className={`rounded-pill px-3.5 py-1.5 text-[12.5px] font-bold transition active:scale-95 ${
+      className={`rounded-pill px-3.5 py-1.5 text-[13px] font-bold transition active:scale-95 ${
         isActive
           ? 'bg-aring-ink-900 text-white border border-transparent'
           : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300'
@@ -143,7 +143,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[9.5px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[10px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
@@ -153,7 +153,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
 function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11.5px] font-bold"
+      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-bold"
       style={{
         background: 'linear-gradient(135deg, rgba(251,200,220,0.2) 0%, rgba(197,221,240,0.2) 50%, rgba(200,230,201,0.2) 100%)',
         outline: '1.5px solid rgba(197,221,240,0.85)',
@@ -346,8 +346,8 @@ export default function DiscoverPage() {
           <TopNav />
 
           <div className="px-5 pt-2 pb-2">
-            <h1 className="text-[20px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
-            <p className="mt-0.5 text-[12px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
+            <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
+            <p className="mt-0.5 text-[11px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
           {activeCount > 0 && (
@@ -357,7 +357,7 @@ export default function DiscoverPage() {
               ))}
               <button
                 onClick={resetAll}
-                className="ml-auto text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
+                className="ml-auto text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
               >
                 전체 해제
               </button>
@@ -437,7 +437,7 @@ export default function DiscoverPage() {
                 )}
               </p>
               {activeCount > 0 && (
-                <button onClick={resetAll} className="text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+                <button onClick={resetAll} className="text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
                   초기화
                 </button>
               )}
@@ -454,7 +454,7 @@ export default function DiscoverPage() {
             ) : filtered.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-                <p className="mt-1 text-[11.5px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
+                <p className="mt-1 text-[11px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}

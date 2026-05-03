@@ -71,7 +71,7 @@ export default function LoginPage() {
             </button>
 
             <button onClick={() => handleOAuth('google')}
-              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
+              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -84,7 +84,7 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-aring-ink-100" />
-            <span className="text-[12px] text-aring-ink-400 font-medium">또는</span>
+            <span className="text-[11px] text-aring-ink-400 font-medium">또는</span>
             <div className="flex-1 h-px bg-aring-ink-100" />
           </div>
 
@@ -98,14 +98,14 @@ export default function LoginPage() {
               style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }} />
           </div>
 
-          {error && <p className="mb-3 text-[12px] text-red-500 text-center">{error}</p>}
+          {error && <p className="mb-3 text-[11px] text-red-500 text-center">{error}</p>}
 
           <button onClick={handleEmailLogin} disabled={!isValid || loading}
-            className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
+            className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
             {loading ? '로그인 중...' : '로그인'}
           </button>
 
-          <p className="mt-4 text-center text-[12.5px] text-aring-ink-500">
+          <p className="mt-4 text-center text-[13px] text-aring-ink-500">
             아직 계정이 없으신가요?{' '}
             <Link href="/signup" className="font-bold text-aring-ink-900 underline">회원가입</Link>
           </p>

@@ -308,7 +308,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
 
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
-      <p className="text-[12px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
+      <p className="text-[11px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
       <h1 className="mt-1 text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
@@ -322,13 +322,13 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span className="text-[12px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
+              <span className="text-[11px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
             </div>
             <button
           onClick={toggle}
           aria-label="찜하기"
           className={[
-            'inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[12px] font-bold transition',
+            'inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11px] font-bold transition',
             liked
               ? 'bg-aring-pastel-pink text-aring-accent'
               : 'bg-aring-ink-100 text-aring-ink-500',
@@ -381,7 +381,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10.5px] font-medium text-aring-ink-500">{label}</p>
+      <p className="text-[10px] font-medium text-aring-ink-500">{label}</p>
       <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">
         {value}
       </p>
@@ -406,19 +406,20 @@ const COLOR_MAP: Record<string, { label: string; hex: string }> = {
 
 function ColorChip({ value }: { value: string }) {
   const info = COLOR_MAP[value];
-  const label = info?.label ?? value;
-  const bg = info?.hex ?? '#E5E5E5';
-  const isGradient = bg.startsWith('linear');
   return (
     <div>
-      <p className="text-[10.5px] font-medium text-aring-ink-500">컬러</p>
-      <div className="mt-0.5 flex items-center gap-1.5">
-        <span
-          className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
-          style={isGradient ? { background: bg } : { backgroundColor: bg }}
-        />
-        <p className="text-[13px] font-bold text-aring-ink-900 leading-tight">{label}</p>
-      </div>
+      <p className="text-[10px] font-medium text-aring-ink-500">컬러</p>
+      {info ? (
+        <div className="mt-0.5 flex items-center gap-1.5">
+          <span
+            className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+            style={info.hex.startsWith('linear') ? { background: info.hex } : { backgroundColor: info.hex }}
+          />
+          <p className="text-[13px] font-bold text-aring-ink-900 leading-tight">{info.label}</p>
+        </div>
+      ) : (
+        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">—</p>
+      )}
     </div>
   );
 }
@@ -434,7 +435,7 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
       <h2 className="text-[14px] font-extrabold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
-      <p className="text-[13.5px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
+      <p className="text-[13px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
       <p className="mt-2 text-[11px] text-aring-ink-500">{ago}</p>
     </section>
   );
@@ -471,10 +472,10 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
     <section className="mt-7">
       <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
         <div>
-          <h2 className="text-[16px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+          <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
-          <p className="mt-0.5 text-[11.5px] text-aring-ink-500">
+          <p className="mt-0.5 text-[11px] text-aring-ink-500">
             AI가 형태·소재·디테일을 분석해 추천
           </p>
         </div>
@@ -519,11 +520,11 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
           {item.brand}
         </p>
-        <p className="mt-0.5 text-[12px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-0.5 text-[11px] font-bold text-aring-ink-900 truncate">
           {item.name}
         </p>
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[12px] font-extrabold text-aring-ink-900">
+          <p className="mt-1 text-[11px] font-extrabold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}
@@ -545,11 +546,11 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
         onClick={log('detail:seller')}
         className="w-full flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 text-left active:scale-[0.99] transition"
       >
-        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[15px] font-extrabold text-aring-ink-900">
+        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] font-extrabold text-aring-ink-900">
           {seller.nickname.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[13.5px] font-bold text-aring-ink-900 truncate">
+          <p className="text-[13px] font-bold text-aring-ink-900 truncate">
             {seller.nickname}
           </p>
           <div className="mt-0.5 flex items-center gap-2 text-[11px] text-aring-ink-500">
@@ -581,7 +582,7 @@ function LoadingScreen() {
     <main className="min-h-screen flex items-center justify-center bg-white">
       <div className="text-center">
         <div className="w-10 h-10 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-        <p className="mt-3 text-[12px] text-aring-ink-500">불러오는 중…</p>
+        <p className="mt-3 text-[11px] text-aring-ink-500">불러오는 중…</p>
       </div>
     </main>
   );
@@ -591,10 +592,10 @@ function NotFoundScreen() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="text-center">
-        <p className="text-[16px] font-extrabold text-aring-ink-900">
+        <p className="text-[17px] font-extrabold text-aring-ink-900">
           상품을 찾을 수 없습니다
         </p>
-        <p className="mt-1 text-[12.5px] text-aring-ink-500">
+        <p className="mt-1 text-[13px] text-aring-ink-500">
           등록이 종료되었거나 잘못된 링크일 수 있어요.
         </p>
         <Link

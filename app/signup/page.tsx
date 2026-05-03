@@ -62,7 +62,7 @@ export default function SignupPage() {
 
             <button
               onClick={handleGoogle}
-              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-800 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap"
+              className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap"
             >
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -76,7 +76,7 @@ export default function SignupPage() {
 
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-aring-ink-100" />
-            <span className="text-[12px] text-aring-ink-400 font-medium">또는</span>
+            <span className="text-[11px] text-aring-ink-400 font-medium">또는</span>
             <div className="flex-1 h-px bg-aring-ink-100" />
           </div>
 
@@ -91,7 +91,7 @@ export default function SignupPage() {
             이메일로 가입하기
           </button>
 
-          <p className="mt-4 text-center text-[12.5px] text-aring-ink-500">
+          <p className="mt-4 text-center text-[13px] text-aring-ink-500">
             이미 계정이 있으신가요?{' '}
             <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
           </p>

@@ -58,7 +58,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
       <button
         onClick={() => { onSort('latest'); setOpen(false); }}
         className={[
-          'shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
+          'shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11px] font-bold shadow-card transition active:scale-[0.98]',
           sort === 'latest' ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900',
         ].join(' ')}
       >
@@ -70,7 +70,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
         <button
           onClick={() => setOpen(o => !o)}
           className={[
-            'shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
+            'shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11px] font-bold shadow-card transition active:scale-[0.98]',
             isPriceActive ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900',
           ].join(' ')}
         >
@@ -90,7 +90,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
                   key={opt.value}
                   onClick={() => { onPrice(opt.value); setOpen(false); }}
                   className={[
-                    'w-full text-left px-3.5 py-2.5 text-[12.5px] font-semibold transition',
+                    'w-full text-left px-3.5 py-2.5 text-[13px] font-semibold transition',
                     selected ? 'bg-aring-ink-900 text-white' : 'text-aring-ink-700 hover:bg-aring-ink-100',
                   ].join(' ')}
                 >
@@ -106,7 +106,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
       {isPriceActive && (
         <button
           onClick={() => { onPrice('all'); onSort('latest'); setOpen(false); }}
-          className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
+          className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
         >
           초기화
         </button>

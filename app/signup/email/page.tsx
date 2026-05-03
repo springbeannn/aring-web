@@ -68,23 +68,23 @@ type DupState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 // ─── 상태 문구 ───────────────────────────────────────────
 function EmailHint({ state, email }: { state: DupState; email: string }) {
   if (!email) return null;
-  if (!isValidEmail(email)) return <p className="mt-1 text-[11.5px] text-amber-500">이메일 형식이 올바르지 않아요. 예: aring@example.com</p>;
-  if (state === 'idle') return <p className="mt-1 text-[11.5px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1 text-[11.5px] text-aring-ink-400">이메일을 확인하고 있어요.</p>;
-  if (state === 'available') return <p className="mt-1 text-[11.5px] text-emerald-500">사용 가능한 이메일이에요.</p>;
-  if (state === 'taken') return <p className="mt-1 text-[11.5px] text-rose-400">이미 가입된 이메일이에요. 다른 이메일을 입력해 주세요.</p>;
-  return <p className="mt-1 text-[11.5px] text-amber-500">확인 중 오류가 발생했어요. 다시 시도해 주세요.</p>;
+  if (!isValidEmail(email)) return <p className="mt-1 text-[11px] text-amber-500">이메일 형식이 올바르지 않아요. 예: aring@example.com</p>;
+  if (state === 'idle') return <p className="mt-1 text-[11px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1 text-[11px] text-aring-ink-400">이메일을 확인하고 있어요.</p>;
+  if (state === 'available') return <p className="mt-1 text-[11px] text-emerald-500">사용 가능한 이메일이에요.</p>;
+  if (state === 'taken') return <p className="mt-1 text-[11px] text-rose-400">이미 가입된 이메일이에요. 다른 이메일을 입력해 주세요.</p>;
+  return <p className="mt-1 text-[11px] text-amber-500">확인 중 오류가 발생했어요. 다시 시도해 주세요.</p>;
 }
 
 function NicknameHint({ state, nickname }: { state: DupState; nickname: string }) {
   if (!nickname) return null;
-  if (looksLikePII(nickname)) return <p className="mt-1 text-[11.5px] text-amber-500">이메일이나 전화번호처럼 보이는 닉네임은 사용할 수 없어요.</p>;
-  if (!isValidNickname(nickname)) return <p className="mt-1 text-[11.5px] text-amber-500">닉네임은 2~12자의 한글, 영문, 숫자로 입력해 주세요.</p>;
-  if (state === 'idle') return <p className="mt-1 text-[11.5px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1 text-[11.5px] text-aring-ink-400">닉네임을 확인하고 있어요.</p>;
-  if (state === 'available') return <p className="mt-1 text-[11.5px] text-emerald-500">사용 가능한 닉네임이에요.</p>;
-  if (state === 'taken') return <p className="mt-1 text-[11.5px] text-rose-400">이미 사용 중인 닉네임이에요. 다른 닉네임을 입력해 주세요.</p>;
-  return <p className="mt-1 text-[11.5px] text-amber-500">확인 중 오류가 발생했어요. 다시 시도해 주세요.</p>;
+  if (looksLikePII(nickname)) return <p className="mt-1 text-[11px] text-amber-500">이메일이나 전화번호처럼 보이는 닉네임은 사용할 수 없어요.</p>;
+  if (!isValidNickname(nickname)) return <p className="mt-1 text-[11px] text-amber-500">닉네임은 2~12자의 한글, 영문, 숫자로 입력해 주세요.</p>;
+  if (state === 'idle') return <p className="mt-1 text-[11px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1 text-[11px] text-aring-ink-400">닉네임을 확인하고 있어요.</p>;
+  if (state === 'available') return <p className="mt-1 text-[11px] text-emerald-500">사용 가능한 닉네임이에요.</p>;
+  if (state === 'taken') return <p className="mt-1 text-[11px] text-rose-400">이미 사용 중인 닉네임이에요. 다른 닉네임을 입력해 주세요.</p>;
+  return <p className="mt-1 text-[11px] text-amber-500">확인 중 오류가 발생했어요. 다시 시도해 주세요.</p>;
 }
 
 // ─── 비밀번호 강도 표시 ──────────────────────────────────
@@ -230,7 +230,7 @@ export default function SignupEmailPage() {
                 type="button"
                 onClick={checkEmail}
                 disabled={!isValidEmail(email) || emailDup === 'checking'}
-                className={`shrink-0 px-3 py-2 rounded-2xl text-[12px] font-bold transition ${isValidEmail(email) && emailDup !== 'checking' ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+                className={`shrink-0 px-3 py-2 rounded-2xl text-[11px] font-bold transition ${isValidEmail(email) && emailDup !== 'checking' ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
               >
                 {emailDup === 'checking' ? '확인중' : '중복 확인'}
               </button>
@@ -255,13 +255,13 @@ export default function SignupEmailPage() {
             </div>
             <PasswordStrengthBar pw={password} />
             {password && !pwOk && pwStrength === 'weak' && (
-              <p className="mt-1 text-[11.5px] text-amber-500">보안 강도가 약해요. 대문자와 특수문자를 포함해 8자 이상으로 입력해 주세요.</p>
+              <p className="mt-1 text-[11px] text-amber-500">보안 강도가 약해요. 대문자와 특수문자를 포함해 8자 이상으로 입력해 주세요.</p>
             )}
             {password && pwOk && pwStrength === 'medium' && (
-              <p className="mt-1 text-[11.5px] text-emerald-500">사용 가능한 비밀번호예요.</p>
+              <p className="mt-1 text-[11px] text-emerald-500">사용 가능한 비밀번호예요.</p>
             )}
             {password && pwStrength === 'strong' && (
-              <p className="mt-1 text-[11.5px] text-emerald-500">안전한 비밀번호예요.</p>
+              <p className="mt-1 text-[11px] text-emerald-500">안전한 비밀번호예요.</p>
             )}
           </div>
 
@@ -281,7 +281,7 @@ export default function SignupEmailPage() {
               </button>
             </div>
             {pwTouched && passwordConfirm.length > 0 && (
-              <p className={`mt-1 text-[11.5px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
+              <p className={`mt-1 text-[11px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
                 {pwMatch ? '비밀번호가 일치해요.' : '비밀번호가 일치하지 않아요.'}
               </p>
             )}
@@ -303,7 +303,7 @@ export default function SignupEmailPage() {
                 type="button"
                 onClick={checkNickname}
                 disabled={!isValidNickname(nickname) || looksLikePII(nickname) || nickDup === 'checking'}
-                className={`shrink-0 px-3 py-2 rounded-2xl text-[12px] font-bold transition ${isValidNickname(nickname) && !looksLikePII(nickname) && nickDup !== 'checking' ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+                className={`shrink-0 px-3 py-2 rounded-2xl text-[11px] font-bold transition ${isValidNickname(nickname) && !looksLikePII(nickname) && nickDup !== 'checking' ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
               >
                 {nickDup === 'checking' ? '확인중' : '중복 확인'}
               </button>
@@ -316,7 +316,7 @@ export default function SignupEmailPage() {
           <div className="mb-6 rounded-2xl border border-aring-ink-100 overflow-hidden">
             <button onClick={toggleAll} className="w-full flex items-center gap-3 px-4 py-3.5 bg-aring-ink-50 border-b border-aring-ink-100">
               <IconCheck checked={allChecked} />
-              <span className="text-[13.5px] font-bold text-aring-ink-900">전체 동의</span>
+              <span className="text-[13px] font-bold text-aring-ink-900">전체 동의</span>
             </button>
             {([
               { key: 'age', label: '(필수) 만 14세 이상입니다', link: null },
@@ -334,19 +334,19 @@ export default function SignupEmailPage() {
           </div>
 
           {!allRequired && (
-            <p className="mb-3 text-[11.5px] text-amber-500 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
+            <p className="mb-3 text-[11px] text-amber-500 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
           )}
-          {submitError && <p className="mb-3 text-[12px] text-rose-400 text-center">{submitError}</p>}
+          {submitError && <p className="mb-3 text-[11px] text-rose-400 text-center">{submitError}</p>}
 
           <button
             onClick={handleSubmit}
             disabled={!canSubmit || loading}
-            className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+            className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
           >
             {loading ? '가입 중...' : '가입하기'}
           </button>
 
-          <p className="mt-4 text-center text-[12.5px] text-aring-ink-500">
+          <p className="mt-4 text-center text-[13px] text-aring-ink-500">
             이미 계정이 있으신가요?{' '}
             <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
           </p>

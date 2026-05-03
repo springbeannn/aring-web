@@ -188,10 +188,10 @@ export function CommentSection({
     <section className="mt-7">
       {/* 헤더 */}
       <div className="px-5 lg:px-8 mb-3">
-        <h2 className="text-[16px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+        <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
           문의 댓글
         </h2>
-        <p className="mt-0.5 text-[11.5px] text-aring-ink-500">
+        <p className="mt-0.5 text-[11px] text-aring-ink-500">
           이 상품에 대해 궁금한 점을 남겨보세요
         </p>
       </div>
@@ -219,13 +219,13 @@ export function CommentSection({
               답글 취소
             </button>
           )}
-          <span className="text-[10.5px] text-aring-ink-500 ml-auto">
+          <span className="text-[10px] text-aring-ink-500 ml-auto">
             {message.length}/1000
           </span>
           <button
             onClick={submit}
             disabled={!nickname.trim() || !message.trim() || submitting}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[12px] font-extrabold disabled:opacity-40 active:scale-95 transition"
+            className="inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold disabled:opacity-40 active:scale-95 transition"
           >
             {submitting ? '등록 중…' : replyTo ? '답글 등록' : '문의 등록'}
           </button>
@@ -235,15 +235,15 @@ export function CommentSection({
       {/* 리스트 */}
       <div className="px-5 lg:px-8">
         {loading ? (
-          <p className="text-center py-6 text-[12px] text-aring-ink-500">
+          <p className="text-center py-6 text-[11px] text-aring-ink-500">
             불러오는 중…
           </p>
         ) : error ? (
-          <p className="text-center py-6 text-[12px] text-aring-ink-500">
+          <p className="text-center py-6 text-[11px] text-aring-ink-500">
             {error}
           </p>
         ) : roots.length === 0 ? (
-          <p className="text-center py-6 text-[12px] text-aring-ink-500">
+          <p className="text-center py-6 text-[11px] text-aring-ink-500">
             아직 문의가 없어요. 첫 문의를 남겨보세요.
           </p>
         ) : (
@@ -328,15 +328,15 @@ function CommentItem({
       >
         {/* 헤더: 닉네임 + 판매자 뱃지 + 시각 */}
         <div className="flex items-center gap-1.5">
-          <p className="text-[12.5px] font-bold text-aring-ink-900 truncate">
+          <p className="text-[13px] font-bold text-aring-ink-900 truncate">
             {comment.user_name}
           </p>
           {isSeller && (
-            <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-pill bg-aring-ink-900 text-white text-[9.5px] font-extrabold tracking-wider">
+            <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold tracking-wider">
               {isReply ? '판매자 답글' : '판매자'}
             </span>
           )}
-          <span className="ml-auto shrink-0 text-[10.5px] text-aring-ink-500">
+          <span className="ml-auto shrink-0 text-[10px] text-aring-ink-500">
             {relativeTime(comment.created_at)}
             {wasEdited && ' · 수정됨'}
           </span>

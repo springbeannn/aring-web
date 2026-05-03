@@ -57,17 +57,17 @@ function SearchCard({ row }: { row: Listing }) {
         <span aria-hidden className="absolute inset-0 hidden items-center justify-center text-[42px]">◇</span>
       </div>
       <div className="px-3 py-3">
-        <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
           {row.brand ?? '브랜드 미상'}
         </p>
         <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
           {row.detail ?? row.shape ?? '한 짝'}
         </p>
         {row.story && (
-          <p className="mt-1 text-[10.5px] text-aring-ink-500 truncate">· {row.story}</p>
+          <p className="mt-1 text-[10px] text-aring-ink-500 truncate">· {row.story}</p>
         )}
         <div className="mt-2">
-          <span className="text-[12px] font-bold text-aring-ink-900">
+          <span className="text-[11px] font-bold text-aring-ink-900">
             {row.price ? `₩${row.price.toLocaleString('ko-KR')}` : '가격 미상'}
           </span>
         </div>
@@ -101,7 +101,7 @@ function SearchInput({
         className="flex-1 bg-transparent border-0 outline-none text-[14px] text-aring-ink-700 placeholder:text-aring-ink-500"
         autoFocus
       />
-      <button type="submit" className="shrink-0 px-3 py-1 rounded-pill bg-aring-ink-900 text-white text-[12px] font-bold active:scale-95 transition">
+      <button type="submit" className="shrink-0 px-3 py-1 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-95 transition">
         검색
       </button>
     </form>
@@ -184,9 +184,9 @@ function SearchPageInner() {
               <IconArrowLeft />
             </button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-[20px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">검색결과</h1>
+              <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">검색결과</h1>
               {query && (
-                <p className="mt-0.5 text-[12px] text-aring-ink-500">
+                <p className="mt-0.5 text-[11px] text-aring-ink-500">
                   &apos;{query}&apos; 검색 결과{!loading && total > 0 && <> · 총 <span className="font-semibold">{total}</span>개</>}
                 </p>
               )}
@@ -195,13 +195,13 @@ function SearchPageInner() {
           <SearchInput defaultValue={query} onSearch={handleSearch} />
           {!query ? (
             <div className="px-5 py-16 text-center">
-              <p className="text-[15px] font-bold text-aring-ink-900">찾고 싶은 규걸이 정보를 입력해 주세요</p>
-              <p className="mt-2 text-[12px] text-aring-ink-500">브랜드, 모양, 컬러로 검색할 수 있어요</p>
+              <p className="text-[14px] font-bold text-aring-ink-900">찾고 싶은 규걸이 정보를 입력해 주세요</p>
+              <p className="mt-2 text-[11px] text-aring-ink-500">브랜드, 모양, 컬러로 검색할 수 있어요</p>
             </div>
           ) : loading ? (
             <div className="px-5 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[12px] text-aring-ink-500">검색 중…</p>
+              <p className="mt-3 text-[11px] text-aring-ink-500">검색 중…</p>
             </div>
           ) : error ? (
             <div className="px-5 py-16 text-center">
@@ -210,8 +210,8 @@ function SearchPageInner() {
             </div>
           ) : rows.length === 0 ? (
             <div className="px-5 py-16 text-center">
-              <p className="text-[15px] font-bold text-aring-ink-900">아직 맞는 규걸이를 찾지 못했어요</p>
-              <p className="mt-2 text-[12px] text-aring-ink-500">다른 브랜드명이나 컬러, 모양으로 다시 검색해 보세요</p>
+              <p className="text-[14px] font-bold text-aring-ink-900">아직 맞는 규걸이를 찾지 못했어요</p>
+              <p className="mt-2 text-[11px] text-aring-ink-500">다른 브랜드명이나 컬러, 모양으로 다시 검색해 보세요</p>
               <Link href="/register" className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold">규걸이 등록하기</Link>
             </div>
           ) : (

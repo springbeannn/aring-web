@@ -106,9 +106,9 @@ export default function CommentsPage() {
           {/* 헤더 */}
           <div className="px-5 lg:px-8 pt-3 pb-3">
             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">커뮤니티</h1>
-            <p className="mt-0.5 text-[12.5px] text-aring-ink-500">서로의 한 짝을 찾기 위해 남긴 이야기들이 모였어요</p>
+            <p className="mt-0.5 text-[13px] text-aring-ink-500">서로의 한 짝을 찾기 위해 남긴 이야기들이 모였어요</p>
             {!loading && (
-              <p className="mt-1.5 text-[12px] font-bold text-aring-ink-700">전체 댓글 {comments.length}개</p>
+              <p className="mt-1.5 text-[11px] font-bold text-aring-ink-700">전체 댓글 {comments.length}개</p>
             )}
           </div>
 
@@ -116,12 +116,12 @@ export default function CommentsPage() {
           {loading ? (
             <div className="px-5 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[12px] text-aring-ink-500">불러오는 중…</p>
+              <p className="mt-3 text-[11px] text-aring-ink-500">불러오는 중…</p>
             </div>
           ) : comments.length === 0 ? (
             <div className="px-5 py-16 text-center">
               <p className="text-[14px] font-bold text-aring-ink-900">아직 댓글이 없어요</p>
-              <p className="mt-1 text-[12px] text-aring-ink-500">첫 번째 이야기를 남겨보세요!</p>
+              <p className="mt-1 text-[11px] text-aring-ink-500">첫 번째 이야기를 남겨보세요!</p>
             </div>
           ) : (
             <div className="px-5 lg:px-8 space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
@@ -170,13 +170,13 @@ export default function CommentsPage() {
 
                     {/* 댓글 내용 */}
                     <div className="px-4 pb-2">
-                      <p className="text-[13px] text-aring-ink-800 leading-relaxed line-clamp-2">{c.message}</p>
+                      <p className="text-[13px] text-aring-ink-900 leading-relaxed line-clamp-2">{c.message}</p>
                     </div>
 
                     {/* 하단: 닉네임 + 시간 + No */}
                     <div className="px-4 pb-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[12px] font-bold text-aring-ink-900">{c.user_name || 'aring 사용자'}</span>
+                        <span className="text-[11px] font-bold text-aring-ink-900">{c.user_name || 'aring 사용자'}</span>
                         <span className="text-aring-ink-300">·</span>
                         <span className="text-[11px] text-aring-ink-500">{relativeTime(c.created_at)}</span>
                       </div>

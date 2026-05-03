@@ -86,7 +86,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   if (notOwner) return (
     <main className="min-h-screen flex justify-center bg-white">
       <div className="w-full max-w-[440px] min-h-screen px-5 pt-20 text-center">
-        <p className="text-[15px] font-bold text-aring-ink-900">수정 권한이 없어요</p>
+        <p className="text-[14px] font-bold text-aring-ink-900">수정 권한이 없어요</p>
         <Link href="/" className="mt-4 inline-flex px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold">홈으로</Link>
       </div>
     </main>
@@ -162,7 +162,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
           {/* 저장 버튼 */}
           <button
             onClick={handleSave} disabled={saving}
-            className={`mt-8 w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${saving ? 'bg-aring-ink-100 text-aring-ink-400' : 'bg-aring-ink-900 text-white shadow-cta'}`}
+            className={`mt-8 w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${saving ? 'bg-aring-ink-100 text-aring-ink-400' : 'bg-aring-ink-900 text-white shadow-cta'}`}
           >
             {saving ? '저장 중...' : '저장하기'}
           </button>

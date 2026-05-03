@@ -48,18 +48,18 @@ export default function NicknamePage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
+              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
               style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }}
               autoFocus
             />
             <p className="mt-2 text-right text-[11px] text-aring-ink-400">{nickname.length}/12</p>
-            {error && <p className="mt-1 text-[11.5px] text-red-500 text-center">{error}</p>}
+            {error && <p className="mt-1 text-[11px] text-red-500 text-center">{error}</p>}
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+            className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
           >
             {loading ? '저장 중...' : '시작하기'}
           </button>

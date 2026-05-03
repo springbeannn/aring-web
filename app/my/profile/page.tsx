@@ -126,9 +126,9 @@ export default function ProfilePage() {
             {/* 헤더 */}
             <div className="px-5 pt-3 pb-5 lg:pt-6 lg:pb-6">
               <div className="flex items-center gap-2 mb-1">
-                <Link href="/my" className="text-[12px] text-aring-ink-400 hover:text-aring-ink-700 transition">MY</Link>
-                <span className="text-aring-ink-300 text-[12px]">›</span>
-                <span className="text-[12px] text-aring-ink-700 font-semibold">내 정보</span>
+                <Link href="/my" className="text-[11px] text-aring-ink-400 hover:text-aring-ink-700 transition">MY</Link>
+                <span className="text-aring-ink-300 text-[11px]">›</span>
+                <span className="text-[11px] text-aring-ink-700 font-semibold">내 정보</span>
               </div>
               <h1 className="text-[22px] lg:text-[28px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
             </div>
@@ -144,7 +144,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[18px] lg:text-[22px] font-extrabold text-aring-ink-900 truncate">{profile.nickname}</p>
-                    <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[10.5px] font-bold text-aring-ink-500">
+                    <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[10px] font-bold text-aring-ink-500">
                       {providerLabel[profile.provider] ?? profile.provider} 계정
                     </span>
                   </div>
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                     {!editingNick && (
                       <button
                         onClick={() => { setEditingNick(true); setNickMsg(''); setNewNick(profile.nickname); }}
-                        className="text-[12px] font-bold text-aring-ink-900 underline underline-offset-2"
+                        className="text-[11px] font-bold text-aring-ink-900 underline underline-offset-2"
                       >
                         변경
                       </button>
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                         autoFocus
                       />
                       {nickMsg && (
-                        <p className={`text-[11.5px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
+                        <p className={`text-[11px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
                       )}
                       <div className="flex gap-2 lg:max-w-[320px]">
                         <button
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[15px] font-semibold text-aring-ink-900">{profile.nickname}</p>
+                    <p className="text-[14px] font-semibold text-aring-ink-900">{profile.nickname}</p>
                   )}
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function ProfilePage() {
                 className="flex items-center justify-between rounded-2xl border border-aring-green-line bg-white px-5 py-4 lg:px-6 active:scale-[0.99] transition"
               >
                 <span className="text-[14px] font-bold text-aring-ink-900">내 활동 보기</span>
-                <span className="text-aring-ink-400 text-[16px]">›</span>
+                <span className="text-aring-ink-400 text-[17px]">›</span>
               </Link>
 
               {/* 로그아웃 버튼 — PC에서 폭 제한 */}
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
+                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
                 >
                   {loggingOut ? '로그아웃 중...' : '로그아웃'}
                 </button>

@@ -16,8 +16,6 @@ export async function POST(req: NextRequest) {
 
     const { imageBase64, mimeType } = await req.json();
 
-    console.log('[aring] imageBase64 length:', imageBase64?.length);
-
     if (!imageBase64) {
       return NextResponse.json(
         { error: '이미지가 없습니다' },
@@ -26,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash-lite',
+      model: 'gemini-2.0-flash-lite', // 안정화 버전
     });
 
     const prompt = `
@@ -51,6 +49,8 @@ export async function POST(req: NextRequest) {
     ]);
 
     const text = result.response.text().trim();
+
+    // markdown 제거
     const cleaned = text.replace(/```json|```/g, '').trim();
 
     let analysis;
@@ -59,8 +59,12 @@ export async function POST(req: NextRequest) {
       analysis = JSON.parse(cleaned);
     } catch (parseError) {
       console.error('[aring] JSON parse error', cleaned);
+
       return NextResponse.json(
-        { error: 'JSON 파싱 실패', raw: cleaned },
+        {
+          error: 'JSON 파싱 실패',
+          raw: cleaned,
+        },
         { status: 500 }
       );
     }
@@ -68,9 +72,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ analysis });
   } catch (err: unknown) {
     console.error('[aring] analyze error', err);
-    const message = err instanceof Error ? err.message : 'Unknown error';
+
+    const message =
+      err instanceof Error ? err.message : 'Unknown error';
+
     return NextResponse.json(
-      { error: '분석 실패', detail: message },
+      {
+        error: '분석 실패',
+        detail: message,
+      },
       { status: 500 }
     );
   }

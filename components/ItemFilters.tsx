@@ -72,7 +72,7 @@ export function ItemFilterChips({
       {/* 최신순 */}
       <button
         onClick={() => { setSort('recent'); setOpen(false); }}
-        className={['shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
+        className={['shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11px] font-bold shadow-card transition active:scale-[0.98]',
           sort === 'recent' ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900'].join(' ')}
       >
         최신순
@@ -81,7 +81,7 @@ export function ItemFilterChips({
       {/* 조회수순 */}
       <button
         onClick={() => { setSort('view_count'); setOpen(false); }}
-        className={['shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
+        className={['shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11px] font-bold shadow-card transition active:scale-[0.98]',
           sort === 'view_count' ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900'].join(' ')}
       >
         조회수순
@@ -91,7 +91,7 @@ export function ItemFilterChips({
       <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(o => !o)}
-          className={['shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
+          className={['shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11px] font-bold shadow-card transition active:scale-[0.98]',
             isPriceActive ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900'].join(' ')}
         >
           {priceLabel}
@@ -103,7 +103,7 @@ export function ItemFilterChips({
               const selected = price === opt.value;
               return (
                 <button key={opt.value} onClick={() => { setPrice(opt.value); setOpen(false); }}
-                  className={['w-full text-left px-3.5 py-2.5 text-[12.5px] font-semibold transition',
+                  className={['w-full text-left px-3.5 py-2.5 text-[13px] font-semibold transition',
                     selected ? 'bg-aring-ink-900 text-white' : 'text-aring-ink-700 hover:bg-aring-ink-100'].join(' ')}>
                   {opt.label}
                 </button>
@@ -116,7 +116,7 @@ export function ItemFilterChips({
       {/* 초기화 */}
       {(isPriceActive || sort === 'view_count') && (
         <button onClick={() => { setPrice('all'); setSort('recent'); setOpen(false); }}
-          className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+          className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
           초기화
         </button>
       )}

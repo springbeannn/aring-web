@@ -399,14 +399,14 @@ function ProfileHeader({
   return (
     <section className="px-5 lg:px-8 pt-3 lg:pt-7 pb-5">
       <div className="flex items-center gap-3">
-        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[20px] lg:text-[22px] font-extrabold text-aring-ink-900">
+        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[22px] lg:text-[22px] font-extrabold text-aring-ink-900">
           {(nickname || '?').charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[16px] lg:text-[18px] font-extrabold text-aring-ink-900 truncate">
+          <p className="text-[17px] lg:text-[18px] font-extrabold text-aring-ink-900 truncate">
             {nickname || '아링 친구'}
           </p>
-          <p className="mt-0.5 text-[12px] text-aring-ink-500 truncate">
+          <p className="mt-0.5 text-[11px] text-aring-ink-500 truncate">
             {bio}
           </p>
         </div>
@@ -414,7 +414,7 @@ function ProfileHeader({
 
       {/* 랜덤 상태 메시지 */}
       <div className="mt-4 rounded-card bg-aring-grad-pastel px-4 py-3">
-        <p className="text-[12.5px] font-bold text-aring-ink-900">
+        <p className="text-[13px] font-bold text-aring-ink-900">
           {message}
         </p>
       </div>
@@ -432,10 +432,10 @@ function ProfileHeader({
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center">
-      <p className="text-[20px] font-extrabold tracking-tight text-aring-ink-900">
+      <p className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">
         {value}
       </p>
-      <p className="mt-0.5 text-[10.5px] font-medium text-aring-ink-500">
+      <p className="mt-0.5 text-[10px] font-medium text-aring-ink-500">
         {label}
       </p>
     </div>
@@ -464,11 +464,11 @@ function QuickMenu({
             href={m.anchor}
             className="relative rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center active:scale-[0.99] transition"
           >
-            <p className="text-[12.5px] font-bold text-aring-ink-900">
+            <p className="text-[13px] font-bold text-aring-ink-900">
               {m.label}
             </p>
             {m.count > 0 && (
-              <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-pill bg-aring-ink-900 text-white text-[9.5px] font-extrabold">
+              <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold">
                 {m.count > 99 ? '99+' : m.count}
               </span>
             )}
@@ -550,13 +550,13 @@ function MyListingCard({
 
       <div className="flex-1 min-w-0">
         <Link href={`/items/${listing.id}`} className="block">
-          <p className="text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
+          <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
             {listing.brand ?? '브랜드 미상'}
           </p>
           <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
-          <p className="mt-0.5 text-[10.5px] text-aring-ink-500">
+          <p className="mt-0.5 text-[10px] text-aring-ink-500">
             {relativeTime(listing.created_at)}
           </p>
         </Link>
@@ -565,7 +565,7 @@ function MyListingCard({
             onClick={() => canChange && onStatusChange(listing)}
             disabled={!canChange}
             className={[
-              'inline-flex items-center px-2 py-0.5 rounded-pill text-[10.5px] font-extrabold tracking-wider transition',
+              'inline-flex items-center px-2 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider transition',
               STATUS_BADGE[listing.status],
               canChange ? 'active:scale-95' : 'opacity-70 cursor-default',
             ].join(' ')}
@@ -574,7 +574,7 @@ function MyListingCard({
             {STATUS_LABEL[listing.status]}
             {canChange && <span className="ml-1 opacity-70">›</span>}
           </button>
-          <span className="text-[10.5px] text-aring-ink-500 italic truncate">
+          <span className="text-[10px] text-aring-ink-500 italic truncate">
             {hint}
           </span>
         </div>
@@ -648,7 +648,7 @@ function LikedCard({ listing }: { listing: Listing }) {
         <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
           {listing.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-0.5 text-[12px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-0.5 text-[11px] font-bold text-aring-ink-900 truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link
@@ -747,7 +747,7 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
         <div className="flex items-center gap-1.5 flex-wrap">
           <span
             className={[
-              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[9.5px] font-extrabold tracking-wider',
+              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider',
               s.kind === 'on_my_product'
                 ? 'bg-aring-ink-900 text-white'
                 : 'bg-aring-ink-100 text-aring-ink-700',
@@ -757,20 +757,20 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
           </span>
           <span
             className={[
-              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[9.5px] font-extrabold tracking-wider',
+              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider',
               tag.cls,
             ].join(' ')}
           >
             {tag.label}
           </span>
         </div>
-        <p className="mt-1 text-[10.5px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="mt-1 text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
           {s.brand}
         </p>
-        <p className="text-[12.5px] font-bold text-aring-ink-900 truncate">
+        <p className="text-[13px] font-bold text-aring-ink-900 truncate">
           {s.productName}
         </p>
-        <p className="mt-1 text-[11.5px] text-aring-ink-700 truncate">
+        <p className="mt-1 text-[11px] text-aring-ink-700 truncate">
           <span className="font-semibold">{s.lastAuthor}</span>{' '}
           <span className="text-aring-ink-500">·</span> {s.lastMessage}
         </p>
@@ -798,7 +798,7 @@ function SectionHead({
     <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
       <div>
         <div className="flex items-center gap-2">
-          <h2 className="text-[16px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+          <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
             {title}
           </h2>
           {typeof count === 'number' && count > 0 && (
@@ -808,7 +808,7 @@ function SectionHead({
           )}
         </div>
         {sub && (
-          <p className="mt-1 text-[11.5px] text-aring-ink-500">{sub}</p>
+          <p className="mt-1 text-[11px] text-aring-ink-500">{sub}</p>
         )}
       </div>
     </div>
@@ -829,10 +829,10 @@ function EmptyBlock({
   return (
     <div className="rounded-card bg-aring-ink-100 px-5 py-8 text-center">
       <p className="text-[14px] font-extrabold text-aring-ink-900">{title}</p>
-      <p className="mt-1 text-[11.5px] text-aring-ink-500">{sub}</p>
+      <p className="mt-1 text-[11px] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
-        className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[12px] font-extrabold active:scale-95 transition"
+        className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold active:scale-95 transition"
       >
         {ctaLabel}
       </Link>
