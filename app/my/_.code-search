@@ -1,9 +1,0 @@
-# Query: 커뮤니티
-# ContextLines: 1
-
-결과 1개 - 1개 파일
-
-app/comments/page.tsx:
-  107            <div className="px-5 lg:px-8 pt-3 pb-3">
-  108:             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">댓글</h1>
-  109              <p className="mt-0.5 text-[12.5px] text-aring-ink-500">서로의 한 짝을 찾기 위해 남긴 이야기들이 모였어요</p>
