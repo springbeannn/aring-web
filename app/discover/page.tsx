@@ -345,7 +345,7 @@ export default function DiscoverPage() {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          <div className="px-5 pt-2 pb-2">
+          <div className="px-5 pt-3 pb-3">
             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
             <p className="mt-0.5 text-[13px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>

@@ -124,8 +124,9 @@ export default function ProfilePage() {
           <div className="lg:max-w-[720px] lg:mx-auto lg:px-0 lg:w-full">
 
             {/* 헤더 */}
-            <div className="px-5 pt-3 pb-5 lg:pt-6 lg:pb-6">
+            <div className="px-5 pt-3 pb-3 lg:pt-6 lg:pb-6">
               <h1 className="text-[22px] lg:text-[28px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
+              <p className="mt-0.5 text-[13px] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
             </div>
 
             {/* 카드 영역 */}
