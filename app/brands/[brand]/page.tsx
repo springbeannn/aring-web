@@ -64,7 +64,7 @@ export default function BrandPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { sort, setSort, side, setSide, filtered: sortFiltered } = useItemFilters(items);
+  const { sort, setSort, side, setSide, price, setPrice, filtered: sortFiltered } = useItemFilters(items);
 
   // 브랜드 필터 적용
   const filtered = useMemo(() => {
@@ -198,6 +198,8 @@ export default function BrandPage() {
             setSort={setSort}
             side={side}
             setSide={setSide}
+            price={price}
+            setPrice={setPrice}
           />
 
           {/* 본문 */}

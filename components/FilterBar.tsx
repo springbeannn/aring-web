@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export type SortOption = 'latest' | 'oldest';
 export type PriceRange = 'all' | '0-10000' | '10000-30000' | '30000-70000' | '70000-150000' | '150000-plus';
@@ -15,7 +15,7 @@ const IconChevronDown = ({ className = 'w-3 h-3', open = false }: { className?: 
   </svg>
 );
 
-const PRICE_OPTIONS: { value: PriceRange; label: string }[] = [
+export const PRICE_OPTIONS: { value: PriceRange; label: string }[] = [
   { value: 'all',           label: '전체 가격' },
   { value: '0-10000',       label: '~1만원' },
   { value: '10000-30000',   label: '1~3만원' },
@@ -33,11 +33,12 @@ interface Props {
 
 export function FilterBar({ sort, price, onSort, onPrice }: Props) {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const onMouse = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest('[data-filter-chip]')) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
     document.addEventListener('mousedown', onMouse);
@@ -52,8 +53,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
   const isPriceActive = price !== 'all';
 
   return (
-    <div className="no-scrollbar flex gap-2 overflow-x-auto overflow-y-visible px-5 lg:px-8 pb-3">
-
+    <div className="flex gap-2 px-5 lg:px-8 pb-3 relative z-10">
       {/* 최신순 chip */}
       <button
         onClick={() => { onSort('latest'); setOpen(false); }}
@@ -66,7 +66,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
       </button>
 
       {/* 가격 드롭다운 */}
-      <div className="relative" data-filter-chip>
+      <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(o => !o)}
           className={[
@@ -82,7 +82,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
         </button>
 
         {open && (
-          <div className="absolute top-full left-0 mt-1.5 z-30 min-w-[140px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden">
+          <div className="absolute top-full left-0 mt-1.5 z-50 min-w-[140px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden">
             {PRICE_OPTIONS.map(opt => {
               const selected = price === opt.value;
               return (
@@ -102,7 +102,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
         )}
       </div>
 
-      {/* 초기화 — 활성 필터 있을 때만 */}
+      {/* 초기화 */}
       {isPriceActive && (
         <button
           onClick={() => { onPrice('all'); onSort('latest'); setOpen(false); }}

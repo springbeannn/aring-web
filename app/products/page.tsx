@@ -58,7 +58,7 @@ function ProductsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { sort, setSort, side, setSide, filtered: sortFiltered } = useItemFilters(items);
+  const { sort, setSort, side, setSide, price, setPrice, filtered: sortFiltered } = useItemFilters(items);
 
   const filtered = useMemo(() => {
     if (!brandFilter) return sortFiltered;
@@ -176,7 +176,7 @@ function ProductsContent() {
         </div>
       </div>
 
-      <ItemFilterChips sort={sort} setSort={setSort} side={side} setSide={setSide} />
+      <ItemFilterChips sort={sort} setSort={setSort} side={side} setSide={setSide} price={price} setPrice={setPrice} />
 
       {loading && items.length === 0 ? (
         <div className="px-5 lg:px-8 py-16 text-center">

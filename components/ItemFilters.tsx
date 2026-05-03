@@ -1,29 +1,25 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RecentItem } from '@/lib/mock';
+import { type PriceRange, PRICE_OPTIONS } from '@/components/FilterBar';
 
-// ─────────────────────────────────────────────────────────────
-// 필터 타입 — 사용자 명세 (2026-04-26)
-// 최신순 (default) / 가격대 (낮은순·높은순) / L·R
-// 정렬: created_at DESC | price ASC | price DESC, side 필터링
-// ─────────────────────────────────────────────────────────────
-export type SortKey = 'recent' | 'price_asc' | 'price_desc';
+export type SortKey = 'recent';
 export type SideFilter = 'all' | 'L' | 'R';
 
 const IconChevronDown = ({
   className = 'w-3 h-3',
-  strokeWidth = 2.4,
+  open = false,
 }: {
   className?: string;
-  strokeWidth?: number;
+  open?: boolean;
 }) => (
   <svg
-    className={className}
+    className={`${className} transition-transform ${open ? 'rotate-180' : ''}`}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={strokeWidth}
+    strokeWidth={2.4}
     strokeLinecap="round"
     strokeLinejoin="round"
   >
@@ -31,51 +27,56 @@ const IconChevronDown = ({
   </svg>
 );
 
-/** items에 sort/side 필터를 적용한 결과를 반환하는 훅. */
 export function useItemFilters(items: RecentItem[]) {
   const [sort, setSort] = useState<SortKey>('recent');
   const [side, setSide] = useState<SideFilter>('all');
+  const [price, setPrice] = useState<PriceRange>('all');
 
   const filtered = useMemo(() => {
     let arr = items.slice();
     if (side !== 'all') arr = arr.filter((it) => it.side === side);
-    if (sort === 'price_asc') {
-      arr.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-    } else if (sort === 'price_desc') {
-      arr.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
-    }
-    // 'recent'는 fetch 정렬 그대로 유지 (created_at DESC)
+    arr = arr.filter((it) => {
+      if (price === 'all') return true;
+      const p = it.price ?? null;
+      if (price === '0-10000') return p !== null && p <= 10000;
+      if (price === '10000-30000') return p !== null && p > 10000 && p <= 30000;
+      if (price === '30000-70000') return p !== null && p > 30000 && p <= 70000;
+      if (price === '70000-150000') return p !== null && p > 70000 && p <= 150000;
+      if (price === '150000-plus') return p !== null && p > 150000;
+      return true;
+    });
     return arr;
-  }, [items, sort, side]);
+  }, [items, sort, side, price]);
 
-  return { sort, setSort, side, setSide, filtered };
+  return { sort, setSort, side, setSide, price, setPrice, filtered };
 }
 
-/** 3-chip 드롭다운 필터 UI. 외부 클릭/ESC 시 자동 닫힘. */
 export function ItemFilterChips({
   sort,
   setSort,
   side,
   setSide,
+  price,
+  setPrice,
   className = '',
 }: {
   sort: SortKey;
   setSort: (s: SortKey) => void;
   side: SideFilter;
   setSide: (s: SideFilter) => void;
+  price: PriceRange;
+  setPrice: (p: PriceRange) => void;
   className?: string;
 }) {
-  const [open, setOpen] = useState<null | 'price' | 'side'>(null);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const onMouse = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest('[data-filter-chip]')) setOpen(null);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(null);
-    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
     document.addEventListener('mousedown', onMouse);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -84,77 +85,54 @@ export function ItemFilterChips({
     };
   }, [open]);
 
-  const priceLabel =
-    sort === 'price_asc'
-      ? '낮은순'
-      : sort === 'price_desc'
-      ? '높은순'
-      : '가격대';
+  const priceLabel = PRICE_OPTIONS.find(o => o.value === price)?.label ?? '전체 가격';
+  const isPriceActive = price !== 'all';
 
   return (
     <div
       className={[
-        'no-scrollbar flex gap-2 overflow-x-auto overflow-y-visible px-5 lg:px-8 mb-3',
+        'flex gap-2 px-5 lg:px-8 mb-3 relative z-10',
         className,
       ].join(' ')}
     >
-      {/* chip 1: 최신순 (단일 토글) */}
+      {/* 최신순 chip */}
       <button
-        onClick={() => {
-          setSort('recent');
-          setOpen(null);
-          console.log('[aring]', 'filter:sort', 'recent');
-        }}
+        onClick={() => { setSort('recent'); setOpen(false); }}
         className={[
           'shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
-          sort === 'recent'
-            ? 'bg-aring-ink-900 text-white'
-            : 'glass text-aring-ink-900',
+          sort === 'recent' ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900',
         ].join(' ')}
       >
         최신순
       </button>
 
-      {/* chip 2: 가격대 (드롭다운) */}
-      <div className="relative" data-filter-chip>
+      {/* 가격 드롭다운 */}
+      <div className="relative" ref={ref}>
         <button
-          onClick={() => setOpen(open === 'price' ? null : 'price')}
+          onClick={() => setOpen(o => !o)}
           className={[
             'shrink-0 inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-[11.5px] font-bold shadow-card transition active:scale-[0.98]',
-            sort.startsWith('price')
-              ? 'bg-aring-ink-900 text-white'
-              : 'glass text-aring-ink-900',
+            isPriceActive ? 'bg-aring-ink-900 text-white' : 'glass text-aring-ink-900',
           ].join(' ')}
         >
           {priceLabel}
           <IconChevronDown
-            className={[
-              'w-3 h-3 transition-transform',
-              sort.startsWith('price') ? 'text-white/80' : 'text-aring-ink-500',
-              open === 'price' ? 'rotate-180' : '',
-            ].join(' ')}
+            className={`w-3 h-3 ${isPriceActive ? 'text-white/80' : 'text-aring-ink-500'}`}
+            open={open}
           />
         </button>
-        {open === 'price' && (
-          <div className="absolute top-full left-0 mt-1.5 z-30 min-w-[140px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden">
-            {[
-              { value: 'price_asc' as SortKey, label: '낮은순' },
-              { value: 'price_desc' as SortKey, label: '높은순' },
-            ].map((opt) => {
-              const selected = sort === opt.value;
+
+        {open && (
+          <div className="absolute top-full left-0 mt-1.5 z-50 min-w-[140px] rounded-tile bg-white border border-aring-green-line shadow-card overflow-hidden">
+            {PRICE_OPTIONS.map(opt => {
+              const selected = price === opt.value;
               return (
                 <button
                   key={opt.value}
-                  onClick={() => {
-                    setSort(opt.value);
-                    setOpen(null);
-                    console.log('[aring]', 'filter:sort', opt.value);
-                  }}
+                  onClick={() => { setPrice(opt.value); setOpen(false); }}
                   className={[
                     'w-full text-left px-3.5 py-2.5 text-[12.5px] font-semibold transition',
-                    selected
-                      ? 'bg-aring-ink-900 text-white'
-                      : 'text-aring-ink-700 hover:bg-aring-ink-100',
+                    selected ? 'bg-aring-ink-900 text-white' : 'text-aring-ink-700 hover:bg-aring-ink-100',
                   ].join(' ')}
                 >
                   {opt.label}
@@ -165,14 +143,10 @@ export function ItemFilterChips({
         )}
       </div>
 
-      {/* 초기화 — 활성 필터 있을 때만 노출 */}
-      {sort !== 'recent' && (
+      {/* 초기화 */}
+      {isPriceActive && (
         <button
-          onClick={() => {
-            setSort('recent');
-            setSide('all');
-            setOpen(null);
-          }}
+          onClick={() => { setPrice('all'); setSort('recent'); setOpen(false); }}
           className="shrink-0 inline-flex items-center rounded-pill px-3 py-1.5 text-[11.5px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
         >
           초기화
