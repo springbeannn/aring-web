@@ -125,11 +125,6 @@ export default function ProfilePage() {
 
             {/* 헤더 */}
             <div className="px-5 pt-3 pb-5 lg:pt-6 lg:pb-6">
-              <div className="flex items-center gap-2 mb-1">
-                <Link href="/my" className="text-[11px] text-aring-ink-400 hover:text-aring-ink-700 transition">MY</Link>
-                <span className="text-aring-ink-300 text-[11px]">›</span>
-                <span className="text-[11px] text-aring-ink-700 font-semibold">내 정보</span>
-              </div>
               <h1 className="text-[22px] lg:text-[28px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
             </div>
 
