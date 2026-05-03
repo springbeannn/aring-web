@@ -138,6 +138,11 @@ export default function MyPage() {
   const [commentSummaries, setCommentSummaries] = useState<CommentSummary[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 프로필 메시지 — 마운트 시 1회만 결정 (re-render 시에도 안 바뀜)
   const profileMessage = useMemo(
@@ -349,6 +354,7 @@ export default function MyPage() {
               comments: myCommentsCount,
               closed: closedCount,
             }}
+            mounted={mounted}
           />
 
           {/* 2) Quick Menu */}
@@ -390,11 +396,13 @@ function ProfileHeader({
   bio,
   message,
   stats,
+  mounted,
 }: {
   nickname: string;
   bio: string;
   message: string;
   stats: { listings: number; comments: number; closed: number };
+  mounted: boolean;
 }) {
   return (
     <section className="px-5 lg:px-8 pt-3 lg:pt-7 pb-5">
@@ -421,19 +429,19 @@ function ProfileHeader({
 
       {/* 활동 요약 */}
       <div className="mt-4 grid grid-cols-3 gap-2">
-        <Stat label="등록" value={stats.listings} />
-        <Stat label="받은 댓글" value={stats.comments} />
-        <Stat label="거래 완료" value={stats.closed} />
+        <Stat label="등록" value={stats.listings} mounted={mounted} />
+        <Stat label="받은 댓글" value={stats.comments} mounted={mounted} />
+        <Stat label="거래 완료" value={stats.closed} mounted={mounted} />
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({ label, value, mounted }: { label: string; value: number; mounted: boolean }) {
   return (
     <div className="rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center">
-      <p className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">
-        {value}
+      <p className="text-[22px] font-extrabold tracking-tight text-aring-ink-900" suppressHydrationWarning>
+        {mounted ? value : 0}
       </p>
       <p className="mt-0.5 text-[10px] font-medium text-aring-ink-500">
         {label}
