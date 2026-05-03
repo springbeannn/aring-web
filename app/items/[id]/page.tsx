@@ -240,7 +240,7 @@ function GallerySection({
   return (
     <section className="lg:mb-6">
       <div
-        className="relative aspect-square w-full lg:rounded-card overflow-hidden"
+        className="relative aspect-square w-full lg:rounded-card overflow-hidden bg-white"
         style={{ background: thumbBg(tone) }}
       >
         {/* 갤러리 floating 액션 (back / share / more) */}
