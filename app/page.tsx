@@ -147,7 +147,7 @@ function HeroBanner() {   // async 제거된 상태
       <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
         <IconSparkle />AI MATCH · NEW
       </span>
-      <div className="absolute top-2 right-3 lg:top-4 lg:right-6 z-10 glass rounded-pill pl-1.5 pr-2 py-0.5 inline-flex items-center gap-1.5 shadow-card">
+      <div className="absolute top-2.5 right-3 lg:top-6 lg:right-6 z-10 glass rounded-pill pl-1.5 pr-2 py-0.5 inline-flex items-center gap-1.5 shadow-card">
         <span className="relative flex w-2 h-2">
           <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent" />
           <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
