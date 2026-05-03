@@ -570,12 +570,10 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
 
       const item = listingToItemDetail(row as Listing);
 
-      // 2-1) 조회수 +1 (fire-and-forget — race condition은 demo 수준에서 무시)
+      // 2-1) 조회수 +1 — DB 서버에서 직접 증가 (race condition 안전)
       const nextViewCount = ((row as Listing).view_count ?? 0) + 1;
       supabase
-        .from('listings')
-        .update({ view_count: nextViewCount })
-        .eq('id', params.id)
+        .rpc('increment_view_count', { listing_id: params.id })
         .then(({ error: vcErr }) => {
           if (vcErr) console.error('[aring] view_count update', vcErr);
         });
