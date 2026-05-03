@@ -144,7 +144,7 @@ function HeroBanner() {   // async 제거된 상태
         <div className="aring-blob-b absolute top-1/3 -right-14 w-[220px] h-[220px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
         <div className="aring-blob-c absolute -bottom-14 left-1/4 w-[180px] h-[180px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
       </div>
-      <span className="absolute top-2.5 left-3 lg:top-6 lg:left-6 z-10 inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
+      <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
         <IconSparkle />AI MATCH · NEW
       </span>
       <div className="absolute top-2.5 right-3 lg:top-6 lg:right-6 z-10 glass rounded-pill pl-1.5 pr-2 py-0.5 inline-flex items-center gap-1.5 shadow-card">
