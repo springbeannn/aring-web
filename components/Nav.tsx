@@ -165,9 +165,9 @@ export function BottomNav({ active }: { active?: Tab }) {
         <div className="flex items-stretch px-2 pt-2 pb-2">
           {item('home', '홈', '/', <IconHome />)}
           {item('discover', '탐색', '/discover', <IconCompass />)}
-          <div className="flex-1 flex flex-col items-center gap-1 py-2 select-none">
+          <div className="flex-1 flex flex-col items-center gap-1.5 py-2 select-none">
             <IconPlus />
-            <span className="text-[10px]">등록</span>
+            <span className="mt-0.5 text-[11px]">등록</span>
           </div>
           {item('chat', '댓글', '/comments', <IconComments />, 'unread')}
           {item('my', 'MY', '/my', <IconUser />, 'new')}

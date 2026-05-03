@@ -108,7 +108,7 @@ export default function CommentsPage() {
             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">커뮤니티</h1>
             <p className="mt-0.5 text-[13px] text-aring-ink-500">서로의 한 짝을 찾기 위해 남긴 이야기들이 모였어요</p>
             {!loading && (
-              <p className="mt-1.5 text-[11px] font-bold text-aring-ink-700">전체 댓글 {comments.length}개</p>
+              <p className="mt-1.5 text-[13px] font-bold text-aring-ink-700">전체 댓글 {comments.length}개</p>
             )}
           </div>
 

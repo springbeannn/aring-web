@@ -89,7 +89,7 @@ case 'negotiable': return price === 0 || price == null;
 function CategoryRow({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="px-5 py-3 border-b border-aring-ink-100">
-      <h3 className="text-[11px] font-extrabold tracking-wider text-aring-ink-700 uppercase mb-2">
+      <h3 className="text-[13px] font-bold text-aring-ink-700 mb-2">
         {title}
       </h3>
       {children}
@@ -347,7 +347,7 @@ export default function DiscoverPage() {
 
           <div className="px-5 pt-2 pb-2">
             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
-            <p className="mt-0.5 text-[11px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
+            <p className="mt-0.5 text-[13px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
           {activeCount > 0 && (
