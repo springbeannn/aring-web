@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -21,18 +22,22 @@ import { normalizeBrand } from '@/lib/brandNormalizer';
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
 // ─────────────────────────────────────────────────────────────
+
 type IconProps = { className?: string; strokeWidth?: number };
+
 const IconClose = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 6 6 18M6 6l12 12" />
   </svg>
 );
+
 const IconCamera = ({ className = 'w-5 h-5', strokeWidth = 2 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
     <circle cx="12" cy="13" r="4" />
   </svg>
 );
+
 const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
     <path d="m5 12 5 5 9-11" />
@@ -42,7 +47,9 @@ const IconCheck = ({ className = 'w-4 h-4', strokeWidth = 3 }: IconProps) => (
 // ─────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────
+
 type Step = 'upload' | 'analyzing' | 'review';
+
 type Analysis = {
   shape: string;
   material: string;
@@ -64,6 +71,7 @@ const MOCK_ANALYSIS: Analysis = {
 // ─────────────────────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────────────────────
+
 type Photo = { url: string; file: File };
 
 export default function RegisterPage() {
@@ -72,6 +80,12 @@ export default function RegisterPage() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [progress, setProgress] = useState<number>(-1);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
+
+  // AI 분석 결과 → 사용자 수정 가능한 state (최종 저장값)
+  const [aiShape, setAiShape] = useState('');
+  const [aiMaterial, setAiMaterial] = useState('');
+  const [aiDetail, setAiDetail] = useState('');
+
   const [brand, setBrand] = useState('');
   const [shapeKey, setShapeKey] = useState<ShapeKey | null>(null);
   const [materialKey, setMaterialKey] = useState<MaterialKey | null>(null);
@@ -92,11 +106,13 @@ export default function RegisterPage() {
     if (!photo) return;
     setStep('analyzing');
     setProgress(0);
+
     let i = 0;
     const id = setInterval(() => {
       i += 1;
       setProgress(i);
     }, 950);
+
     try {
       const base64Data = photo.url.split(',')[1];
       const mimeType = photo.url.split(';')[0].split(':')[1];
@@ -108,23 +124,24 @@ export default function RegisterPage() {
       const data = await res.json();
       clearInterval(id);
       setProgress(ANALYSIS_STEPS.length);
-      if (data.analysis) {
-        setTimeout(() => {
-          setAnalysis(data.analysis);
-          setStep('review');
-        }, 700);
-      } else {
-        setTimeout(() => {
-          setAnalysis(MOCK_ANALYSIS);
-          setStep('review');
-        }, 700);
-      }
+
+      const result: Analysis = data.analysis ?? MOCK_ANALYSIS;
+      setTimeout(() => {
+        setAnalysis(result);
+        setAiShape(result.shape ?? '');
+        setAiMaterial(result.material ?? '');
+        setAiDetail(result.detail ?? '');
+        setStep('review');
+      }, 700);
     } catch (err) {
       clearInterval(id);
       console.error('[aring] startAnalysis error', err);
       setProgress(ANALYSIS_STEPS.length);
       setTimeout(() => {
         setAnalysis(MOCK_ANALYSIS);
+        setAiShape(MOCK_ANALYSIS.shape);
+        setAiMaterial(MOCK_ANALYSIS.material);
+        setAiDetail(MOCK_ANALYSIS.detail);
         setStep('review');
       }, 700);
     }
@@ -132,11 +149,13 @@ export default function RegisterPage() {
 
   const submit = async () => {
     if (!photo || !analysis || submitting) return;
+
     if (!isSupabaseConfigured || !supabase) {
-      console.log('[aring]', 'register:submit (mock)', { analysis, brand, shapeKey, materialKey, price, story, region });
+      console.log('[aring]', 'register:submit (mock)', { aiShape, aiMaterial, aiDetail, brand, shapeKey, materialKey, price, story, region });
       alert('등록 완료 (mock)');
       return;
     }
+
     setSubmitting(true);
     try {
       const path = buildPhotoPath(photo.file.name);
@@ -152,21 +171,28 @@ export default function RegisterPage() {
       const brandInput = brand.trim() || '';
       const brandKey = normalizeBrand(brandInput);
 
+      // 최종 저장값: shapeKey/materialKey 선택 시 우선, 없으면 사용자가 수정한 AI 분석값 사용
+      const finalShape = shapeKey ? shapeLabel(shapeKey) : aiShape;
+      const finalMaterial = materialKey ? materialLabel(materialKey) : aiMaterial;
+      const finalDetail = aiDetail;
+
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
         photo_path: path,
         brand: brandInput || '브랜드 미상',
         brand_input: brandInput || null,
         brand_key: brandKey || '',
-        shape: shapeKey ? shapeLabel(shapeKey) : analysis.shape,
-        material: materialKey ? materialLabel(materialKey) : analysis.material,
-        detail: analysis.detail,
+        shape: finalShape,
+        material: finalMaterial,
+        detail: finalDetail,
         side: 'L',
         price: Number.isFinite(priceNum) ? priceNum : null,
         story: story || null,
         region: region || null,
       });
+
       if (dbErr) throw dbErr;
+
       router.push('/');
       router.refresh();
     } catch (err: unknown) {
@@ -187,14 +213,22 @@ export default function RegisterPage() {
           <div className="text-[14px] font-extrabold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
+
         <StepIndicator current={step} />
+
         {step === 'upload' && (
           <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} />
         )}
+
         {step === 'review' && analysis && photo && (
           <ReviewStep
             photo={photo.url}
-            analysis={analysis}
+            aiShape={aiShape}
+            setAiShape={setAiShape}
+            aiMaterial={aiMaterial}
+            setAiMaterial={setAiMaterial}
+            aiDetail={aiDetail}
+            setAiDetail={setAiDetail}
             brand={brand}
             setBrand={setBrand}
             shapeKey={shapeKey}
@@ -211,6 +245,7 @@ export default function RegisterPage() {
             submitting={submitting}
           />
         )}
+
         {step === 'analyzing' && photo && (
           <AnalyzingOverlay progress={progress} photo={photo.url} />
         )}
@@ -222,6 +257,7 @@ export default function RegisterPage() {
 // ─────────────────────────────────────────────────────────────
 // Step indicator
 // ─────────────────────────────────────────────────────────────
+
 function StepIndicator({ current }: { current: Step }) {
   const labels = [
     { key: 'upload', label: '사진' },
@@ -230,6 +266,7 @@ function StepIndicator({ current }: { current: Step }) {
   ];
   const order = ['upload', 'analyzing', 'review'] as Step[];
   const idx = order.indexOf(current);
+
   return (
     <div className="px-5 mb-5 flex items-center gap-2">
       {labels.map((l, i) => (
@@ -255,6 +292,7 @@ function StepIndicator({ current }: { current: Step }) {
 // ─────────────────────────────────────────────────────────────
 // Step 1 — Upload
 // ─────────────────────────────────────────────────────────────
+
 function UploadStep({ photo, onPhoto, onAnalyze }: {
   photo: string | null;
   onPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -270,6 +308,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
         밝은 배경에서 정면으로 찍은 사진이 가장 정확합니다.<br />
         AI가 브랜드·형태·소재·디테일을 분석해요.
       </p>
+
       {!photo ? (
         <label className="relative block aspect-[4/5] rounded-card bg-aring-grad-pastel overflow-hidden cursor-pointer active:scale-[0.99] transition">
           <div aria-hidden className="absolute inset-0 pointer-events-none">
@@ -302,6 +341,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
           </label>
         </div>
       )}
+
       <div className="mt-5 grid grid-cols-3 gap-2">
         {[{ e: '☀️', t: '밝은 배경' }, { e: '📐', t: '정면 촬영' }, { e: '🔍', t: '디테일 가깝게' }].map((tip) => (
           <div key={tip.t} className="rounded-tile bg-aring-ink-100/70 px-3 py-3 text-center">
@@ -310,6 +350,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
           </div>
         ))}
       </div>
+
       <StickyCTA onClick={onAnalyze} disabled={!photo}>
         {photo ? 'AI 분석 시작하기' : '사진을 먼저 올려주세요'}
       </StickyCTA>
@@ -320,6 +361,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
 // ─────────────────────────────────────────────────────────────
 // AI Analyzing Overlay
 // ─────────────────────────────────────────────────────────────
+
 function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string }) {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center px-5">
@@ -363,31 +405,42 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
 // ─────────────────────────────────────────────────────────────
 // Step 3 — Review
 // ─────────────────────────────────────────────────────────────
+
 const ACTIVE_BG = '#EAF7F5';
 const ACTIVE_BORDER = '#8ED9CC';
 const ACTIVE_TEXT = '#222222';
 const INACTIVE_BORDER = '#E5E5E5';
 
-function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, materialKey, setMaterialKey, price, setPrice, story, setStory, region, setRegion, onSubmit, submitting }: {
+function ReviewStep({
+  photo,
+  aiShape, setAiShape,
+  aiMaterial, setAiMaterial,
+  aiDetail, setAiDetail,
+  brand, setBrand,
+  shapeKey, setShapeKey,
+  materialKey, setMaterialKey,
+  price, setPrice,
+  story, setStory,
+  region, setRegion,
+  onSubmit, submitting,
+}: {
   photo: string;
-  analysis: Analysis;
-  brand: string;
-  setBrand: (s: string) => void;
-  shapeKey: ShapeKey | null;
-  setShapeKey: (v: ShapeKey | null) => void;
-  materialKey: MaterialKey | null;
-  setMaterialKey: (v: MaterialKey | null) => void;
-  price: string;
-  setPrice: (s: string) => void;
-  story: string;
-  setStory: (s: string) => void;
-  region: string;
-  setRegion: (s: string) => void;
+  aiShape: string; setAiShape: (s: string) => void;
+  aiMaterial: string; setAiMaterial: (s: string) => void;
+  aiDetail: string; setAiDetail: (s: string) => void;
+  brand: string; setBrand: (s: string) => void;
+  shapeKey: ShapeKey | null; setShapeKey: (v: ShapeKey | null) => void;
+  materialKey: MaterialKey | null; setMaterialKey: (v: MaterialKey | null) => void;
+  price: string; setPrice: (s: string) => void;
+  story: string; setStory: (s: string) => void;
+  region: string; setRegion: (s: string) => void;
   onSubmit: () => void;
   submitting: boolean;
 }) {
   return (
     <div className="px-5 pb-32">
+
+      {/* 이미지 */}
       <div className="relative rounded-card overflow-hidden border border-aring-green-line bg-white mb-5 shadow-card">
         <div className="relative aspect-[4/3]">
           <img src={photo} alt="" className="w-full h-full object-cover" />
@@ -396,16 +449,37 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
             <span className="text-[10px] font-bold text-aring-ink-900">AI 분석 완료</span>
           </span>
         </div>
-        <div className="p-4 grid grid-cols-3 gap-2">
-          <AnalysisField label="형태" value={analysis.shape} />
-          <AnalysisField label="소재" value={analysis.material} />
-          <AnalysisField label="디테일" value={analysis.detail} />
-        </div>
       </div>
+
+      {/* AI 분석 결과 확인/수정 섹션 */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-[11px] font-extrabold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
+        </div>
+        <p className="text-[12px] text-aring-ink-500 mb-3 leading-[1.55]">
+          AI가 먼저 분석한 결과예요. 실제 정보와 다르면 직접 수정해 주세요.<br />
+          <span className="text-aring-ink-400">수정한 내용이 최종 등록 정보로 저장됩니다.</span>
+        </p>
+
+        <FieldLabel>형태</FieldLabel>
+        <Input value={aiShape} onChange={setAiShape} placeholder="예: 스터드 / 후프 / 드롭" maxLength={60} />
+
+        <FieldLabel>소재</FieldLabel>
+        <Input value={aiMaterial} onChange={setAiMaterial} placeholder="예: 스털링 실버 / 골드 / 진주" maxLength={60} />
+
+        <FieldLabel>디테일</FieldLabel>
+        <Input value={aiDetail} onChange={setAiDetail} placeholder="예: 6mm · 광택 마감" maxLength={100} />
+      </div>
+
+      {/* 구분선 */}
+      <div className="border-t border-aring-ink-100 mb-5" />
+
       <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">정보 추가</h2>
+
       <FieldLabel>브랜드</FieldLabel>
       <Input value={brand} onChange={setBrand} placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING" maxLength={40} />
-      <FieldLabel>모양</FieldLabel>
+
+      <FieldLabel>모양 <span className="text-aring-ink-500 font-medium">(선택 시 AI 분석값 대체)</span></FieldLabel>
       <div className="flex gap-2 flex-wrap mb-5">
         {SHAPE_OPTIONS.map((opt) => {
           const active = shapeKey === opt.value;
@@ -418,7 +492,8 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
           );
         })}
       </div>
-      <FieldLabel>소재</FieldLabel>
+
+      <FieldLabel>소재 <span className="text-aring-ink-500 font-medium">(선택 시 AI 분석값 대체)</span></FieldLabel>
       <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
         {MATERIAL_OPTIONS.map((opt) => {
           const active = materialKey === opt.value;
@@ -435,8 +510,10 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
           );
         })}
       </div>
+
       <FieldLabel>가격 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
       <Input value={price} onChange={setPrice} placeholder="예: 50,000" suffix="원" />
+
       <FieldLabel>등록자 한마디 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
       <div className="relative mb-1">
         <textarea
@@ -453,6 +530,7 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
           {story.length} / 1000
         </span>
       </div>
+
       <div className="mb-5 rounded-tile bg-aring-ink-100/60 px-4 py-3 space-y-1.5">
         <p className="text-[11px] text-aring-ink-500 leading-[1.6]">
           따뜻한 마음을 담아 작성해 주세요. 욕설, 비하 표현, 타인의 개인정보가 포함된 내용은 작성할 수 없습니다.
@@ -461,8 +539,10 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
           개인정보 노출, 타인 비방, 부적절한 표현 등 서비스 운영 기준에 맞지 않는 글은 관리자 판단에 따라 별도 안내 없이 삭제될 수 있습니다.
         </p>
       </div>
+
       <FieldLabel>거래 지역</FieldLabel>
       <Input value={region} onChange={setRegion} placeholder="예: 서울 · 강남구" />
+
       <StickyCTA onClick={onSubmit} disabled={submitting}>
         {submitting ? '등록 중…' : '한 짝 등록하기'}
       </StickyCTA>
@@ -473,6 +553,7 @@ function ReviewStep({ photo, analysis, brand, setBrand, shapeKey, setShapeKey, m
 // ─────────────────────────────────────────────────────────────
 // Field helpers
 // ─────────────────────────────────────────────────────────────
+
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
 }
@@ -493,18 +574,10 @@ function Input({ value, onChange, placeholder, suffix, maxLength }: {
   );
 }
 
-function AnalysisField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-tile bg-aring-ink-100/60 px-3 py-2.5">
-      <p className="text-[10px] font-extrabold tracking-wider text-aring-ink-500 uppercase">{label}</p>
-      <p className="mt-1 text-[12.5px] font-bold text-aring-ink-900 truncate">{value}</p>
-    </div>
-  );
-}
-
 // ─────────────────────────────────────────────────────────────
 // Sticky bottom CTA
 // ─────────────────────────────────────────────────────────────
+
 function StickyCTA({ onClick, disabled, children }: {
   onClick: () => void;
   disabled: boolean;
