@@ -69,6 +69,11 @@ const config: Config = {
         // Deep — Success Story 같은 정적 카드 (텍스트 흰색용)
         'aring-grad-green':
           'linear-gradient(135deg, #2A4A3C 0%, #1C3328 100%)',
+        // 댓글/MY 페이지 전용 — 연한 단색 계열 배경
+        'aring-bg-comments':
+          'linear-gradient(160deg, #FDF0EE 0%, #FAF0F5 100%)',
+        'aring-bg-my':
+          'linear-gradient(160deg, #F5F0FA 0%, #EFF4F9 100%)',
       },
       borderRadius: {
         card: '22px',
