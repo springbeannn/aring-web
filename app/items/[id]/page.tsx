@@ -359,7 +359,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
         <div className="grid grid-cols-3 gap-3 lg:gap-4">
           <KV label="형태" value={ai.shape} />
           <KV label="소재" value={ai.material} />
-          <KV label="컬러" value={ai.color} />
+          <ColorChip value={ai.color} />
         </div>
         {ai.details.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -385,6 +385,40 @@ function KV({ label, value }: { label: string; value: string }) {
       <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">
         {value}
       </p>
+    </div>
+  );
+}
+
+const COLOR_MAP: Record<string, { label: string; hex: string }> = {
+  white:  { label: '화이트', hex: '#F5F5F5' },
+  pink:   { label: '핑크',   hex: '#F9A8C9' },
+  yellow: { label: '옐로',   hex: '#FCD34D' },
+  orange: { label: '오렌지', hex: '#FB923C' },
+  red:    { label: '레드',   hex: '#F87171' },
+  green:  { label: '그린',   hex: '#6EE7B7' },
+  blue:   { label: '블루',   hex: '#93C5FD' },
+  purple: { label: '퍼플',   hex: '#C4B5FD' },
+  gold:   { label: '골드',   hex: '#D4AF37' },
+  silver: { label: '실버',   hex: '#C0C0C0' },
+  black:  { label: '블랙',   hex: '#222222' },
+  multi:  { label: '멀티',   hex: 'linear-gradient(135deg,#F87171,#FCD34D,#6EE7B7,#93C5FD)' },
+};
+
+function ColorChip({ value }: { value: string }) {
+  const info = COLOR_MAP[value];
+  const label = info?.label ?? value;
+  const bg = info?.hex ?? '#E5E5E5';
+  const isGradient = bg.startsWith('linear');
+  return (
+    <div>
+      <p className="text-[10.5px] font-medium text-aring-ink-500">컬러</p>
+      <div className="mt-0.5 flex items-center gap-1.5">
+        <span
+          className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+          style={isGradient ? { background: bg } : { backgroundColor: bg }}
+        />
+        <p className="text-[13px] font-bold text-aring-ink-900 leading-tight">{label}</p>
+      </div>
     </div>
   );
 }
