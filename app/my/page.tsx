@@ -327,7 +327,7 @@ export default function MyPage() {
   }
 
   return (
-    <main className="min-h-screen flex justify-center bg-gradient-to-b from-green-50 via-yellow-50 to-pink-50">
+    <main className="min-h-screen flex justify-center bg-gradient-to-b from-green-50/10 via-yellow-50 to-pink-50">
       <div
         className="
           relative w-full max-w-[440px] bg-transparent overflow-hidden
