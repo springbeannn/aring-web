@@ -85,6 +85,7 @@ export default function RegisterPage() {
   const [aiShape, setAiShape] = useState('');
   const [aiMaterial, setAiMaterial] = useState('');
   const [aiDetail, setAiDetail] = useState('');
+  const [aiColor, setAiColor] = useState('');
 
   const [brand, setBrand] = useState('');
   const [shapeKey, setShapeKey] = useState<ShapeKey | null>(null);
@@ -131,6 +132,7 @@ export default function RegisterPage() {
         setAiShape(result.shape ?? '');
         setAiMaterial(result.material ?? '');
         setAiDetail(result.detail ?? '');
+        setAiColor((result as any).color ?? '');
         setStep('review');
       }, 700);
     } catch (err) {
@@ -142,6 +144,7 @@ export default function RegisterPage() {
         setAiShape(MOCK_ANALYSIS.shape);
         setAiMaterial(MOCK_ANALYSIS.material);
         setAiDetail(MOCK_ANALYSIS.detail);
+        setAiColor('');
         setStep('review');
       }, 700);
     }
@@ -175,6 +178,7 @@ export default function RegisterPage() {
       const finalShape = shapeKey ? shapeLabel(shapeKey) : aiShape;
       const finalMaterial = materialKey ? materialLabel(materialKey) : aiMaterial;
       const finalDetail = aiDetail;
+      const finalColor = (aiColor || null) as import('@/lib/supabase').ColorKey | null;
 
       const { error: dbErr } = await supabase.from('listings').insert({
         photo_url,
@@ -185,6 +189,7 @@ export default function RegisterPage() {
         shape: finalShape,
         material: finalMaterial,
         detail: finalDetail,
+        color: finalColor,
         side: 'L',
         price: Number.isFinite(priceNum) ? priceNum : null,
         story: story || null,
@@ -229,6 +234,8 @@ export default function RegisterPage() {
             setAiMaterial={setAiMaterial}
             aiDetail={aiDetail}
             setAiDetail={setAiDetail}
+            aiColor={aiColor}
+            setAiColor={setAiColor}
             brand={brand}
             setBrand={setBrand}
             shapeKey={shapeKey}
@@ -416,6 +423,7 @@ function ReviewStep({
   aiShape, setAiShape,
   aiMaterial, setAiMaterial,
   aiDetail, setAiDetail,
+  aiColor, setAiColor,
   brand, setBrand,
   shapeKey, setShapeKey,
   materialKey, setMaterialKey,
@@ -428,6 +436,7 @@ function ReviewStep({
   aiShape: string; setAiShape: (s: string) => void;
   aiMaterial: string; setAiMaterial: (s: string) => void;
   aiDetail: string; setAiDetail: (s: string) => void;
+  aiColor: string; setAiColor: (s: string) => void;
   brand: string; setBrand: (s: string) => void;
   shapeKey: ShapeKey | null; setShapeKey: (v: ShapeKey | null) => void;
   materialKey: MaterialKey | null; setMaterialKey: (v: MaterialKey | null) => void;
@@ -469,6 +478,9 @@ function ReviewStep({
 
         <FieldLabel>디테일</FieldLabel>
         <Input value={aiDetail} onChange={setAiDetail} placeholder="예: 6mm · 광택 마감" maxLength={100} />
+
+        <FieldLabel>컬러</FieldLabel>
+        <Input value={aiColor} onChange={setAiColor} placeholder="예: 골드 / 실버 / 화이트" maxLength={40} />
       </div>
 
       {/* 구분선 */}

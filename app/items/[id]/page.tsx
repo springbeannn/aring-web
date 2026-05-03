@@ -114,7 +114,7 @@ function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } 
     ai: {
       shape: row.shape ?? '미상',
       material: row.material ?? '미상',
-      color: '—',
+      color: row.color ?? '—',
       details: detailTags,
     },
     seller: {
