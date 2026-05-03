@@ -117,12 +117,12 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-white to-blue-50">
-      <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
+      <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-none lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
           {/* 헤더 */}
-          <div className="px-5 lg:px-8 pt-3 pb-5">
+          <div className="px-5 lg:px-0 pt-3 pb-5 lg:max-w-[720px] lg:mx-auto lg:w-full">
             <div className="flex items-center gap-2 mb-1">
               <Link href="/my" className="text-[12px] text-aring-ink-400 hover:text-aring-ink-700 transition">MY</Link>
               <span className="text-aring-ink-300 text-[12px]">›</span>
@@ -131,7 +131,7 @@ export default function ProfilePage() {
             <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
           </div>
 
-          <div className="px-5 lg:px-8 space-y-3 lg:max-w-[600px]">
+          <div className="px-5 lg:px-0 space-y-3 lg:max-w-[720px] lg:mx-auto lg:w-full">
 
             {/* 아바타 + 닉네임 */}
             <div className="rounded-2xl border border-aring-green-line bg-white p-5">
@@ -225,7 +225,7 @@ export default function ProfilePage() {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className={`w-full py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
+              className={`w-full lg:max-w-[320px] lg:mx-auto block py-4 rounded-2xl font-extrabold text-[15px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
             >
               {loggingOut ? '로그아웃 중...' : '로그아웃'}
             </button>
