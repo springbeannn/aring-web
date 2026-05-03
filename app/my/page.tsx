@@ -399,7 +399,7 @@ function ProfileHeader({
   return (
     <section className="px-5 lg:px-8 pt-3 lg:pt-7 pb-5">
       <div className="flex items-center gap-3">
-        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[20px] lg:text-[22px] font-extrabold text-aring-ink-900">
+        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-pastel-pink/50 flex items-center justify-center text-[20px] lg:text-[22px] font-extrabold text-aring-ink-900">
           {(nickname || '?').charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
@@ -413,7 +413,7 @@ function ProfileHeader({
       </div>
 
       {/* 랜덤 상태 메시지 */}
-      <div className="mt-4 rounded-card bg-aring-grad-pastel px-4 py-3">
+      <div className="mt-4 rounded-card bg-white border border-aring-green-line px-4 py-3">
         <p className="text-[12.5px] font-bold text-aring-ink-900">
           {message}
         </p>
