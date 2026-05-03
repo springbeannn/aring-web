@@ -82,11 +82,12 @@ function ProductsContent() {
         return;
       }
 
+      const orderCol = sort === 'view_count' ? 'view_count' : 'created_at';
       const { data, error } = await supabase
         .from('listings')
         .select('*')
         .eq('status', 'open')
-        .order('created_at', { ascending: false })
+        .order(orderCol, { ascending: false })
         .range(0, PAGE_SIZE - 1);
 
       if (cancelled) return;
@@ -114,7 +115,7 @@ function ProductsContent() {
 
     loadFirst();
     return () => { cancelled = true; };
-  }, []);
+  }, [sort]);
 
   async function loadMore() {
     if (!supabase || loading || !hasMore) return;
