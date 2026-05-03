@@ -1,4 +1,5 @@
 'use client';
+// v2: 1000자 확장 + 카운터 + 안내문구
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
