@@ -150,25 +150,33 @@ export default function MyPage() {
     []
   );
 
-  // 1) localStorage에서 익명 정보 hydrate
+  // 1) Supabase 세션 + localStorage 프로필 정보 hydrate
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    let id = localStorage.getItem(ANON_ID_KEY);
-    if (!id) {
-      id =
-        (crypto.randomUUID && crypto.randomUUID()) ||
-        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-          const r = (Math.random() * 16) | 0;
-          const v = c === 'x' ? r : (r & 0x3) | 0x8;
-          return v.toString(16);
-        });
-      localStorage.setItem(ANON_ID_KEY, id);
-    }
-    setUserId(id);
-    setNickname(localStorage.getItem(ANON_NICK_KEY) ?? '아링 친구');
-    setBio(
-      localStorage.getItem(ANON_BIO_KEY) ?? '한 짝의 짝을 찾고 있어요'
-    );
+    if (typeof window === 'undefined' || !supabase) return;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const id = session?.user?.id ?? localStorage.getItem(ANON_ID_KEY) ?? '';
+      if (!session?.user?.id) {
+        // 비로그인: 기존 익명 ID 생성 로직 유지
+        let anonId = localStorage.getItem(ANON_ID_KEY);
+        if (!anonId) {
+          anonId =
+            (crypto.randomUUID && crypto.randomUUID()) ||
+            'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+              const r = (Math.random() * 16) | 0;
+              const v = c === 'x' ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            });
+          localStorage.setItem(ANON_ID_KEY, anonId);
+        }
+        setUserId(anonId);
+      } else {
+        setUserId(session.user.id);
+      }
+      setNickname(localStorage.getItem(ANON_NICK_KEY) ?? '아링 친구');
+      setBio(
+        localStorage.getItem(ANON_BIO_KEY) ?? '한 짝의 짝을 찾고 있어요'
+      );
+    });
   }, []);
 
   // 2) 데이터 fetch — userId 결정된 후
