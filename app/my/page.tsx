@@ -330,7 +330,7 @@ export default function MyPage() {
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-green-50 via-yellow-50 to-pink-50">
       <div
         className="
-          relative w-full max-w-[440px] bg-white overflow-hidden
+          relative w-full max-w-[440px] bg-transparent overflow-hidden
           min-h-screen
           sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone
           lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible
