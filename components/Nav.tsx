@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HamburgerButton from './HamburgerButton';
 import SideMenu from './SideMenu';
+import { supabase } from '@/lib/supabase';
 
 export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
 
@@ -55,8 +56,29 @@ const desktopMenu = [
 
 export function TopNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const isSignupPage = pathname === '/signup';
+
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setIsLoggedIn(!!data.session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  function handleProfileClick() {
+    if (isLoggedIn) {
+      router.push('/my/profile');
+    } else {
+      router.push('/login');
+    }
+  }
 
   return (
     <>
@@ -85,9 +107,17 @@ export function TopNav() {
               한 짝 등록
             </Link>
           )}
-          <Link href="/signup" aria-label="회원가입" className="relative w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
+          <button
+            type="button"
+            onClick={handleProfileClick}
+            aria-label="프로필"
+            className="relative w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+          >
             <IconUser />
-          </Link>
+            {isLoggedIn && (
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-aring-green border-2 border-white" />
+            )}
+          </button>
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
         </div>
       </div>
@@ -132,7 +162,6 @@ export function BottomNav({ active }: { active?: Tab }) {
           <IconPlus />
           <span aria-hidden className="absolute inset-[-3px] rounded-full pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(251,200,220,.55), rgba(197,221,240,.55))', filter: 'blur(8px)', zIndex: -1 }} />
         </Link>
-
         <div className="flex items-stretch px-2 pt-2 pb-2">
           {item('home', '홈', '/', <IconHome />)}
           {item('discover', '탐색', '/discover', <IconCompass />)}
