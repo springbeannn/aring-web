@@ -340,7 +340,7 @@ function BrandSection({ brandCounts }: {
             <button
               key={brand}
               onClick={() => handleClick(brand)}
-              className="rounded-pill px-2 py-1 text-[11px] font-bold transition active:scale-95 bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300"
+              className="rounded-pill px-2 py-1 text-[11px] lg:text-[13px] font-bold transition active:scale-95 bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300"
             >
               {brand}
               {count > 0 && (
