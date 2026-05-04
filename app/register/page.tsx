@@ -182,7 +182,7 @@ export default function RegisterPage() {
       const finalMaterial = materialKey ? materialLabel(materialKey) : aiMaterial;
       const finalDetail = aiDetail;
 
-      const { error: dbErr } = await supabase.from('listings').insert({
+      const { data: insertedRows, error: dbErr } = await supabase.from('listings').insert({
         user_id: userId,
         photo_url,
         photo_path: path,
@@ -199,8 +199,9 @@ export default function RegisterPage() {
       });
 
       if (dbErr) throw dbErr;
+      const insertedId = (insertedRows as any)?.[0]?.id ?? null;
 
-      router.push('/');
+      router.push(insertedId ? `/match/${insertedId}` : '/my');
       router.refresh();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : (typeof err === 'object' ? JSON.stringify(err) : String(err));
