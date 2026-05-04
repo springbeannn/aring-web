@@ -370,3 +370,4 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
       </div>
     </main>
   );
+}
