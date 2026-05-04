@@ -60,7 +60,7 @@ function SimilarCard({ item, matchScore }: { item: Listing; matchScore: MatchRes
   return (
     <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="flex flex-col md:flex-row">
-        <div className="relative md:w-52 md:shrink-0 aspect-square md:aspect-auto bg-aring-ink-100 overflow-hidden">
+        <div className="relative md:w-56 md:shrink-0 aspect-square md:aspect-auto bg-aring-ink-100 overflow-hidden" style={{ minHeight: 0 }}>
           {item.photo_url
             ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
             : <div className="w-full h-full bg-aring-grad-pastel" />
@@ -68,11 +68,11 @@ function SimilarCard({ item, matchScore }: { item: Listing; matchScore: MatchRes
           <div className="absolute top-2.5 left-2.5"><MatchBadge score={matchScore.totalScore} type="similar" /></div>
           <div className="absolute top-2.5 right-2.5"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
         </div>
-        <div className="flex flex-col justify-between flex-1 px-4 py-3 md:px-5 md:py-4">
+        <div className="flex flex-col justify-between flex-1 px-4 py-3 md:px-6 md:py-5">
           <div>
             <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
             <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
-            <p className="mt-0.5 text-[14px] font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+            <p className="mt-0.5 text-[14px] md:text-[15px] font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
             {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
             <ReasonBox reasons={matchScore.reasons} type="similar" />
           </div>
@@ -116,7 +116,7 @@ function ReferenceCard({ item, matchScore }: { item: Listing; matchScore: MatchR
   );
 }
 
-function MyItemPanel({ item }: { item: Listing }) {
+function MyItemSummary({ item }: { item: Listing }) {
   const tags = [
     item.shape    && `형태: ${item.shape}`,
     item.color    && `컬러: ${item.color}`,
@@ -125,26 +125,28 @@ function MyItemPanel({ item }: { item: Listing }) {
   ].filter(Boolean) as string[];
   return (
     <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden shadow-sm">
-      <div className="relative w-full bg-aring-grad-pastel" style={{ height: '200px' }}>
-        {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}
-      </div>
-      <div className="px-4 py-3">
-        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase mb-1">
-          <IconSparkle className="w-3 h-3" /> 내 귀걸이
-        </span>
-        <p className="text-[13px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-        {item.brand && <p className="mt-0.5 text-[11px] text-aring-ink-400 font-medium">{item.brand}</p>}
-        <div className="mt-2 flex flex-wrap gap-1">
-          {tags.slice(0, 4).map(t => (
-            <span key={t} className="rounded-pill bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
-          ))}
+      <div className="flex gap-0">
+        <div className="w-24 h-24 md:w-28 md:h-28 shrink-0 overflow-hidden bg-aring-grad-pastel">
+          {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}
         </div>
-        {item.story && (
-          <div className="mt-2.5 border-t border-aring-ink-100 pt-2.5">
-            <p className="text-[11px] text-aring-ink-400 italic line-clamp-2">&ldquo;{item.story}&rdquo;</p>
+        <div className="flex-1 px-4 py-3 min-w-0">
+          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase mb-1">
+            <IconSparkle className="w-3 h-3" /> 내 귀걸이
+          </span>
+          <p className="text-[13px] md:text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+          {item.brand && <p className="mt-0.5 text-[11px] text-aring-ink-400 font-medium">{item.brand}</p>}
+          <div className="mt-2 flex flex-wrap gap-1">
+            {tags.slice(0, 4).map(t => (
+              <span key={t} className="rounded-pill bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
+            ))}
           </div>
-        )}
+        </div>
       </div>
+      {item.story && (
+        <div className="border-t border-aring-ink-100 px-4 py-2.5">
+          <p className="text-[11px] text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -221,106 +223,111 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
       <div className="flex justify-center">
         <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone md:max-w-none md:my-0 md:min-h-screen md:rounded-none md:shadow-none md:overflow-visible">
           <TopNav />
+
           <div className="pb-28 md:pb-16">
-            <div className="md:max-w-[1280px] md:mx-auto md:px-10">
-              <div className="md:flex md:gap-12 md:pt-8">
+            {/* 전체 1컬럼 — 가로폭 풀 사용, 중앙 max-w 제한 없음 */}
+            <div className="w-full px-5 md:px-10 lg:px-16">
 
-                <div className="md:w-[360px] md:shrink-0">
-                  <div className="px-5 pt-6 pb-4 md:px-0 md:pt-0 md:pb-6">
-                    <button onClick={() => router.back()} className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-700 transition">
-                      <IconArrowLeft className="w-4 h-4" /> 뒤로
-                    </button>
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <IconSparkle className="w-3.5 h-3.5 text-aring-accent" />
-                      <span className="text-[10.5px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span>
-                    </div>
-                    <h1 className="text-[22px] md:text-[26px] font-extrabold text-aring-ink-900 leading-snug">
-                      AI가 비슷한<br />짝을 찾아봤어요
-                    </h1>
-                    <p className="mt-2 text-[12.5px] text-aring-ink-500 leading-relaxed">
-                      방금 등록한 귀걸이를 기준으로<br className="hidden md:block" /> aring Match를 계산했어요
-                    </p>
-                  </div>
-                  <div className="px-5 md:px-0 md:sticky md:top-6">
-                    {state.status === 'ok' && <MyItemPanel item={state.myItem} />}
-                    {state.status === 'loading' && <div className="h-28 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
-                  </div>
+              {/* 헤더 */}
+              <div className="pt-6 pb-4 md:pt-8 md:pb-6">
+                <button onClick={() => router.back()} className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-700 transition">
+                  <IconArrowLeft className="w-4 h-4" /> 뒤로
+                </button>
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <IconSparkle className="w-3.5 h-3.5 text-aring-accent" />
+                  <span className="text-[10.5px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span>
                 </div>
-
-                <div className="flex-1 min-w-0">
-                  {state.status === 'loading' && <LoadingScreen />}
-                  {state.status === 'error' && (
-                    <div className="px-5 md:px-0 pt-10 text-center">
-                      <p className="text-[14px] font-bold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
-                      <p className="mt-1 text-[12px] text-aring-ink-500">잠시 후 다시 시도해주세요</p>
-                      <Link href="/my" className="mt-5 inline-flex rounded-pill bg-aring-ink-900 px-5 py-2.5 text-[13px] font-extrabold text-white">내 상품 보기</Link>
-                    </div>
-                  )}
-                  {isEmpty && <EmptyState />}
-
-                  {state.status === 'ok' && (hasSimilar || hasReference) && (
-                    <div className="mx-5 md:mx-0 mt-6 md:mt-0 mb-6 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-5 py-4">
-                      {!hasSimilar && hasReference ? (
-                        <>
-                          <p className="text-[13px] font-extrabold text-aring-ink-900">아직 꼭 닮은 짝을 찾지 못했어요</p>
-                          <p className="mt-1 text-[12px] text-aring-ink-500">대신 참고해볼 수 있는 후보 {state.reference.length}개를 모아봤어요</p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-[13px] font-extrabold text-aring-ink-900">
-                            {hasSimilar ? `유사한 후보 ${state.similar.length}개` : ''}{hasSimilar && hasReference ? ' · ' : ''}{hasReference ? `참고 후보 ${state.reference.length}개` : ''}를 찾았어요
-                          </p>
-                          <p className="mt-1 text-[12px] text-aring-ink-500">매칭률이 높을수록 더 비슷한 귀걸이예요</p>
-                        </>
-                      )}
-                    </div>
-                  )}
-
-                  {hasSimilar && state.status === 'ok' && (
-                    <section className="px-5 md:px-0 mb-8">
-                      <div className="flex items-center gap-2.5 mb-4">
-                        <span className="w-2.5 h-2.5 rounded-full bg-aring-green shrink-0" />
-                        <div>
-                          <h2 className="text-[15px] md:text-[17px] font-extrabold text-aring-ink-900">
-                            가장 비슷한 짝을 찾아봤어요
-                            <span className="ml-2 text-[12px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
-                          </h2>
-                          <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 60% 이상</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        {state.similar.map(c => <SimilarCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                      </div>
-                    </section>
-                  )}
-
-                  {hasSimilar && hasReference && state.status === 'ok' && (
-                    <div className="mx-5 md:mx-0 mb-8 border-t border-aring-ink-100" />
-                  )}
-
-                  {hasReference && state.status === 'ok' && (
-                    <section className="px-5 md:px-0">
-                      <div className="flex items-center gap-2.5 mb-4">
-                        <span className="w-2.5 h-2.5 rounded-full bg-aring-ink-300 shrink-0" />
-                        <div>
-                          <h2 className="text-[14px] md:text-[15px] font-extrabold text-aring-ink-600">
-                            완전히 같진 않지만, 이런 후보도 있어요
-                            <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
-                          </h2>
-                          <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 40~59%</p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
-                        {state.reference.map(c => <ReferenceCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                      </div>
-                    </section>
-                  )}
-                  <div className="h-8" />
-                </div>
-
+                <h1 className="text-[22px] md:text-[28px] font-extrabold text-aring-ink-900 leading-snug">
+                  AI가 비슷한 짝을 찾아봤어요
+                </h1>
+                <p className="mt-2 text-[12.5px] text-aring-ink-500 leading-relaxed">
+                  방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
+                </p>
               </div>
+
+              {/* 내 귀걸이 요약 */}
+              <div className="mb-6">
+                {state.status === 'ok' && <MyItemSummary item={state.myItem} />}
+                {state.status === 'loading' && <div className="h-24 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
+              </div>
+
+              {/* 로딩 / 에러 / 빈 상태 */}
+              {state.status === 'loading' && <LoadingScreen />}
+              {state.status === 'error' && (
+                <div className="pt-4 text-center">
+                  <p className="text-[14px] font-bold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
+                  <p className="mt-1 text-[12px] text-aring-ink-500">잠시 후 다시 시도해주세요</p>
+                  <Link href="/my" className="mt-5 inline-flex rounded-pill bg-aring-ink-900 px-5 py-2.5 text-[13px] font-extrabold text-white">내 상품 보기</Link>
+                </div>
+              )}
+              {isEmpty && <EmptyState />}
+
+              {/* 결과 요약 박스 */}
+              {state.status === 'ok' && (hasSimilar || hasReference) && (
+                <div className="mb-6 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-5 py-4">
+                  {!hasSimilar && hasReference ? (
+                    <>
+                      <p className="text-[13px] font-extrabold text-aring-ink-900">아직 꼭 닮은 짝을 찾지 못했어요</p>
+                      <p className="mt-1 text-[12px] text-aring-ink-500">대신 참고해볼 수 있는 후보 {state.reference.length}개를 모아봤어요</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[13px] font-extrabold text-aring-ink-900">
+                        {hasSimilar ? `유사한 후보 ${state.similar.length}개` : ''}{hasSimilar && hasReference ? ' · ' : ''}{hasReference ? `참고 후보 ${state.reference.length}개` : ''}를 찾았어요
+                      </p>
+                      <p className="mt-1 text-[12px] text-aring-ink-500">매칭률이 높을수록 더 비슷한 귀걸이예요</p>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* 유사 후보 섹션 */}
+              {hasSimilar && state.status === 'ok' && (
+                <section className="mb-8">
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <span className="w-2.5 h-2.5 rounded-full bg-aring-green shrink-0" />
+                    <div>
+                      <h2 className="text-[15px] md:text-[17px] font-extrabold text-aring-ink-900">
+                        가장 비슷한 짝을 찾아봤어요
+                        <span className="ml-2 text-[12px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
+                      </h2>
+                      <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 60% 이상</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3 md:grid md:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] md:gap-4">
+                    {state.similar.map(c => <SimilarCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                  </div>
+                </section>
+              )}
+
+              {/* 구분선 */}
+              {hasSimilar && hasReference && state.status === 'ok' && (
+                <div className="mb-8 border-t border-aring-ink-100" />
+              )}
+
+              {/* 참고 후보 섹션 */}
+              {hasReference && state.status === 'ok' && (
+                <section>
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <span className="w-2.5 h-2.5 rounded-full bg-aring-ink-300 shrink-0" />
+                    <div>
+                      <h2 className="text-[14px] md:text-[15px] font-extrabold text-aring-ink-600">
+                        완전히 같진 않지만, 이런 후보도 있어요
+                        <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
+                      </h2>
+                      <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 40~59%</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+                    {state.reference.map(c => <ReferenceCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                  </div>
+                </section>
+              )}
+
+              <div className="h-8" />
             </div>
           </div>
+
           <BottomNav />
         </div>
       </div>
