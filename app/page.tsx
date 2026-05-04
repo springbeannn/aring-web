@@ -137,41 +137,34 @@ function HeroBanner() {   // async 제거된 상태
       .then(res => res.json())
       .then(data => setCount(data.count))
   }, [])
-  return (
-    <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-2.5 lg:pt-6 pb-2.5 lg:pb-6 min-h-[220px] lg:min-h-[280px]">
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="aring-blob-a absolute -top-12 -left-10 w-[200px] h-[200px] rounded-full opacity-70" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
-        <div className="aring-blob-b absolute top-1/3 -right-14 w-[220px] h-[220px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
-        <div className="aring-blob-c absolute -bottom-14 left-1/4 w-[180px] h-[180px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
-      </div>
-      <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
-        <IconSparkle />AI MATCH · NEW
-      </span>
-      <div className="absolute top-2.5 right-3 lg:top-6 lg:right-6 z-10 glass rounded-pill px-1.5 py-0.5 inline-flex items-center gap-1.5 shadow-card">
-        <span className="relative flex w-2 h-2">
-          <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent" />
-          <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
-        </span>
-        <span className="text-[10px] font-extrabold text-aring-green tracking-wider">지금 {count ?? 0}개 매칭 중</span>
-      </div>
-      <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
-        하나만 남은 귀걸이,<br />
-        <span className="grad-text-green">AI가 짝을 찾아드려요</span>
-      </h1>
-      <p className="relative z-10 mt-2 lg:mt-4 text-[13px] lg:text-[14px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
-        사진 한 장이면 충분합니다. 브랜드·형태·소재·디테일까지 분석해 비슷하거나 정확히 맞는 짝을 연결합니다.
-      </p>
-      <Link href="/register" className="relative z-10 mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-extrabold text-white shadow-cta active:scale-[0.98] transition">
-        등록하기<IconArrow className="w-3.5 h-3.5" />
-      </Link>
-      <div className="pointer-events-none absolute -right-4 -bottom-6 lg:right-10 lg:bottom-1/2 lg:translate-y-1/2 w-[170px] h-[170px] lg:w-[260px] lg:h-[260px] flex items-center justify-center">
-        <div className="absolute inset-0 radial-halo rounded-full" />
-        <div className="relative grad-ring w-[110px] h-[110px] lg:w-[180px] lg:h-[180px] rounded-full shadow-[0_12px_30px_rgba(107,127,232,.25)]">
-          <div className="absolute -top-3 lg:-top-5 left-1/2 -translate-x-1/2 w-5 h-5 lg:w-8 lg:h-8 rounded-full" style={{ background: 'linear-gradient(135deg,#FBC8DC,#FFD9B8,#C8E6C9)', boxShadow: '0 6px 14px rgba(245,168,199,.35)' }} />
-        </div>
+return (
+  <>
+    <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
+      <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
+      AI MATCH · NEW : {count ?? 0} 매칭 중
+    </span>
+
+    <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
+      하나만 남은 귀걸이,<br />
+      <span className="grad-text-green">AI가 짝을 찾아드려요</span>
+    </h1>
+
+    <p className="relative z-10 mt-2 lg:mt-4 text-[13px] lg:text-[14px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
+      사진 한 장이면 충분합니다. 브랜드·형태·소재·디테일까지 분석해 비슷하거나 정확히 맞는 짝을 연결합니다.
+    </p>
+
+    <Link href="/register" className="relative z-10 mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-extrabold text-white shadow-cta active:scale-[0.98] transition">
+      등록하기<IconArrow className="w-3.5 h-3.5" />
+    </Link>
+
+    <div className="pointer-events-none absolute -right-4 -bottom-6 lg:right-10 lg:bottom-1/2 lg:translate-y-1/2 w-[170px] h-[170px] lg:w-[260px] lg:h-[260px] flex items-center justify-center">
+      <div className="absolute inset-0 radial-halo rounded-full" />
+      <div className="relative grad-ring w-[110px] h-[110px] lg:w-[180px] lg:h-[180px] rounded-full shadow-[0_12px_30px_rgba(107,127,232,.25)]">
+        <div className="absolute -top-3 lg:-top-5 left-1/2 -translate-x-1/2 w-5 h-5 lg:w-8 lg:h-8 rounded-full" style={{ background: 'linear-gradient(135deg,#FBC8DC,#FFD9B8,#C8E6C9)', boxShadow: '0 6px 14px rgba(245,168,199,.35)' }} />
       </div>
     </div>
-  );
+  </>
+);
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -344,7 +337,7 @@ function BrandSection({ brandCounts }: {
             >
               {brand}
               {count > 0 && (
-                <span className="ml-1.5 text-[10px] font-extrabold text-aring-ink-400">
+                <span className="ml-1.5 text-[11px] font-extrabold text-aring-ink-400">
                   {count}
                 </span>
               )}
