@@ -84,7 +84,7 @@ function CandidateCard({ item, matchScore, isSimilar }: { item: Listing; matchSc
 function MyItemSummary({ item }: { item: Listing }) {
   const tags = [item.shape && `형태: ${item.shape}`, item.color && `컬러: ${item.color}`, item.material && `소재: ${item.material}`, item.brand && item.brand !== '브랜드 미상' && item.brand].filter(Boolean) as string[];
   return (
-    <div className="mx-5 rounded-card border border-aring-green-line bg-white overflow-hidden shadow-card">
+    <div className="mx-5 lg:mx-8 rounded-card border border-aring-green-line bg-white overflow-hidden shadow-card">
       <div className="flex gap-4 p-4">
         <div className="w-20 h-20 shrink-0 rounded-tile overflow-hidden bg-aring-grad-pastel">{item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}</div>
         <div className="flex-1 min-w-0">
@@ -162,11 +162,11 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
   const isEmpty      = state.status === 'ok' && !hasSimilar && !hasReference;
 
   return (
-    <main className="min-h-screen flex justify-center bg-gradient-to-b from-green-50/10 via-yellow-50 to-pink-50">
-      <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone">
+    <main className="min-h-screen flex justify-center bg-white">
+      <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <TopNav />
         <div className="pb-28">
-          <div className="px-5 pt-6 pb-5">
+          <div className="px-5 lg:px-8 pt-6 lg:pt-10 pb-5">
             <button onClick={() => router.back()} className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 active:opacity-70 transition"><IconArrowLeft className="w-4 h-4" /> 뒤로</button>
             <div className="flex items-center gap-2 mb-1"><IconSparkle className="w-4 h-4 text-aring-accent" /><span className="text-[11px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span></div>
             <h1 className="text-[22px] font-extrabold text-aring-ink-900 leading-snug">AI가 비슷한 짝을<br />찾아봤어요</h1>
@@ -190,21 +190,21 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
             </div>
           )}
           {hasSimilar && state.status === 'ok' && (
-            <section className="mt-7 px-5">
+            <section className="mt-7 px-5 lg:px-8">
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-0.5"><span className="w-2 h-2 rounded-full bg-aring-green" /><h2 className="text-[17px] font-extrabold text-aring-ink-900">가장 비슷한 짝을 찾아봤어요</h2></div>
                 <p className="text-[11px] text-aring-ink-500 pl-4">aring Match 60% 이상 · {state.similar.length}개</p>
               </div>
-              <div className="grid grid-cols-1 gap-4">{state.similar.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} isSimilar={true} />)}</div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">{state.similar.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} isSimilar={true} />)}</div>
             </section>
           )}
           {hasReference && state.status === 'ok' && (
-            <section className="mt-8 px-5">
+            <section className="mt-8 px-5 lg:px-8">
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-0.5"><span className="w-2 h-2 rounded-full bg-aring-ink-300" /><h2 className="text-[15px] font-extrabold text-aring-ink-700">완전히 같진 않지만, 이런 후보도 있어요</h2></div>
                 <p className="text-[11px] text-aring-ink-400 pl-4">aring Match 40~59% · {state.reference.length}개</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">{state.reference.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} isSimilar={false} />)}</div>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">{state.reference.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} isSimilar={false} />)}</div>
             </section>
           )}
         </div>
