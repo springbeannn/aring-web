@@ -270,7 +270,29 @@ export default function DiscoverPage() {
         setRawListings(new Map());
       } else {
         const rows = data as Listing[];
-        setItems(rows.map(listingToRecent));
+        const { getBrands } = await import('@/lib/brandNormalizer');
+        const brandDict = await getBrands();
+        const resolvedItems = rows.map(row => {
+          const item = listingToRecent(row);
+          const brandInput = (row.brand as string)?.trim();
+          const bkey = (row as any).brand_key as string | undefined;
+          let dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
+          if (!dictEntry && brandInput) {
+            const q = brandInput.toLowerCase().replace(/\s+/g, '');
+            dictEntry = brandDict.find(b => {
+              const targets = [
+                b.brand_key,
+                b.display_name.toLowerCase(),
+                (b.name_ko ?? '').toLowerCase(),
+                (b.name_en ?? '').toLowerCase(),
+                ...b.aliases.map((a: string) => a.toLowerCase()),
+              ].map(t => t.replace(/\s+/g, ''));
+              return targets.includes(q);
+            }) ?? null;
+          }
+          return { ...item, brand: dictEntry?.display_name ?? '기타' };
+        });
+        setItems(resolvedItems);
         setRawListings(new Map(rows.map((r) => [r.id, r])));
       }
       setLoading(false);
@@ -281,9 +303,14 @@ export default function DiscoverPage() {
 
   const brandOptions = useMemo(() => {
     const map = new Map<string, number>();
-    for (const it of items) map.set(it.brand, (map.get(it.brand) ?? 0) + 1);
+    for (const it of items) {
+      if (it.brand && it.brand !== '브랜드 미상' && it.brand !== '기타') {
+        map.set(it.brand, (map.get(it.brand) ?? 0) + 1);
+      }
+    }
     const sorted = Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([b]) => b);
-    return ['all', ...sorted];
+    const hasEtc = items.some(it => it.brand === '기타');
+    return ['all', ...sorted, ...(hasEtc ? ['기타'] : [])];
   }, [items]);
 
   const filtered = useMemo(() => {
