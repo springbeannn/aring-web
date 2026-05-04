@@ -197,6 +197,27 @@ function ThumbImage({ src, fallback, tone, alt, className = '' }: {
   );
 }
 
+
+// ─────────────────────────────────────────────────────────────
+// SectionHeader
+// ─────────────────────────────────────────────────────────────
+function SectionHeader({ title, sub, more, onMore }: {
+  title: string; sub?: string; more?: string; onMore?: () => void;
+}) {
+  return (
+    <div className="flex items-end justify-between px-5 lg:px-8 mb-3">
+      <div>
+        <h2 className="text-[16px] lg:text-[20px] font-extrabold text-aring-ink-900 tracking-tight">{title}</h2>
+        {sub && <p className="mt-0.5 text-[11px] lg:text-[13px] text-aring-ink-500">{sub}</p>}
+      </div>
+      {more && onMore && (
+        <button onClick={onMore} className="text-[11px] lg:text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+          {more}
+        </button>
+      )}
+    </div>
+  );
+}
 // ─────────────────────────────────────────────────────────────
 // TodayMatchSection
 // ─────────────────────────────────────────────────────────────
