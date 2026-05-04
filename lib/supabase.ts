@@ -89,3 +89,19 @@ export function buildPhotoPath(filename: string): string {
 }
 
 export const STORAGE_BUCKET = 'listing-photos';
+
+// ────────────────────────────────────────────────────────────────
+// Brand dictionary — brands 테이블 row 타입
+// ────────────────────────────────────────────────────────────────
+export type BrandRow = {
+  id: string;
+  brand_key: string;
+  display_name: string;
+  name_ko: string | null;
+  name_en: string | null;
+  aliases: string[];
+  origin: 'domestic' | 'international' | null;
+  category: 'luxury' | 'fashion' | 'contemporary' | 'mass' | 'designer' | null;
+  created_at: string;
+  updated_at: string;
+};

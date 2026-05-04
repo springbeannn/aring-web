@@ -438,13 +438,22 @@ export default function HomePage() {
 
         setAllItems(data.map((row, i) => listingToRecentItem(row as Listing, i)));
 
-        const counts: Record<string, number> = {};
-        data.forEach(row => {
-          const brand = (row.brand as string)?.trim();
-          if (!brand || brand === '브랜드 미상') return;
-          counts[brand] = (counts[brand] ?? 0) + 1;
+        // brand_key 기준으로 집계, display_name으로 표시
+        import('@/lib/brandNormalizer').then(({ getBrands }) => {
+          getBrands().then(brandDict => {
+            const counts: Record<string, number> = {};
+            data.forEach(row => {
+              const brandInput = (row.brand as string)?.trim();
+              if (!brandInput || brandInput === '브랜드 미상') return;
+              const bkey = (row as any).brand_key as string | undefined;
+              // brand_key로 딕셔너리에서 display_name 찾기
+              const dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
+              const displayName = dictEntry?.display_name ?? brandInput;
+              counts[displayName] = (counts[displayName] ?? 0) + 1;
+            });
+            if (!cancelled) setBrandCounts(counts);
+          });
         });
-        setBrandCounts(counts);
       });
     return () => { cancelled = true; };
   }, []);

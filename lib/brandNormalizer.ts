@@ -1,59 +1,61 @@
-// 한글 → 영문 브랜드 매핑 dictionary (확장 가능)
-const BRAND_DICTIONARY: Record<string, string> = {
-  // 샤넬
-  '샤넬': 'chanel',
-  'chanel': 'chanel',
-  // 디올
-  '디올': 'dior',
-  'dior': 'dior',
-  // 티파니
-  '티파니': 'tiffany',
-  'tiffany & co': 'tiffany',
-  'tiffany&co': 'tiffany',
-  'tiffany': 'tiffany',
-  // 비비안웨스트우드
-  '비비안웨스트우드': 'viviennewestwood',
-  '비비안 웨스트우드': 'viviennewestwood',
-  'vivienne westwood': 'viviennewestwood',
-  'viviennewestwood': 'viviennewestwood',
-  // 셀린느
-  '셀린느': 'celine',
-  '셀린': 'celine',
-  'celine': 'celine',
-  // 스와로브스키
-  '스와로브스키': 'swarovski',
-  'swarovski': 'swarovski',
-  // 미우미우
-  '미우미우': 'miumiu',
-  'miu miu': 'miumiu',
-  'miumiu': 'miumiu',
-  // 아지메
-  '아지메': 'agme',
-  'agme': 'agme',
-  // 넘버링
-  '넘버링': 'numbering',
-  'numbering': 'numbering',
+import { supabase } from '@/lib/supabase';
+
+export type BrandRow = {
+  id: string;
+  brand_key: string;
+  display_name: string;
+  name_ko: string | null;
+  name_en: string | null;
+  aliases: string[];
+  origin: 'domestic' | 'international' | null;
+  category: 'luxury' | 'fashion' | 'contemporary' | 'mass' | 'designer' | null;
 };
 
-/**
- * 브랜드 입력값을 정규화된 brand_key로 변환합니다.
- * - 소문자 변환 + 앞뒤 공백 제거
- * - dictionary 기반 한글/영문 매핑
- * - dictionary에 없으면 소문자+trim 그대로 반환
- */
+// ─── 메모리 캐시 ───────────────────────────────────────────
+let _cache: BrandRow[] | null = null;
+let _cacheAt = 0;
+const CACHE_TTL = 1000 * 60 * 10; // 10분
+
+export async function getBrands(): Promise<BrandRow[]> {
+  if (_cache && Date.now() - _cacheAt < CACHE_TTL) return _cache;
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .order('display_name');
+  if (error || !data) return _cache ?? [];
+  _cache = data as BrandRow[];
+  _cacheAt = Date.now();
+  return _cache;
+}
+
+// ─── 브랜드 매칭 ───────────────────────────────────────────
+export async function resolveBrand(input: string): Promise<{
+  brand_key: string;
+  display_name: string;
+} | null> {
+  if (!input.trim()) return null;
+  const brands = await getBrands();
+  const q = input.toLowerCase().trim().replace(/\s+/g, '');
+
+  for (const b of brands) {
+    const targets = [
+      b.brand_key,
+      b.display_name.toLowerCase(),
+      b.name_ko?.toLowerCase() ?? '',
+      b.name_en?.toLowerCase() ?? '',
+      ...b.aliases.map(a => a.toLowerCase()),
+    ];
+    const targetsNoSpace = targets.map(t => t.replace(/\s+/g, ''));
+    if (targets.includes(input.toLowerCase().trim()) || targetsNoSpace.includes(q)) {
+      return { brand_key: b.brand_key, display_name: b.display_name };
+    }
+  }
+  return null;
+}
+
+// ─── 하위호환 동기 함수 (register에서 쓰던 것) ─────────────
 export function normalizeBrand(input: string): string {
-  if (!input || input.trim() === '') return '';
-
-  // 1. 소문자 변환 + 앞뒤 공백 제거
-  const normalized = input.toLowerCase().trim();
-
-  // 2. 공백 제거 버전 (검색용)
-  const noSpaceKey = normalized.replace(/\s+/g, '');
-
-  // 3. dictionary 검색 (원본 → 공백제거 순서로)
-  if (BRAND_DICTIONARY[normalized]) return BRAND_DICTIONARY[normalized];
-  if (BRAND_DICTIONARY[noSpaceKey]) return BRAND_DICTIONARY[noSpaceKey];
-
-  // 4. dictionary에 없으면 기본 정규화값 반환
-  return normalized;
+  if (!input.trim()) return '';
+  return input.toLowerCase().trim().replace(/\s+/g, '');
 }

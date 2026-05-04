@@ -17,7 +17,7 @@ import {
   type ShapeKey,
   type MaterialKey,
 } from '@/lib/categories';
-import { normalizeBrand } from '@/lib/brandNormalizer';
+import { normalizeBrand, resolveBrand } from '@/lib/brandNormalizer';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
@@ -173,7 +173,9 @@ export default function RegisterPage() {
 
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const brandInput = brand.trim() || '';
-      const brandKey = normalizeBrand(brandInput);
+      const resolved = await resolveBrand(brandInput);
+      const brandKey = resolved?.brand_key ?? normalizeBrand(brandInput);
+      const brandDisplay = resolved?.display_name ?? brandInput;
 
       // 최종 저장값: shapeKey/materialKey 선택 시 우선, 없으면 사용자가 수정한 AI 분석값 사용
       const finalShape = shapeKey ? shapeLabel(shapeKey) : aiShape;
@@ -184,7 +186,7 @@ export default function RegisterPage() {
         user_id: userId,
         photo_url,
         photo_path: path,
-        brand: brandInput || '브랜드 미상',
+        brand: brandDisplay || '브랜드 미상',
         brand_input: brandInput || null,
         brand_key: brandKey || '',
         shape: finalShape,
