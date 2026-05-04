@@ -316,13 +316,14 @@ function BrandSection({ brandCounts }: {
 
   const userBrands = useMemo(() =>
     Object.entries(brandCounts)
-      .filter(([brand]) => brand && brand !== '브랜드 미상' && !famousSet.has(brand.toLowerCase()))
+      .filter(([brand]) => brand && brand !== '브랜드 미상' && brand !== '기타' && !famousSet.has(brand.toLowerCase()))
       .sort((a, b) => b[1] - a[1])
       .slice(0, 15)
       .map(([brand]) => brand),
   [brandCounts]);
 
-  const allBrands = ['전체', ...FAMOUS_BRANDS, ...userBrands];
+  const hasEtc = (brandCounts['기타'] ?? 0) > 0;
+  const allBrands = ['전체', ...FAMOUS_BRANDS, ...userBrands, ...(hasEtc ? ['기타'] : [])];
   const totalCount = Object.values(brandCounts).reduce((a, b) => a + b, 0);
 
   function handleClick(brand: string) {
@@ -438,7 +439,7 @@ export default function HomePage() {
 
         setAllItems(data.map((row, i) => listingToRecentItem(row as Listing, i)));
 
-        // brand_key 기준으로 집계, display_name으로 표시
+        // brand_key 또는 aliases 기준으로 집계, display_name으로 표시
         import('@/lib/brandNormalizer').then(({ getBrands }) => {
           getBrands().then(brandDict => {
             const counts: Record<string, number> = {};
@@ -446,9 +447,24 @@ export default function HomePage() {
               const brandInput = (row.brand as string)?.trim();
               if (!brandInput || brandInput === '브랜드 미상') return;
               const bkey = (row as any).brand_key as string | undefined;
-              // brand_key로 딕셔너리에서 display_name 찾기
-              const dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
-              const displayName = dictEntry?.display_name ?? brandInput;
+              // 1) brand_key로 직접 매칭
+              let dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
+              // 2) brand_key 없으면 aliases/name_ko/name_en으로 매칭
+              if (!dictEntry) {
+                const q = brandInput.toLowerCase().replace(/\s+/g, '');
+                dictEntry = brandDict.find(b => {
+                  const targets = [
+                    b.brand_key,
+                    b.display_name.toLowerCase(),
+                    (b.name_ko ?? '').toLowerCase(),
+                    (b.name_en ?? '').toLowerCase(),
+                    ...b.aliases.map((a: string) => a.toLowerCase()),
+                  ].map(t => t.replace(/\s+/g, ''));
+                  return targets.includes(q);
+                }) ?? null;
+              }
+              // 3) 딕셔너리에 없으면 '기타'
+              const displayName = dictEntry?.display_name ?? '기타';
               counts[displayName] = (counts[displayName] ?? 0) + 1;
             });
             if (!cancelled) setBrandCounts(counts);
