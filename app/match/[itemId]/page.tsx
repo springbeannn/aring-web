@@ -92,24 +92,32 @@ function SimilarCard({ item, matchScore }: { item: Listing; matchScore: MatchRes
 function ReferenceCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
   const st = statusLabel(item.status);
   return (
-    <div className="rounded-2xl border border-aring-ink-100 bg-white overflow-hidden hover:border-aring-ink-200 transition-colors flex flex-col">
-      <div className="relative overflow-hidden bg-aring-ink-100" style={{ height: '220px' }}>
-        {item.photo_url
-          ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
-          : <div className="w-full h-full bg-aring-grad-pastel" />
-        }
-        <div className="absolute top-2 left-2"><MatchBadge score={matchScore.totalScore} type="reference" /></div>
-        <div className="absolute top-2 right-2"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
-      </div>
-      <div className="px-3.5 py-3 flex flex-col flex-1">
-        <p className="text-[10.5px] font-extrabold text-aring-ink-400 mb-1">{matchScore.label}</p>
-        <p className="text-[10px] text-aring-ink-400 font-bold truncate">{item.brand ?? '브랜드 미상'}</p>
-        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 line-clamp-2 leading-snug">{item.detail ?? item.shape ?? '한 짝'}</p>
-        {item.story && <p className="mt-1 text-[10.5px] text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>}
-        <ReasonBox reasons={matchScore.reasons.slice(0, 2)} type="reference" />
-        <div className="mt-auto pt-3 flex gap-1.5">
-          <Link href={`/items/${item.id}`} className="flex-1 flex items-center justify-center rounded-pill bg-aring-ink-900 py-2 text-[11px] font-extrabold text-white hover:opacity-90 transition">상세 보기</Link>
-          <Link href={`/items/${item.id}#comments`} className="flex items-center justify-center rounded-pill border border-aring-ink-200 px-2.5 py-2 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition"><IconChat className="w-3.5 h-3.5" /></Link>
+    <div className="rounded-2xl border border-aring-ink-100 bg-white overflow-hidden hover:border-aring-ink-200 transition-colors">
+      <div className="flex flex-row">
+        <div className="relative w-36 shrink-0 bg-aring-ink-100 overflow-hidden" style={{ minHeight: '180px' }}>
+          {item.photo_url
+            ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
+            : <div className="w-full h-full bg-aring-grad-pastel" />
+          }
+          <div className="absolute top-2 left-2"><MatchBadge score={matchScore.totalScore} type="reference" /></div>
+          <div className="absolute top-2 right-2"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
+        </div>
+        <div className="flex flex-col justify-between flex-1 px-4 py-3">
+          <div>
+            <p className="text-[10.5px] font-extrabold text-aring-ink-400 mb-1">{matchScore.label}</p>
+            <p className="text-[10px] text-aring-ink-400 font-bold truncate">{item.brand ?? '브랜드 미상'}</p>
+            <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 line-clamp-2 leading-snug">{item.detail ?? item.shape ?? '한 짝'}</p>
+            {item.story && <p className="mt-1 text-[10.5px] text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>}
+            <ReasonBox reasons={matchScore.reasons.slice(0, 2)} type="reference" />
+          </div>
+          <div className="mt-3 flex gap-2">
+            <Link href={`/items/${item.id}#comments`} className="flex items-center gap-1 rounded-pill border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
+              <IconChat className="w-3.5 h-3.5" /> 댓글
+            </Link>
+            <Link href={`/items/${item.id}`} className="flex items-center gap-1 rounded-pill bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
+              상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
