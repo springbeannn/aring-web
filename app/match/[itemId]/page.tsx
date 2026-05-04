@@ -94,7 +94,8 @@ function ReferenceCard({ item, matchScore }: { item: Listing; matchScore: MatchR
   return (
     <div className="rounded-2xl border border-aring-ink-100 bg-white overflow-hidden hover:border-aring-ink-200 transition-colors">
       <div className="flex flex-row">
-        <div className="relative w-36 shrink-0 bg-aring-ink-100 overflow-hidden" style={{ minHeight: '180px' }}>
+        {/* 이미지 영역 */}
+        <div className="relative w-40 shrink-0 bg-aring-ink-100 overflow-hidden" style={{ minHeight: '200px' }}>
           {item.photo_url
             ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
             : <div className="w-full h-full bg-aring-grad-pastel" />
@@ -102,19 +103,29 @@ function ReferenceCard({ item, matchScore }: { item: Listing; matchScore: MatchR
           <div className="absolute top-2 left-2"><MatchBadge score={matchScore.totalScore} type="reference" /></div>
           <div className="absolute top-2 right-2"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
         </div>
-        <div className="flex flex-col justify-between flex-1 px-4 py-3">
-          <div>
-            <p className="text-[10.5px] font-extrabold text-aring-ink-400 mb-1">{matchScore.label}</p>
-            <p className="text-[10px] text-aring-ink-400 font-bold truncate">{item.brand ?? '브랜드 미상'}</p>
-            <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 line-clamp-2 leading-snug">{item.detail ?? item.shape ?? '한 짝'}</p>
-            {item.story && <p className="mt-1 text-[10.5px] text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>}
+        {/* 텍스트 영역 */}
+        <div className="flex flex-col justify-between flex-1 px-5 py-4">
+          <div className="flex flex-col gap-3">
+            {/* 상품 기본 정보 묶음 */}
+            <div>
+              {/* 캡션: 라벨 */}
+              <p className="text-[11px] font-extrabold text-aring-ink-400 mb-1">{matchScore.label}</p>
+              {/* 본문: 브랜드 */}
+              <p className="text-[13px] font-semibold text-aring-ink-500 truncate">{item.brand ?? '브랜드 미상'}</p>
+              {/* 카드 타이틀: 상품명 */}
+              <p className="mt-0.5 text-[14px] font-extrabold text-aring-ink-900 line-clamp-2 leading-snug">{item.detail ?? item.shape ?? '한 짝'}</p>
+              {/* 캡션: 등록자 한마디 */}
+              {item.story && <p className="mt-1.5 text-[11px] font-medium text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>}
+            </div>
+            {/* 이유 설명 박스 */}
             <ReasonBox reasons={matchScore.reasons.slice(0, 2)} type="reference" />
           </div>
-          <div className="mt-3 flex gap-2">
-            <Link href={`/items/${item.id}#comments`} className="flex items-center gap-1 rounded-pill border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
+          {/* 버튼 영역 */}
+          <div className="mt-4 flex gap-2">
+            <Link href={`/items/${item.id}#comments`} className="flex items-center gap-1 rounded-pill border border-aring-ink-200 bg-white px-3 py-1.5 text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-50 transition">
               <IconChat className="w-3.5 h-3.5" /> 댓글
             </Link>
-            <Link href={`/items/${item.id}`} className="flex items-center gap-1 rounded-pill bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
+            <Link href={`/items/${item.id}`} className="flex items-center gap-1 rounded-pill bg-aring-ink-900 px-4 py-1.5 text-[13px] font-extrabold text-white hover:opacity-90 transition">
               상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -134,25 +145,32 @@ function MyItemSummary({ item }: { item: Listing }) {
   return (
     <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden shadow-sm">
       <div className="flex gap-0">
-        <div className="w-24 h-24 md:w-28 md:h-28 shrink-0 overflow-hidden bg-aring-grad-pastel">
+        {/* 이미지 */}
+        <div className="w-28 h-28 md:w-32 md:h-32 shrink-0 overflow-hidden bg-aring-grad-pastel">
           {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}
         </div>
-        <div className="flex-1 px-4 py-3 min-w-0">
-          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase mb-1">
+        {/* 정보 */}
+        <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
+          {/* 캡션: 내 귀걸이 라벨 */}
+          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase">
             <IconSparkle className="w-3 h-3" /> 내 귀걸이
           </span>
-          <p className="text-[13px] md:text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-          {item.brand && <p className="mt-0.5 text-[11px] text-aring-ink-400 font-medium">{item.brand}</p>}
-          <div className="mt-2 flex flex-wrap gap-1">
+          {/* 카드 타이틀: 상품명 */}
+          <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+          {/* 본문: 브랜드 */}
+          {item.brand && <p className="text-[13px] font-semibold text-aring-ink-500">{item.brand}</p>}
+          {/* 속성 칩 */}
+          <div className="flex flex-wrap gap-1 mt-0.5">
             {tags.slice(0, 4).map(t => (
               <span key={t} className="rounded-pill bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
             ))}
           </div>
         </div>
       </div>
+      {/* 캡션: 등록자 한마디 */}
       {item.story && (
         <div className="border-t border-aring-ink-100 px-4 py-2.5">
-          <p className="text-[11px] text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
+          <p className="text-[11px] font-medium text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
         </div>
       )}
     </div>
@@ -292,7 +310,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               {/* 유사 후보 섹션 */}
               {hasSimilar && state.status === 'ok' && (
                 <section className="mb-8">
-                  <div className="flex items-center gap-2.5 mb-4">
+                  <div className="flex items-center gap-2.5 mb-5">
                     <span className="w-2.5 h-2.5 rounded-full bg-aring-green shrink-0" />
                     <div>
                       <h2 className="text-[15px] md:text-[17px] font-extrabold text-aring-ink-900">
@@ -316,7 +334,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               {/* 참고 후보 섹션 */}
               {hasReference && state.status === 'ok' && (
                 <section>
-                  <div className="flex items-center gap-2.5 mb-4">
+                  <div className="flex items-center gap-2.5 mb-5">
                     <span className="w-2.5 h-2.5 rounded-full bg-aring-ink-300 shrink-0" />
                     <div>
                       <h2 className="text-[14px] md:text-[15px] font-extrabold text-aring-ink-600">
