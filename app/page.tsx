@@ -138,7 +138,16 @@ function HeroBanner() {   // async 제거된 상태
       .then(data => setCount(data.count))
   }, [])
 return (
-  <>
+  <div className="mx-5 lg:mx-8 mb-6 lg:mb-10 relative overflow-hidden rounded-card bg-aring-grad-pastel px-5 lg:px-10 pt-2.5 lg:pt-6 pb-2.5 lg:pb-6 min-h-[220px] lg:min-h-[280px]">
+
+    {/* 블러 배경 */}
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      <div className="aring-blob-a absolute -top-12 -left-10 w-[200px] h-[200px] rounded-full opacity-70" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
+      <div className="aring-blob-b absolute top-1/3 -right-14 w-[220px] h-[220px] rounded-full opacity-60" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
+      <div className="aring-blob-c absolute -bottom-14 left-1/4 w-[180px] h-[180px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
+    </div>
+
+    {/* 합쳐진 배지 */}
     <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
       <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
       AI MATCH · NEW : {count ?? 0} 매칭 중
@@ -163,26 +172,10 @@ return (
         <div className="absolute -top-3 lg:-top-5 left-1/2 -translate-x-1/2 w-5 h-5 lg:w-8 lg:h-8 rounded-full" style={{ background: 'linear-gradient(135deg,#FBC8DC,#FFD9B8,#C8E6C9)', boxShadow: '0 6px 14px rgba(245,168,199,.35)' }} />
       </div>
     </div>
-  </>
-);
-}
 
-// ─────────────────────────────────────────────────────────────
-// SectionHeader
-// ─────────────────────────────────────────────────────────────
-function SectionHeader({ title, sub, more, onMore }: {
-  title: string; sub?: string; more?: string; onMore?: () => void;
-}) {
-  return (
-    <div className="px-5 lg:px-8 mb-3 lg:mb-5 flex items-end justify-between">
-      <div>
-        <h2 className="text-[17px] lg:text-[22px] font-extrabold tracking-tight text-aring-ink-900">{title}</h2>
-        {sub && <p className="mt-1 text-[11px] lg:text-[13px] text-aring-ink-500">{sub}</p>}
-      </div>
-      {more && <button onClick={onMore} className="text-[11px] lg:text-[13px] font-semibold text-aring-ink-500 active:opacity-70">{more}</button>}
-    </div>
-  );
-}
+  </div>
+);
+
 
 // ─────────────────────────────────────────────────────────────
 // ThumbImage
