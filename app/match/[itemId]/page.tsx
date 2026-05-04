@@ -326,7 +326,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                       <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 40~59%</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+                  <div className="flex flex-col gap-4">
                     {state.reference.map(c => <ReferenceCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
                   </div>
                 </section>
