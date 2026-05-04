@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { thumbBg, type ThumbTone } from '@/lib/mock';
 import {
@@ -79,11 +79,7 @@ const STATUS_BADGE: Record<Listing['status'], string> = {
   closed: 'bg-aring-ink-100 text-aring-ink-500',
 };
 
-function nextStatus(s: Listing['status']): Listing['status'] | null {
-  if (s === 'open') return 'matched';
-  if (s === 'matched') return 'closed';
-  return null;
-}
+// nextStatus 제거 — 직접 선택 방식으로 교체
 
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -317,10 +313,9 @@ export default function MyPage() {
     };
   }, [userId]);
 
-  // 상태 변경
-  async function handleStatusChange(listing: Listing) {
-    const next = nextStatus(listing.status);
-    if (!next || !supabase) return;
+  // 상태 변경 (직접 선택)
+  async function handleStatusChange(listing: Listing, next: Listing['status']) {
+    if (!supabase) return;
     const { error } = await supabase
       .from('listings')
       .update({ status: next })
@@ -335,7 +330,11 @@ export default function MyPage() {
     );
     if (next === 'matched' || next === 'closed') {
       // 거래 완료 카운트 재계산
-      setClosedCount((c) => (listing.status === 'open' ? c + 1 : c));
+      setClosedCount((c) => {
+        if (next === 'closed' && listing.status !== 'closed') return c + 1;
+        if (next !== 'closed' && listing.status === 'closed') return c - 1;
+        return c;
+      });
     }
   }
 
@@ -505,7 +504,7 @@ function MyListingsSection({
 }: {
   listings: Listing[];
   loading: boolean;
-  onStatusChange: (l: Listing) => void;
+  onStatusChange: (listing: Listing, next: Listing['status']) => void;
 }) {
   return (
     <section id="my-listings" className="pt-3 pb-5 scroll-mt-20">
@@ -541,11 +540,9 @@ function MyListingCard({
   onStatusChange,
 }: {
   listing: Listing;
-  onStatusChange: (l: Listing) => void;
+  onStatusChange: (listing: Listing, next: Listing['status']) => void;
 }) {
   const tone = pickTone(listing.id);
-  const hint = pickRandom(STATE_HINTS[listing.status], listing.id);
-  const canChange = listing.status !== 'closed';
 
   return (
     <div className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3">
@@ -576,26 +573,100 @@ function MyListingCard({
             {relativeTime(listing.created_at)}
           </p>
         </Link>
-        <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-          <button
-            onClick={() => canChange && onStatusChange(listing)}
-            disabled={!canChange}
-            className={[
-              'inline-flex items-center px-2 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider transition',
-              STATUS_BADGE[listing.status],
-              canChange ? 'active:scale-95' : 'opacity-70 cursor-default',
-            ].join(' ')}
-            title={canChange ? '클릭해서 다음 상태로' : ''}
-          >
-            {STATUS_LABEL[listing.status]}
-            {canChange && <span className="ml-1 opacity-70">›</span>}
-          </button>
-          <span className="text-[10px] text-aring-ink-500 italic truncate">
-            {hint}
-          </span>
+        <div className="mt-2">
+          <StatusStepper listing={listing} onStatusChange={onStatusChange} />
         </div>
       </div>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// StatusStepper — 3단계 상태 표시 + 변경
+// ─────────────────────────────────────────────────────────────
+const STEPS: Listing['status'][] = ['open', 'matched', 'closed'];
+const STEP_LABEL: Record<Listing['status'], string> = {
+  open: '판매중',
+  matched: '거래중',
+  closed: '완료',
+};
+
+function StatusStepper({
+  listing,
+  onStatusChange,
+}: {
+  listing: Listing;
+  onStatusChange: (listing: Listing, next: Listing['status']) => void;
+}) {
+  const [confirm, setConfirm] = useState<Listing['status'] | null>(null);
+  const curIdx = STEPS.indexOf(listing.status);
+
+  function handleClick(target: Listing['status']) {
+    const targetIdx = STEPS.indexOf(target);
+    if (targetIdx === curIdx) return;
+    if (targetIdx < curIdx) {
+      setConfirm(target);
+    } else {
+      onStatusChange(listing, target);
+    }
+  }
+
+  return (
+    <>
+      <div className="flex items-center gap-0.5">
+        {STEPS.map((step, idx) => {
+          const isCurrent = step === listing.status;
+          const isPast = idx < curIdx;
+          return (
+            <Fragment key={step}>
+              <button
+                onClick={() => handleClick(step)}
+                className={[
+                  'px-2 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wide transition active:scale-95',
+                  isCurrent
+                    ? 'bg-aring-ink-900 text-white shadow-sm'
+                    : isPast
+                    ? 'bg-aring-ink-100 text-aring-ink-400 hover:bg-aring-ink-200'
+                    : 'bg-aring-pastel-pink/30 text-aring-ink-400 hover:bg-aring-pastel-pink/60',
+                ].join(' ')}
+              >
+                {STEP_LABEL[step]}
+              </button>
+              {idx < STEPS.length - 1 && (
+                <span className="text-[9px] text-aring-ink-300 px-0.5">›</span>
+              )}
+            </Fragment>
+          );
+        })}
+      </div>
+
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+          <div className="w-full max-w-[300px] rounded-[20px] bg-white p-6 shadow-xl">
+            <p className="text-[14px] font-bold text-aring-ink-900 text-center leading-snug">
+              {STEP_LABEL[confirm]} 상태로<br />변경하시겠습니까?
+            </p>
+            <div className="mt-5 flex gap-2">
+              <button
+                onClick={() => setConfirm(null)}
+                className="flex-1 rounded-pill border border-aring-green-line py-2.5 text-[13px] font-bold text-aring-ink-600 hover:bg-aring-ink-100 transition"
+              >
+                취소
+              </button>
+              <button
+                onClick={() => {
+                  onStatusChange(listing, confirm);
+                  setConfirm(null);
+                }}
+                className="flex-1 rounded-pill bg-aring-ink-900 py-2.5 text-[13px] font-bold text-white shadow-cta active:scale-95 transition"
+              >
+                변경하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
