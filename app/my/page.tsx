@@ -545,10 +545,10 @@ function MyListingCard({
   const tone = pickTone(listing.id);
 
   return (
-    <div className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3">
+    <div className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3.5">
       <Link
         href={`/items/${listing.id}`}
-        className="shrink-0 w-[72px] h-[72px] rounded-tile overflow-hidden relative"
+        className="shrink-0 w-[86px] h-[86px] rounded-tile overflow-hidden relative"
         style={{ background: thumbBg(tone) }}
       >
         {listing.photo_url && (
@@ -561,19 +561,19 @@ function MyListingCard({
         )}
       </Link>
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 flex flex-col justify-between">
         <Link href={`/items/${listing.id}`} className="block">
-          <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
+          <p className="text-[10px] font-bold tracking-wider text-aring-ink-400 truncate uppercase">
             {listing.brand ?? '브랜드 미상'}
           </p>
-          <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
+          <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate leading-snug">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
-          <p className="mt-0.5 text-[10px] text-aring-ink-500">
+          <p className="mt-0.5 text-[10px] text-aring-ink-400">
             {relativeTime(listing.created_at)}
           </p>
         </Link>
-        <div className="mt-2">
+        <div className="mt-2.5">
           <StatusStepper listing={listing} onStatusChange={onStatusChange} />
         </div>
       </div>
@@ -613,27 +613,45 @@ function StatusStepper({
 
   return (
     <>
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center w-full">
         {STEPS.map((step, idx) => {
           const isCurrent = step === listing.status;
           const isPast = idx < curIdx;
+          const isLast = idx === STEPS.length - 1;
           return (
             <Fragment key={step}>
               <button
                 onClick={() => handleClick(step)}
-                className={[
-                  'px-2 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wide transition active:scale-95',
-                  isCurrent
-                    ? 'bg-aring-ink-900 text-white shadow-sm'
-                    : isPast
-                    ? 'bg-aring-ink-100 text-aring-ink-400 hover:bg-aring-ink-200'
-                    : 'bg-aring-pastel-pink/30 text-aring-ink-400 hover:bg-aring-pastel-pink/60',
-                ].join(' ')}
+                style={{ flex: 1 }}
+                className="relative flex flex-col items-center gap-0.5 transition active:scale-95 group min-w-0"
               >
-                {STEP_LABEL[step]}
+                <div className={[
+                  'w-4 h-4 rounded-full border-2 flex items-center justify-center transition',
+                  isCurrent
+                    ? 'bg-aring-ink-900 border-aring-ink-900 shadow-sm'
+                    : isPast
+                    ? 'bg-aring-ink-300 border-aring-ink-300'
+                    : 'bg-white border-aring-ink-200 group-hover:border-aring-ink-400',
+                ].join(' ')}>
+                  {isCurrent && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  {isPast && (
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                      <path d="M1.5 4L3 5.5L6.5 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                <span className={[
+                  'text-[9px] lg:text-[10px] font-extrabold tracking-wide whitespace-nowrap',
+                  isCurrent ? 'text-aring-ink-900' : isPast ? 'text-aring-ink-300' : 'text-aring-ink-300 group-hover:text-aring-ink-500',
+                ].join(' ')}>
+                  {STEP_LABEL[step]}
+                </span>
               </button>
-              {idx < STEPS.length - 1 && (
-                <span className="text-[9px] text-aring-ink-300 px-0.5">›</span>
+              {!isLast && (
+                <div className={[
+                  'h-[2px] flex-1 mx-1 rounded-full mb-4 transition',
+                  isPast ? 'bg-aring-ink-300' : 'bg-aring-ink-100',
+                ].join(' ')} />
               )}
             </Fragment>
           );

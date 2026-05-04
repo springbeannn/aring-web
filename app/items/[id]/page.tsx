@@ -238,7 +238,7 @@ function GallerySection({
   const showDots = images.length > 1;
 
   return (
-    <section className="lg:mb-6">
+    <section className="lg:mb-6 lg:max-w-[800px] lg:mx-auto lg:w-full">
       <div
         className="relative aspect-square w-full lg:rounded-card overflow-hidden bg-white"
         style={{ background: thumbBg(tone) }}
