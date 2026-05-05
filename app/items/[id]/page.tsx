@@ -146,6 +146,19 @@ function listingToSummary(row: Listing, idx: number): ItemSummary {
 // ─────────────────────────────────────────────────────────────
 function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => void; isOwner: boolean; itemId: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ url }); return; } catch (_) {}
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) { console.error('복사 실패:', e); }
+  };
   const router = useRouter();
 
   async function handleDelete() {
@@ -170,11 +183,16 @@ function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => voi
       </button>
       <div className="pointer-events-auto flex items-center gap-2">
         <button
-          onClick={log('detail:share')}
+          onClick={handleShare}
           aria-label="공유"
-          className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition"
+          className="w-10 h-10 rounded-full glass-strong flex items-center justify-center text-aring-ink-900 active:scale-95 transition relative"
         >
           <IconShare />
+          {copied && (
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-black text-white px-2 py-1 rounded whitespace-nowrap z-50">
+              링크 복사됨!
+            </span>
+          )}
         </button>
         <div className="relative">
           <button
