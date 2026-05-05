@@ -80,7 +80,7 @@ export default function LoginPage() {
           </div>
           {error && <p className="mb-3 text-[11px] text-rose-400 text-center">{error}</p>}
           <button onClick={handleEmailLogin} disabled={!isValid || loading}
-            className={\`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 \${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}\`}>
+            className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
             {loading ? '로그인 중...' : '로그인'}
           </button>
           <p className="mt-4 text-center text-[13px] text-aring-ink-500">
