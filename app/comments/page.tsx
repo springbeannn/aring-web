@@ -79,49 +79,52 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
 
   return (
     <Link href={`/items/${c.product_id}`} className="block">
-      <div className="flex gap-3 px-4 py-3 hover:bg-aring-ink-50 transition-colors">
-        {/* 썸네일 */}
-        <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-aring-ink-100">
-          {imgUrl ? (
-            <img src={imgUrl} alt={brand} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-aring-ink-300 text-xl">◇</div>
-          )}
+      <div className="hover:bg-aring-ink-50 transition-colors pt-3 pb-2">
+        {/* 썸네일 + 내용 */}
+        <div className="flex gap-3 px-4">
+          {/* 썸네일 */}
+          <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-aring-ink-100">
+            {imgUrl ? (
+              <img src={imgUrl} alt={brand} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-aring-ink-300 text-xl">◇</div>
+            )}
+          </div>
+
+          {/* 내용 */}
+          <div className="flex-1 min-w-0">
+            {/* 상단: 번호 + 상태 */}
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="text-[10px] font-bold text-aring-ink-400">No.{no}</span>
+              <StatusBadge status={listing?.status} />
+            </div>
+
+            {/* 브랜드 */}
+            <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
+
+            {/* 태그 */}
+            {tags.length > 0 && (
+              <div className="mt-0.5">
+                <TagChips tags={tags} />
+              </div>
+            )}
+
+            {/* 댓글 내용 */}
+            <p className="mt-1 text-[12px] text-aring-ink-800 line-clamp-2 leading-relaxed">
+              {c.message}
+            </p>
+          </div>
         </div>
 
-        {/* 내용 */}
-        <div className="flex-1 min-w-0">
-          {/* 상단: 번호 + 상태 */}
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="text-[10px] font-bold text-aring-ink-400">No.{no}</span>
-            <StatusBadge status={listing?.status} />
-          </div>
-
-          {/* 브랜드 */}
-          <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
-
-          {/* 태그 */}
-          {tags.length > 0 && (
-            <div className="mt-0.5">
-              <TagChips tags={tags} />
-            </div>
-          )}
-
-          {/* 댓글 내용 */}
-          <p className="mt-1 text-[12px] text-aring-ink-800 line-clamp-2 leading-relaxed">
-            {c.message}
-          </p>
-
-          {/* 하단: 작성자 · 시간 · 조회 · 좋아요 */}
-          <div className="mt-1 flex items-center gap-2 text-[10px] text-aring-ink-400">
-            <span className="font-medium text-aring-ink-600">{c.user_name || '익명'}</span>
-            <span>·</span>
-            <span>{relativeTime(c.created_at)}</span>
-            <span>·</span>
-            <span>조회 {c.listing?.view_count ?? 0}</span>
-            <span>·</span>
-            <span>♡ 0</span>
-          </div>
+        {/* 하단 메타: 작성자 · 시간 · 조회 · 좋아요 — 전체 너비 */}
+        <div className="mt-2 px-4 flex items-center gap-2 text-[12px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
+          <span className="font-medium text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
+          <span>·</span>
+          <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
+          <span>·</span>
+          <span className="flex-shrink-0">조회 {c.listing?.view_count ?? 0}</span>
+          <span>·</span>
+          <span className="flex-shrink-0">♡ 0</span>
         </div>
       </div>
     </Link>
@@ -173,20 +176,20 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
         </div>
 
         {/* 작성자 */}
-        <div className="w-20 flex-shrink-0 text-[11px] text-aring-ink-600 font-medium truncate">
+        <div className="w-20 flex-shrink-0 text-[12px] text-aring-ink-600 font-medium truncate">
           {c.user_name || '익명'}
         </div>
 
         {/* 시간 */}
-        <div className="w-16 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">
+        <div className="w-16 flex-shrink-0 text-[12px] text-aring-ink-400 text-right">
           {relativeTime(c.created_at)}
         </div>
 
         {/* 조회 */}
-        <div className="w-10 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">{c.listing?.view_count ?? 0}</div>
+        <div className="w-10 flex-shrink-0 text-[12px] text-aring-ink-400 text-right">{c.listing?.view_count ?? 0}</div>
 
         {/* 좋아요 */}
-        <div className="w-10 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">♡ 0</div>
+        <div className="w-10 flex-shrink-0 text-[12px] text-aring-ink-400 text-right">♡ 0</div>
       </div>
     </Link>
   );
