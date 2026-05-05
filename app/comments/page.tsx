@@ -263,7 +263,7 @@ export default function CommentsPage() {
 
           {/* ── 모바일 리스트 (lg 미만) ── */}
           {!loading && comments.length > 0 && (
-            <div className="lg:hidden mt-1 divide-y divide-aring-ink-100">
+            <div className="lg:hidden mt-2 mx-4 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden divide-y divide-aring-ink-100">
               {comments.map((c, i) => (
                 <MobileRow key={c.id} c={c} no={total - i} />
               ))}
