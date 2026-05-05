@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
 
-function relativeTime(iso: string): string {
+/* ── 유틸 ───────────────────────────────────── */
+function relativeTime(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
   const min = Math.floor(diff / 60000);
   if (min < 1) return '방금 전';
@@ -19,73 +20,207 @@ function relativeTime(iso: string): string {
   return `${Math.floor(day / 365)}년 전`;
 }
 
-type CommunityComment = {
+/* ── 상태 뱃지 ──────────────────────────────── */
+const STATUS_MAP: Record<string, { label: string; cls: string }> = {
+  open:    { label: '문의중',   cls: 'bg-pink-100 text-pink-700' },
+  matched: { label: '거래완료', cls: 'bg-gray-100 text-gray-500' },
+  closed:  { label: '거래완료', cls: 'bg-gray-100 text-gray-500' },
+  selling: { label: '판매중',   cls: 'bg-green-100 text-green-700' },
+  trading: { label: '거래중',   cls: 'bg-yellow-100 text-yellow-700' },
+};
+function StatusBadge({ status }: { status?: string | null }) {
+  const s = STATUS_MAP[status ?? ''] ?? { label: '문의중', cls: 'bg-pink-100 text-pink-700' };
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${s.cls}`}>
+      {s.label}
+    </span>
+  );
+}
+
+/* ── 태그 칩 ─────────────────────────────────── */
+function TagChips({ tags }: { tags: string[] }) {
+  if (!tags.length) return null;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {tags.map((t, i) => (
+        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[10px] font-medium">
+          {t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/* ── 타입 ────────────────────────────────────── */
+interface Listing {
+  brand?: string | null;
+  material?: string | null;
+  shape?: string | null;
+  photo_url?: string | null;
+  status?: string | null;
+  view_count?: number | null;
+}
+interface Comment {
   id: string;
   product_id: string;
   user_name: string;
   message: string;
   created_at: string;
-  listing: {
-    brand: string | null;
-    material: string | null;
-    shape: string | null;
-    photo_url: string | null;
-    status: string;
-  } | null;
-};
+  parent_id?: string | null;
+  listing: Listing | null;
+}
 
-const STATUS_LABEL: Record<string, string> = {
-  open: '문의중',
-  matched: '거래완료',
-  closed: '거래완료',
-};
+/* ── 모바일 Row ──────────────────────────────── */
+function MobileRow({ c, no }: { c: Comment; no: number }) {
+  const listing = c.listing;
+  const brand = listing?.brand ?? '브랜드 미상';
+  const tags = [listing?.material, listing?.shape].filter(Boolean) as string[];
+  const imgUrl = listing?.photo_url;
 
-const STATUS_BADGE: Record<string, string> = {
-  open: 'bg-pink-100 text-pink-700',
-  matched: 'bg-gray-100 text-gray-500',
-  closed: 'bg-gray-100 text-gray-500',
-};
+  return (
+    <Link href={`/items/${c.product_id}`} className="block">
+      <div className="flex gap-3 px-4 py-3 hover:bg-aring-ink-50 transition-colors">
+        {/* 썸네일 */}
+        <div className="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-aring-ink-100">
+          {imgUrl ? (
+            <img src={imgUrl} alt={brand} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-aring-ink-300 text-xl">◇</div>
+          )}
+        </div>
 
+        {/* 내용 */}
+        <div className="flex-1 min-w-0">
+          {/* 상단: 번호 + 상태 */}
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <span className="text-[10px] font-bold text-aring-ink-400">No.{no}</span>
+            <StatusBadge status={listing?.status} />
+          </div>
+
+          {/* 브랜드 */}
+          <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
+
+          {/* 태그 */}
+          {tags.length > 0 && (
+            <div className="mt-0.5">
+              <TagChips tags={tags} />
+            </div>
+          )}
+
+          {/* 댓글 내용 */}
+          <p className="mt-1 text-[12px] text-aring-ink-800 line-clamp-2 leading-relaxed">
+            {c.message}
+          </p>
+
+          {/* 하단: 작성자 · 시간 · 조회 · 좋아요 */}
+          <div className="mt-1 flex items-center gap-2 text-[10px] text-aring-ink-400">
+            <span className="font-medium text-aring-ink-600">{c.user_name || '익명'}</span>
+            <span>·</span>
+            <span>{relativeTime(c.created_at)}</span>
+            <span>·</span>
+            <span>조회 {c.listing?.view_count ?? 0}</span>
+            <span>·</span>
+            <span>♡ 0</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ── PC Row ──────────────────────────────────── */
+function PcRow({ c, no }: { c: Comment; no: number }) {
+  const listing = c.listing;
+  const brand = listing?.brand ?? '브랜드 미상';
+  const tags = [listing?.material, listing?.shape].filter(Boolean) as string[];
+  const imgUrl = listing?.photo_url;
+
+  return (
+    <Link href={`/items/${c.product_id}`} className="block">
+      <div className="flex items-center gap-3 px-6 py-3 hover:bg-aring-ink-50 transition-colors border-b border-aring-ink-100 last:border-b-0">
+        {/* No */}
+        <div className="w-10 text-center text-[11px] text-aring-ink-400 font-bold flex-shrink-0">
+          {no}
+        </div>
+
+        {/* 사진 */}
+        <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-aring-ink-100">
+          {imgUrl ? (
+            <img src={imgUrl} alt={brand} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-aring-ink-300 text-xl">◇</div>
+          )}
+        </div>
+
+        {/* 제품명 */}
+        <div className="w-28 flex-shrink-0">
+          <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
+        </div>
+
+        {/* 상태 */}
+        <div className="w-16 flex-shrink-0">
+          <StatusBadge status={listing?.status} />
+        </div>
+
+        {/* 태그 */}
+        <div className="w-28 flex-shrink-0">
+          <TagChips tags={tags} />
+        </div>
+
+        {/* 댓글 내용 */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] text-aring-ink-800 line-clamp-2 leading-relaxed">{c.message}</p>
+        </div>
+
+        {/* 작성자 */}
+        <div className="w-20 flex-shrink-0 text-[11px] text-aring-ink-600 font-medium truncate">
+          {c.user_name || '익명'}
+        </div>
+
+        {/* 시간 */}
+        <div className="w-16 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">
+          {relativeTime(c.created_at)}
+        </div>
+
+        {/* 조회 */}
+        <div className="w-10 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">{c.listing?.view_count ?? 0}</div>
+
+        {/* 좋아요 */}
+        <div className="w-10 flex-shrink-0 text-[11px] text-aring-ink-400 text-right">♡ 0</div>
+      </div>
+    </Link>
+  );
+}
+
+/* ── 메인 페이지 ─────────────────────────────── */
 export default function CommentsPage() {
-  const [comments, setComments] = useState<CommunityComment[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
-
     async function load() {
       const { data: rawComments } = await supabase!
         .from('comments')
-        .select('id, product_id, user_name, message, created_at')
+        .select('id, product_id, user_id, user_name, role, message, parent_id, created_at')
         .order('created_at', { ascending: false })
         .limit(100);
 
-      const raw = (rawComments ?? []) as {
-        id: string; product_id: string; user_name: string;
-        message: string; created_at: string;
-      }[];
-
-      const productIds = [...new Set(raw.map(c => c.product_id))];
-      let listingMap: Record<string, CommunityComment['listing']> = {};
+      const raw = rawComments ?? [];
+      const productIds = [...new Set(raw.map((c: any) => c.product_id))];
+      let listingMap: Record<string, Listing> = {};
 
       if (productIds.length > 0) {
         const { data: listings } = await supabase!
           .from('listings')
-          .select('id, brand, material, shape, photo_url, status')
+          .select('id, brand, material, shape, photo_url, status, view_count')
           .in('id', productIds);
-
-        for (const l of (listings ?? [])) {
-          listingMap[l.id] = {
-            brand: l.brand,
-            material: l.material,
-            shape: l.shape,
-            photo_url: l.photo_url,
-            status: l.status,
-          };
+        for (const l of listings ?? []) {
+          listingMap[l.id] = { brand: l.brand, material: l.material, shape: l.shape, photo_url: l.photo_url, status: l.status, view_count: l.view_count };
         }
       }
 
-      const merged: CommunityComment[] = raw.map(c => ({
+      const merged: Comment[] = raw.map((c: any) => ({
         ...c,
         listing: listingMap[c.product_id] ?? null,
       }));
@@ -93,9 +228,10 @@ export default function CommentsPage() {
       setComments(merged);
       setLoading(false);
     }
-
     load();
   }, []);
+
+  const total = comments.length;
 
   return (
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-pink-50 via-yellow-50 to-green-50">
@@ -104,91 +240,61 @@ export default function CommentsPage() {
           <TopNav />
 
           {/* 헤더 */}
-          <div className="px-5 lg:px-8 pt-3 pb-3">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">커뮤니티</h1>
-            <p className="mt-0.5 text-[13px] text-aring-ink-500">서로의 한 짝을 찾기 위해 남긴 이야기들이 모였어요</p>
+          <div className="px-5 lg:px-8 pt-3 pb-2">
+            <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">댓글</h1>
+            <p className="mt-0.5 text-[13px] text-aring-ink-500">한 짝을 찾는 이야기들이 시간순으로 모였어요</p>
             {!loading && (
-              <p className="mt-1.5 text-[13px] font-bold text-aring-ink-700">전체 댓글 {comments.length}개</p>
+              <p className="mt-1 text-[13px] font-bold text-aring-ink-700">전체 댓글 {total}개</p>
             )}
           </div>
 
-          {/* 본문 */}
-          {loading ? (
-            <div className="px-5 py-16 text-center">
-              <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[11px] text-aring-ink-500">불러오는 중…</p>
+          {/* 로딩 */}
+          {loading && (
+            <div className="flex justify-center py-20 text-aring-ink-400 text-sm">불러오는 중…</div>
+          )}
+
+          {/* 빈 상태 */}
+          {!loading && comments.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-24 text-aring-ink-400">
+              <p className="text-4xl mb-3">💬</p>
+              <p className="text-sm">아직 댓글이 없어요</p>
             </div>
-          ) : comments.length === 0 ? (
-            <div className="px-5 py-16 text-center">
-              <p className="text-[14px] font-bold text-aring-ink-900">아직 댓글이 없어요</p>
-              <p className="mt-1 text-[11px] text-aring-ink-500">첫 번째 이야기를 남겨보세요!</p>
+          )}
+
+          {/* ── 모바일 리스트 (lg 미만) ── */}
+          {!loading && comments.length > 0 && (
+            <div className="lg:hidden mt-1 divide-y divide-aring-ink-100">
+              {comments.map((c, i) => (
+                <MobileRow key={c.id} c={c} no={total - i} />
+              ))}
             </div>
-          ) : (
-            <div className="px-5 lg:px-8 space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
-              {comments.map((c, idx) => {
-                const listing = c.listing;
-                const status = listing?.status ?? 'open';
-                const badgeLabel = STATUS_LABEL[status] ?? '문의중';
-                const badgeClass = STATUS_BADGE[status] ?? STATUS_BADGE.open;
-                const tags = [listing?.material, listing?.shape].filter(Boolean);
-                const no = comments.length - idx;
+          )}
 
-                return (
-                  <Link
-                    key={c.id}
-                    href={`/items/${c.product_id}#comments`}
-                    className="block bg-white rounded-2xl overflow-hidden shadow-sm border border-white/80 active:scale-[0.99] transition"
-                  >
-                    {/* 상단: 사진 + 브랜드/태그/뱃지 */}
-                    <div className="flex items-start gap-3 px-4 pt-4 pb-2">
-                      {listing?.photo_url ? (
-                        <img
-                          src={listing.photo_url}
-                          alt={listing.brand ?? ''}
-                          className="w-[64px] h-[64px] rounded-xl object-cover shrink-0 bg-gray-100"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-[64px] h-[64px] rounded-xl bg-pink-50 shrink-0 flex items-center justify-center">
-                          <span className="text-[22px]">💍</span>
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0 pt-0.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}`}>
-                          {badgeLabel}
-                        </span>
-                        <p className="mt-1 text-[14px] font-extrabold text-aring-ink-900 truncate">{listing?.brand ?? '브랜드 미상'}</p>
-                        {tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {tags.map(tag => (
-                              <span key={tag} className="px-2 py-0.5 rounded-full bg-gray-100 text-[10px] text-gray-600">{tag}</span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* 댓글 내용 */}
-                    <div className="px-4 pb-2">
-                      <p className="text-[13px] text-aring-ink-900 leading-relaxed line-clamp-2">{c.message}</p>
-                    </div>
-
-                    {/* 하단: 닉네임 + 시간 + No */}
-                    <div className="px-4 pb-3 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[11px] font-bold text-aring-ink-900">{c.user_name || 'aring 사용자'}</span>
-                        <span className="text-aring-ink-300">·</span>
-                        <span className="text-[11px] text-aring-ink-500">{relativeTime(c.created_at)}</span>
-                      </div>
-                      <span className="text-[11px] text-aring-ink-400 font-medium">No.{no}</span>
-                    </div>
-                  </Link>
-                );
-              })}
+          {/* ── PC 테이블 (lg 이상) ── */}
+          {!loading && comments.length > 0 && (
+            <div className="hidden lg:block mt-2 mx-6 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
+              {/* 헤더 */}
+              <div className="flex items-center gap-3 px-6 py-2.5 bg-aring-ink-50 border-b border-aring-ink-100 text-[11px] font-bold text-aring-ink-500 uppercase tracking-wide">
+                <div className="w-10 text-center flex-shrink-0">No.</div>
+                <div className="w-14 flex-shrink-0">사진</div>
+                <div className="w-28 flex-shrink-0">제품명</div>
+                <div className="w-16 flex-shrink-0">상태</div>
+                <div className="w-28 flex-shrink-0">특징</div>
+                <div className="flex-1 min-w-0">댓글 내용</div>
+                <div className="w-20 flex-shrink-0">작성자</div>
+                <div className="w-16 flex-shrink-0 text-right">시간</div>
+                <div className="w-10 flex-shrink-0 text-right">조회</div>
+                <div className="w-10 flex-shrink-0 text-right">좋아요</div>
+              </div>
+              {/* 바디 */}
+              {comments.map((c, i) => (
+                <PcRow key={c.id} c={c} no={total - i} />
+              ))}
             </div>
           )}
         </div>
-        <BottomNav active="chat" />
+
+        <BottomNav />
       </div>
     </main>
   );
