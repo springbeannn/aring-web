@@ -85,7 +85,7 @@ function SignupLeftPanel() {
   return (
     <div className="hidden lg:flex flex-col relative overflow-hidden w-[420px] xl:w-[480px] flex-shrink-0 min-h-full">
       <Image
-        src="/images/login_table3.jpg"
+        src="/images/login_table4.png"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
