@@ -27,7 +27,7 @@ function LoginLeftPanel() {
   return (
     <div className="hidden lg:flex flex-col relative overflow-hidden w-[420px] xl:w-[480px] flex-shrink-0 min-h-full">
       <Image
-        src="/images/login_table1.jpg"
+        src="/images/login_table2.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
@@ -65,7 +65,7 @@ function LoginMobileBanner() {
   return (
     <div className="lg:hidden relative mx-5 mt-4 mb-2 rounded-2xl overflow-hidden h-[200px]">
       <Image
-        src="/images/login_table1.jpg"
+        src="/images/login_table2.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
@@ -91,6 +91,11 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState('');
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3000);
+  };
 
   const handleEmailLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -110,12 +115,18 @@ export default function LoginPage() {
     if (error) alert(error);
   };
 
-  const handleNaver = () => alert('서비스 준비 중입니다.');
+  const handleKakao = () => showToast('카카오 로그인은 서비스 준비 중입니다.');
+  const handleNaver = () => showToast('네이버 로그인은 서비스 준비 중입니다.');
 
   const isValid = email.trim() !== '' && password.trim() !== '';
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
+      {toast && (
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[13px] font-medium px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
+          {toast}
+        </div>
+      )}
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <TopNav />
 
@@ -132,14 +143,11 @@ export default function LoginPage() {
               </div>
 
               <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
-                <button onClick={() => handleOAuth('kakao')}
-                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#3C1E1E] transition active:scale-95 whitespace-nowrap"
+                <button onClick={handleKakao}
+                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#191919] transition active:scale-95 whitespace-nowrap"
                   style={{ background: '#FEE500' }}>
-                  <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
-                    <ellipse cx="20" cy="19" rx="18" ry="17" fill="#3C1E1E"/>
-                    <ellipse cx="13" cy="19" rx="3" ry="4" fill="#FEE500"/>
-                    <ellipse cx="27" cy="19" rx="3" ry="4" fill="#FEE500"/>
-                    <path d="M13 26c2 2 12 2 14 0" stroke="#FEE500" strokeWidth="2.5" strokeLinecap="round"/>
+                  <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 3C6.477 3 2 6.82 2 11.5c0 2.98 1.86 5.607 4.68 7.186L5.5 22l4.174-2.304C10.42 19.893 11.2 20 12 20c5.523 0 10-3.82 10-8.5S17.523 3 12 3z" fill="#191919"/>
                   </svg>
                   카카오톡으로 로그인
                 </button>

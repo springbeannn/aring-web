@@ -412,7 +412,7 @@ function ProfileHeader({
   mounted: boolean;
 }) {
   return (
-    <section className="px-5 lg:px-8 pt-3 lg:pt-7 pb-5">
+    <section className="px-5 lg:px-8 pt-3 pb-2">
       <div className="flex items-center gap-3">
         <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[22px] lg:text-[22px] font-extrabold text-aring-ink-900">
           {(nickname || '?').charAt(0).toUpperCase()}
