@@ -1,4 +1,5 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 // ────────────────────────────────────────────────────────────────
 // Supabase client — env 자동 감지
@@ -10,9 +11,7 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export const isSupabaseConfigured = Boolean(url && anonKey);
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(url!, anonKey!, {
-      auth: { persistSession: true, flowType: 'pkce' }, // MVP — auth 추가 시 true
-    })
+  ? createBrowserClient(url!, anonKey!)
   : null;
 
 // ────────────────────────────────────────────────────────────────
