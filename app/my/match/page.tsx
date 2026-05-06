@@ -142,15 +142,13 @@ export default function MyMatchPage() {
           for (const c of candidates) {
             const tgt = { shape: c.shape ?? '', color: c.color ?? '', material: c.material ?? '', detail: c.detail ?? '', brand: c.brand };
             const r = calculateAringMatch(src, tgt);
-            if (r.totalScore > 0) {
-              scored.push({
-                id: c.id,
-                brand: c.brand,
-                photo_url: c.photo_url,
-                score: r.totalScore,
-                type: r.totalScore >= 60 ? 'similar' : 'reference',
-              });
-            }
+            scored.push({
+              id: c.id,
+              brand: c.brand,
+              photo_url: c.photo_url,
+              score: r.totalScore,
+              type: r.totalScore >= 60 ? 'similar' : 'reference',
+            });
           }
           scored.sort((a, b) => b.score - a.score);
           const similar = scored.filter((s) => s.type === 'similar');
@@ -266,7 +264,7 @@ export default function MyMatchPage() {
                     </p>
 
                     <p className={[
-                      'mt-2 text-[13px] font-bold leading-relaxed',
+                      'mt-2 mb-3 text-[13px] font-bold leading-relaxed',
                       hasSimilar ? 'text-aring-green' : 'text-aring-ink-700',
                     ].join(' ')}>
                       {hasSimilar

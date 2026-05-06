@@ -69,40 +69,36 @@ function ReasonBox({ reasons }: { reasons: string[] }) {
 
 function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
   return (
-    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="flex flex-col md:flex-row">
-        <div className="relative md:w-48 md:shrink-0 aspect-square md:aspect-auto bg-aring-ink-100 overflow-hidden">
-          {item.photo_url
-            ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
-            : <div className="w-full h-full bg-aring-ink-100" />
-          }
-          <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
-          <div className="absolute top-3 right-3">
-            <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
-              {statusLabel(item.status)}
-            </span>
-          </div>
+    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+      <div className="relative aspect-square bg-aring-ink-100">
+        {item.photo_url
+          ? <img src={item.photo_url} alt={item.brand ?? ''} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+          : <div className="absolute inset-0 bg-aring-ink-100" />
+        }
+        <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
+        <div className="absolute top-3 right-3">
+          <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+            {statusLabel(item.status)}
+          </span>
         </div>
-        <div className="flex flex-col justify-between flex-1 px-4 py-3 md:px-5 md:py-4">
-          <div>
-            {matchScore.label && (
-              <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
-            )}
-            <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
-            <p className="mt-0.5 text-[14px] md:text-[15px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-            {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
-            <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
-          </div>
-          <div className="mt-3 flex items-center justify-between gap-2">
-            <p className="text-[10px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
-            <div className="flex gap-2">
-              <Link href={`/items/${item.id}#comments`} className="inline-flex items-center gap-1 rounded-full border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
-                <IconChat className="w-3.5 h-3.5" /> 댓글
-              </Link>
-              <Link href={`/items/${item.id}`} className="inline-flex items-center gap-1 rounded-full bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
-                상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+      </div>
+      <div className="flex-1 flex flex-col p-4">
+        {matchScore.label && (
+          <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
+        )}
+        <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
+        <p className="mt-0.5 text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+        {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
+        <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-aring-ink-100">
+          <p className="text-[10px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
+          <div className="flex gap-2">
+            <Link href={`/items/${item.id}#comments`} className="inline-flex items-center gap-1 rounded-full border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
+              <IconChat className="w-3.5 h-3.5" /> 댓글
+            </Link>
+            <Link href={`/items/${item.id}`} className="inline-flex items-center gap-1 rounded-full bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
+              상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>
