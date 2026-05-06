@@ -159,3 +159,9 @@ button {
   background-size: 200% 200%;
   animation: aurora 3s ease infinite;
 }
+
+/* shimmer — AI 분석중 뱃지용 */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

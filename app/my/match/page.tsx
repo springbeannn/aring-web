@@ -41,21 +41,37 @@ function statusColor(s: string) {
 function scoreRange(top: number) {
   if (top >= 80) return 'aring Match 80~100%';
   if (top >= 60) return 'aring Match 60~79%';
-  if (top >= 40) return 'aring Match 40~59%';
-  return 'aring Match 분석중';
+  return 'aring Match 40~59%';
 }
 
 function scoreRangeColor(top: number) {
   if (top >= 80) return 'bg-amber-50 text-amber-700 border-amber-200';
   if (top >= 60) return 'bg-green-50 text-green-700 border-green-200';
-  if (top >= 40) return 'bg-blue-50 text-blue-600 border-blue-200';
-  return 'bg-gray-50 text-gray-400 border-gray-200';
+  return 'bg-blue-50 text-blue-600 border-blue-200';
 }
 
 function matchSummaryText(m: MatchSummary | null) {
-  if (!m) return '아직 비슷한 후보를 찾지 못했어요';
-  if (m.similar === 0 && m.reference === 0) return '아직 비슷한 후보를 찾지 못했어요';
+  if (!m || (m.similar === 0 && m.reference === 0)) {
+    return '아직 비슷한 후보를 찾지 못했어요. 함께 기다려 볼까요?';
+  }
   return '유사한 후보 ' + m.similar + '개 · 참고 후보 ' + m.reference + '개를 찾았어요';
+}
+
+function AnalyzingBadge() {
+  return (
+    <span className='relative inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border border-purple-200 text-purple-700 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 overflow-hidden'>
+      <span className='pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent' />
+      <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round' className='animate-spin' style={{ animationDuration: '1.6s' }}>
+        <path d='M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83' />
+      </svg>
+      <span className='relative'>aring Match 분석중</span>
+      <span className='relative inline-flex w-3 justify-start'>
+        <span className='animate-pulse' style={{ animationDelay: '0ms' }}>.</span>
+        <span className='animate-pulse' style={{ animationDelay: '200ms' }}>.</span>
+        <span className='animate-pulse' style={{ animationDelay: '400ms' }}>.</span>
+      </span>
+    </span>
+  );
 }
 
 export default function MyMatchPage() {
@@ -140,80 +156,67 @@ export default function MyMatchPage() {
           <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
         </div>
 
-        <div className='hidden lg:block mt-2 mx-6 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden'>
-          <div className='flex items-center gap-3 px-6 py-2.5 bg-aring-ink-50 border-b border-aring-ink-100 text-[11px] font-bold text-aring-ink-500 uppercase tracking-wide'>
-            <div className='w-10 text-center flex-shrink-0'>No.</div>
-            <div className='w-14 flex-shrink-0'>사진</div>
-            <div className='w-28 flex-shrink-0'>브랜드명</div>
-            <div className='w-16 flex-shrink-0'>상태</div>
-            <div className='flex-1 min-w-0'>매칭 결과 요약</div>
-            <div className='w-36 flex-shrink-0'>aring Match</div>
-            <div className='w-10 flex-shrink-0 text-right'>조회</div>
-          </div>
+        <div className='mt-4 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-4'>
           {listings.map((item, idx) => {
             const m = matchMap[item.id] ?? null;
+            const hasMatch = m && m.topScore >= 40;
             return (
-              <div key={item.id} onClick={() => router.push('/match/' + item.id)}
-                className='flex items-center gap-3 px-6 py-3 hover:bg-aring-ink-50 transition-colors border-b border-aring-ink-100 last:border-b-0 cursor-pointer'>
-                <div className='w-10 text-center flex-shrink-0 text-[11px] font-bold text-aring-ink-400'>{listings.length - idx}</div>
-                <div className='w-14 flex-shrink-0'>
-                  <div className='relative w-12 h-12 rounded-xl overflow-hidden bg-aring-ink-100'>
-                    {item.photo_url && <Image src={item.photo_url} alt={item.brand ?? ''} fill className='object-cover' />}
-                  </div>
-                </div>
-                <div className='w-28 flex-shrink-0 text-sm font-semibold text-aring-ink-900 truncate'>{item.brand ?? '브랜드 미상'}</div>
-                <div className='w-16 flex-shrink-0'>
-                  <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ' + statusColor(item.status)}>
-                    {statusLabel(item.status)}
-                  </span>
-                </div>
-                <div className='flex-1 min-w-0 text-sm text-aring-ink-600'>{matchSummaryText(m)}</div>
-                <div className='w-36 flex-shrink-0'>
-                  {m && m.topScore > 0 ? (
-                    <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ' + scoreRangeColor(m.topScore)}>
-                      {scoreRange(m.topScore)}
-                    </span>
-                  ) : (
-                    <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border bg-gray-50 text-gray-400 border-gray-200'>aring Match 분석중</span>
+              <div
+                key={item.id}
+                onClick={() => router.push('/match/' + item.id)}
+                className='group rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all'
+              >
+                <div className='relative aspect-square bg-aring-ink-100'>
+                  {item.photo_url && (
+                    <Image
+                      src={item.photo_url}
+                      alt={item.brand ?? ''}
+                      fill
+                      sizes='(min-width: 1024px) 50vw, 100vw'
+                      className='object-cover'
+                    />
                   )}
-                </div>
-                <div className='w-10 flex-shrink-0 text-right text-[11px] text-aring-ink-400'>{item.view_count ?? 0}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className='lg:hidden mt-2 mx-4 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden divide-y divide-aring-ink-100'>
-          {listings.map((item, idx) => {
-            const m = matchMap[item.id] ?? null;
-            return (
-              <div key={item.id} onClick={() => router.push('/match/' + item.id)}
-                className='flex gap-3 px-4 py-3 hover:bg-aring-ink-50 transition-colors cursor-pointer active:bg-aring-ink-50'>
-                <div className='relative w-16 h-16 rounded-xl overflow-hidden bg-aring-ink-100 flex-shrink-0'>
-                  {item.photo_url && <Image src={item.photo_url} alt={item.brand ?? ''} fill className='object-cover' />}
-                </div>
-                <div className='flex-1 min-w-0'>
-                  <div className='flex items-center gap-1.5 mb-0.5'>
-                    <span className='text-[10px] font-bold text-aring-ink-400'>No.{listings.length - idx}</span>
-                    <span className={'inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold border ' + statusColor(item.status)}>
+                  <div className='absolute top-3 left-3 flex items-center gap-1.5'>
+                    <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
+                      No.{listings.length - idx}
+                    </span>
+                    <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
                       {statusLabel(item.status)}
                     </span>
                   </div>
-                  <p className='text-sm font-semibold text-aring-ink-900 truncate'>{item.brand ?? '브랜드 미상'}</p>
-                  <p className='text-xs text-aring-ink-500 mt-0.5 leading-snug'>{matchSummaryText(m)}</p>
-                  <div className='flex items-center gap-2 mt-1'>
-                    {m && m.topScore > 0 ? (
-                      <span className={'inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold border ' + scoreRangeColor(m.topScore)}>
-                        {scoreRange(m.topScore)}
-                      </span>
-                    ) : (
-                      <span className='inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold border bg-gray-50 text-gray-400 border-gray-200'>aring Match 분석중</span>
-                    )}
-                    <span className='text-[10px] text-aring-ink-400'>조회 {item.view_count ?? 0}</span>
+                  <div className='absolute bottom-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black/40 text-white backdrop-blur'>
+                    <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+                      <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/>
+                      <circle cx='12' cy='12' r='3'/>
+                    </svg>
+                    {item.view_count ?? 0}
                   </div>
                 </div>
-                <div className='flex-shrink-0 self-center text-aring-ink-300'>
-                  <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'><polyline points='9 18 15 12 9 6'/></svg>
+
+                <div className='p-4 lg:p-5'>
+                  <p className='text-[15px] font-extrabold text-aring-ink-900 truncate'>
+                    {item.brand ?? '브랜드 미상'}
+                  </p>
+
+                  <p className='mt-2 text-[13px] text-aring-ink-600 leading-relaxed'>
+                    {matchSummaryText(m)}
+                  </p>
+
+                  <div className='mt-3 flex items-center justify-between gap-2'>
+                    {hasMatch ? (
+                      <span className={'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ' + scoreRangeColor(m!.topScore)}>
+                        {scoreRange(m!.topScore)}
+                      </span>
+                    ) : (
+                      <AnalyzingBadge />
+                    )}
+                    <span className='inline-flex items-center gap-0.5 text-[11px] font-semibold text-aring-ink-500 group-hover:text-aring-ink-900 transition-colors'>
+                      자세히 보기
+                      <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+                        <polyline points='9 18 15 12 9 6'/>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
               </div>
             );
@@ -224,8 +227,8 @@ export default function MyMatchPage() {
   }
 
   return (
-    <main className='min-h-screen flex justify-center bg-gradient-to-b from-pink-50 via-yellow-50 to-green-50'>
-      <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible'>
+    <main className='min-h-screen flex justify-center bg-white'>
+      <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
         <div className='pb-28 lg:pb-12'>
           <TopNav />
           {content}
