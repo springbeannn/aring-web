@@ -42,14 +42,14 @@ export default function SearchPhotoPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await supabase!.auth.getSession();
+      const { data: { session } } = await supabase!a.auth.getSession();
       let userId = session?.user?.id ?? '';
       if (!userId) {
         userId = localStorage.getItem(ANON_ID_KEY) ?? '';
       }
       if (!userId) { setLoading(false); return; }
 
-      const { data } = await supabase
+      const { data } = await supabase!
         .from('listings')
         .select('id, title, brand, photo_url, status')
         .eq('user_id', userId)
