@@ -1,4 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -10,9 +11,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/signup?error=no_code`);
   }
 
-  const supabase = createClient(
+  const cookieStore = cookies();
+  const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll(); },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
+      },
+    }
   );
 
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
@@ -25,9 +37,7 @@ export async function GET(request: NextRequest) {
   const email = user.email;
 
   if (!email) {
-    return NextResponse.redirect(
-      `${origin}/signup?error=no_email`
-    );
+    return NextResponse.redirect(`${origin}/signup?error=no_email`);
   }
 
   // 기존 프로필 확인
@@ -37,9 +47,7 @@ export async function GET(request: NextRequest) {
     .eq('user_id', user.id)
     .maybeSingle();
 
-  // 이미 프로필 있으면 → 로그인 처리 → 홈으로
   if (existing) {
-    // 닉네임 없으면 → 닉네임 입력 페이지
     if (!existing.nickname) {
       return NextResponse.redirect(`${origin}/signup/nickname`);
     }
@@ -54,14 +62,11 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (emailExisting) {
-    // 같은 이메일 다른 provider → 같은 회원으로 처리 (로그인)
     return NextResponse.redirect(`${origin}/`);
   }
 
-  // 신규 사용자 → provider 파악
+  // 신규 사용자 프로필 생성
   const provider = user.app_metadata?.provider ?? 'unknown';
-
-  // profiles 생성 (닉네임은 아직 없음)
   await supabase.from('profiles').insert({
     user_id: user.id,
     email,
@@ -69,6 +74,5 @@ export async function GET(request: NextRequest) {
     provider,
   });
 
-  // 닉네임 입력 페이지로
   return NextResponse.redirect(`${origin}/signup/nickname`);
 }
