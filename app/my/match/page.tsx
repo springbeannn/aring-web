@@ -21,7 +21,6 @@ interface MyListing {
   photo_url: string;
   status: 'open' | 'matched' | 'closed';
   view_count: number;
-  likes_count: number | null;
 }
 
 interface MatchSummary {
@@ -78,7 +77,7 @@ function AnalyzingBadge() {
   );
 }
 
-function HeartButton({ itemId, baseCount }: { itemId: string; baseCount: number }) {
+function HeartButton({ itemId }: { itemId: string }) {
   const [liked, setLiked] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -95,7 +94,7 @@ function HeartButton({ itemId, baseCount }: { itemId: string; baseCount: number 
     setLiked(next.includes(itemId));
   }
 
-  const count = baseCount + (mounted && liked ? 1 : 0);
+  const count = mounted && liked ? 1 : 0;
 
   return (
     <button
@@ -128,7 +127,7 @@ export default function MyMatchPage() {
       if (!userId) { setLoading(false); return; }
       const { data: myItems } = await supabase!
         .from('listings')
-        .select('id, brand, shape, detail, color, material, photo_url, status, view_count, likes_count')
+        .select('id, brand, shape, detail, color, material, photo_url, status, view_count')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
       const items = (myItems ?? []) as MyListing[];
@@ -259,7 +258,7 @@ export default function MyMatchPage() {
                       </p>
 
                       <div className='mt-3 pt-3 border-t border-aring-ink-100 flex items-center justify-between gap-2'>
-                        <HeartButton itemId={item.id} baseCount={item.likes_count ?? 0} />
+                        <HeartButton itemId={item.id} />
                         <span className='inline-flex items-center gap-0.5 text-[11px] font-semibold text-aring-ink-500 group-hover:text-aring-ink-900 transition-colors'>
                           자세히 보기
                           <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
