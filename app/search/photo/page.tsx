@@ -392,19 +392,23 @@ export default function SearchPhotoPage() {
 
       const { calculateAringMatch } = await import('@/lib/aringMatch');
       const matchSource = {
-        style: analysisResult.style ?? [],
-        material: analysisResult.material ?? [],
-        shape: analysisResult.shape ?? [],
-        detail: analysisResult.detail ?? [],
-        mood: analysisResult.mood ?? [],
-        keywords: [...(analysisResult.style ?? []), ...(analysisResult.material ?? []), ...(analysisResult.shape ?? [])],
+        shape: (analysisResult.shape ?? []).join(' '),
+        color: (analysisResult.style ?? []).join(' '),
+        material: (analysisResult.material ?? []).join(' '),
+        detail: (analysisResult.detail ?? []).join(' '),
+        brand: null,
+        theme: (analysisResult.mood ?? []).join(' '),
       };
       const scored: MatchItem[] = (listings ?? [])
         .map((item: any) => {
+          const tags: string[] = item.tags ?? [];
           const target = {
-            style: item.tags ?? [], material: item.tags ?? [], shape: item.tags ?? [],
-            detail: item.tags ?? [], mood: item.tags ?? [], keywords: item.tags ?? [],
-            description: item.description ?? '', title: item.title ?? '',
+            shape: tags.join(' '),
+            color: tags.join(' '),
+            material: tags.join(' '),
+            detail: [item.description ?? '', item.title ?? ''].join(' '),
+            brand: item.brand ?? null,
+            theme: tags.join(' '),
           };
           const result = calculateAringMatch(matchSource, target);
           return {
@@ -413,8 +417,8 @@ export default function SearchPhotoPage() {
             imageUrl: Array.isArray(item.image_urls) && item.image_urls.length > 0 ? item.image_urls[0] : null,
             location: item.location ?? null, description: item.description ?? null,
             tags: item.tags ?? [], createdAt: item.created_at,
-            similarity: result.score, reasons: result.reasons ?? [],
-            matchType: result.score >= 60 ? 'similar' : 'reference',
+            similarity: result.totalScore, reasons: result.reasons ?? [],
+            matchType: result.totalScore >= 60 ? 'similar' : 'reference',
           } as MatchItem;
         })
         .filter((item: MatchItem) => item.similarity >= 40)

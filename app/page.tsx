@@ -397,6 +397,7 @@ function SuccessSection() {
 // FindByPhotoCTA
 // ─────────────────────────────────────────────────────────────
 function FindByPhotoCTA() {
+  const router = useRouter();
   return (
     <section className="px-5 lg:px-8 pt-2 pb-7 lg:pb-12">
       <button onClick={() => { log('cta:find-by-photo'); router.push('/search/photo'); }} className="w-full flex items-center gap-3 rounded-card bg-white border border-aring-green-line px-4 py-4 shadow-card active:scale-[0.99] transition text-left">

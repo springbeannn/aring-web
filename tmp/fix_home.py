@@ -1,48 +1,52 @@
-import re
-
-path = "/Users/euijungner/aring-web/app/page.tsx"
+path = "/Users/euijungner/aring-web/app/search/photo/page.tsx"
 
 with open(path, "r", encoding="utf-8") as f:
     content = f.read()
 
-# 1. useRouter를 next/navigation import에 추가
-if "useRouter" not in content:
-    content = re.sub(
-        r"(import\s*\{)([^}]*)(}\s*from\s*'next/navigation')",
-        lambda m: m.group(1) + m.group(2).rstrip(", ") + ", useRouter" + m.group(3)
-            if "useRouter" not in m.group(2) else m.group(0),
-        content,
-        count=1
-    )
-    print("Added useRouter to import")
-else:
-    print("useRouter already imported")
+# matchSource 블록 교체
+old_src = """      const matchSource = {
+        style: analysisResult.style ?? [],
+        material: analysisResult.material ?? [],
+        shape: analysisResult.shape ?? [],
+        detail: analysisResult.detail ?? [],
+        mood: analysisResult.mood ?? [],
+        keywords: [...(analysisResult.style ?? []), ...(analysisResult.material ?? []), ...(analysisResult.shape ?? [])],
+      };
+      const scored: MatchItem[] = (listings ?? [])
+        .map((item: any) => {
+          const target = {
+            style: item.tags ?? [], material: item.tags ?? [], shape: item.tags ?? [],
+            detail: item.tags ?? [], mood: item.tags ?? [], keywords: item.tags ?? [],
+            description: item.description ?? '', title: item.title ?? '',
+          };
+          const result = calculateAringMatch(matchSource, target);"""
 
-# 2. export default function 첫 줄 바로 뒤에 const router = useRouter() 추가
-if "const router = useRouter()" not in content:
-    content = re.sub(
-        r"(export default function \w+[^{]*\{)",
-        r"\1\n  const router = useRouter();",
-        content,
-        count=1
-    )
-    print("Added const router = useRouter()")
-else:
-    print("router already declared")
+new_src = """      const matchSource = {
+        shape: (analysisResult.shape ?? []).join(' '),
+        color: (analysisResult.style ?? []).join(' '),
+        material: (analysisResult.material ?? []).join(' '),
+        detail: (analysisResult.detail ?? []).join(' '),
+        brand: null,
+        theme: (analysisResult.mood ?? []).join(' '),
+      };
+      const scored: MatchItem[] = (listings ?? [])
+        .map((item: any) => {
+          const tags: string[] = item.tags ?? [];
+          const target = {
+            shape: tags.join(' '),
+            color: tags.join(' '),
+            material: tags.join(' '),
+            detail: [item.description ?? '', item.title ?? ''].join(' '),
+            brand: item.brand ?? null,
+            theme: tags.join(' '),
+          };
+          const result = calculateAringMatch(matchSource, target);"""
 
-# 3. onClick 연결
-old = "onClick={log('cta:find-by-photo')}"
-new = "onClick={() => { log('cta:find-by-photo'); router.push('/search/photo'); }}"
-
-if old in content:
-    content = content.replace(old, new)
-    print("Fixed onClick!")
+if old_src in content:
+    content = content.replace(old_src, new_src)
+    print("Fixed matchSource and target!")
 else:
-    print("WARNING: onClick pattern not found - check app/page.tsx manually")
-    # 현재 파일에서 cta:find-by-photo 주변 찾기
-    idx = content.find("cta:find-by-photo")
-    if idx >= 0:
-        print("Found at:", repr(content[idx-50:idx+80]))
+    print("ERROR: pattern not found")
 
 with open(path, "w", encoding="utf-8") as f:
     f.write(content)
