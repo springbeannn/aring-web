@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createBrowserClient } from '@supabase/ssr';
+import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 
 const ANON_ID_KEY = 'aring_anon_user_id';
@@ -41,10 +41,6 @@ export default function SearchPhotoPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       let userId = session?.user?.id ?? '';
