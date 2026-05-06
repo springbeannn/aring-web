@@ -65,7 +65,7 @@ function LoginMobileBanner() {
   return (
     <div className="lg:hidden relative mx-5 mt-4 mb-2 rounded-2xl overflow-hidden h-[200px]">
       <Image
-        src="/images/login_table2.jpg"
+        src="/images/login_table1.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
