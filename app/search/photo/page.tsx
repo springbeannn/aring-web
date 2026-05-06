@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import Image from 'next/image';
 
+const ANON_ID_KEY = 'aring_anon_user_id';
+
 interface MyListing {
   id: string;
   title: string | null;
@@ -37,7 +39,6 @@ export default function SearchPhotoPage() {
   const router = useRouter();
   const [listings, setListings] = useState<MyListing[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const supabase = createBrowserClient(
@@ -45,13 +46,17 @@ export default function SearchPhotoPage() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setLoading(false); return; }
-      setLoggedIn(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      let userId = session?.user?.id ?? '';
+      if (!userId) {
+        userId = localStorage.getItem(ANON_ID_KEY) ?? '';
+      }
+      if (!userId) { setLoading(false); return; }
+
       const { data } = await supabase
         .from('listings')
         .select('id, title, brand, photo_url, status')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       setListings(data ?? []);
       setLoading(false);
@@ -78,17 +83,7 @@ export default function SearchPhotoPage() {
           </div>
         )}
 
-        {!loading && !loggedIn && (
-          <div className='flex flex-col items-center justify-center py-20 text-center'>
-            <p className='text-base font-semibold text-gray-700 mb-1'>로그인이 필요해요</p>
-            <p className='text-sm text-gray-400 mb-6'>내 귀걸이 매칭 현황을 보려면 로그인해주세요.</p>
-            <button onClick={() => router.push('/login')} className='px-6 py-3 bg-gray-900 text-white rounded-full text-sm font-semibold hover:bg-gray-700 transition-colors'>
-              로그인하기
-            </button>
-          </div>
-        )}
-
-        {!loading && loggedIn && listings.length === 0 && (
+        {!loading && listings.length === 0 && (
           <div className='flex flex-col items-center justify-center py-20 text-center'>
             <p className='text-base font-semibold text-gray-700 mb-1'>등록한 귀걸이가 없어요</p>
             <p className='text-sm text-gray-400 mb-6'>한 짝 귀걸이를 등록하면 짝을 찾아드려요.</p>
@@ -98,7 +93,7 @@ export default function SearchPhotoPage() {
           </div>
         )}
 
-        {!loading && loggedIn && listings.length > 0 && (
+        {!loading && listings.length > 0 && (
           <div>
             <p className='text-sm text-gray-400 mb-4'>귀걸이를 선택하면 최신 매칭 결과를 볼 수 있어요.</p>
             <div className='flex flex-col gap-3'>
