@@ -28,26 +28,38 @@ function relativeTime(iso: string): string {
 }
 
 function statusLabel(s: string) {
-  if (s === 'open') return { text: '판매중', color: 'bg-emerald-50 text-emerald-700 border border-emerald-200' };
-  if (s === 'matched') return { text: '거래중', color: 'bg-amber-50 text-amber-700 border border-amber-200' };
-  return { text: '완료', color: 'bg-aring-ink-100 text-aring-ink-500 border border-aring-ink-200' };
+  if (s === 'open') return '찾는 중';
+  if (s === 'matched') return '매칭 완료';
+  return '마감';
 }
 
-function MatchBadge({ score, type }: { score: number; type: 'similar' | 'reference' }) {
-  if (type === 'similar') {
-    const bg = score >= 90 ? 'bg-aring-ink-900 text-white' : score >= 80 ? 'bg-rose-400 text-white' : 'bg-aring-green text-white';
-    return <span className={`inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-extrabold ${bg}`}><IconSparkle className="w-3 h-3" /> aring Match {score}%</span>;
-  }
-  return <span className="inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-extrabold bg-aring-ink-100 text-aring-ink-500 border border-aring-ink-200">aring Match {score}%</span>;
+function statusColor(s: string) {
+  if (s === 'open') return 'bg-green-50 text-green-700 border-green-200';
+  if (s === 'matched') return 'bg-amber-50 text-amber-700 border-amber-200';
+  return 'bg-gray-50 text-gray-500 border-gray-200';
 }
 
-function ReasonBox({ reasons, type }: { reasons: string[]; type: 'similar' | 'reference' }) {
-  const cls = type === 'similar' ? 'border-emerald-100 bg-emerald-50/60' : 'border-aring-ink-100 bg-aring-ink-50/40';
+function scoreColor(score: number) {
+  if (score >= 80) return 'bg-amber-50 text-amber-700 border-amber-200';
+  if (score >= 60) return 'bg-green-50 text-green-700 border-green-200';
+  return 'bg-blue-50 text-blue-600 border-blue-200';
+}
+
+function MatchBadge({ score }: { score: number }) {
   return (
-    <div className={`mt-2 rounded-xl border ${cls} px-3 py-2.5 space-y-1`}>
+    <span className={'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold border ' + scoreColor(score)}>
+      <IconSparkle className="w-3 h-3" />
+      aring Match {score}%
+    </span>
+  );
+}
+
+function ReasonBox({ reasons }: { reasons: string[] }) {
+  return (
+    <div className="mt-2 rounded-xl bg-aring-ink-50 border border-aring-ink-100 px-3 py-2.5 space-y-1">
       {reasons.map((r, i) => (
         <div key={i} className="flex items-start gap-2">
-          <span className={`mt-[4px] w-1.5 h-1.5 rounded-full shrink-0 ${type === 'similar' ? 'bg-aring-green' : 'bg-aring-ink-300'}`} />
+          <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0 bg-aring-ink-400" />
           <p className="text-[11.5px] text-aring-ink-600 leading-snug">{r}</p>
         </div>
       ))}
@@ -55,79 +67,42 @@ function ReasonBox({ reasons, type }: { reasons: string[]; type: 'similar' | 're
   );
 }
 
-function SimilarCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
-  const st = statusLabel(item.status);
+function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
   return (
-    <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow">
       <div className="flex flex-col md:flex-row">
-        <div className="relative md:w-56 md:shrink-0 aspect-square md:aspect-auto bg-aring-ink-100 overflow-hidden" style={{ minHeight: 0 }}>
+        <div className="relative md:w-48 md:shrink-0 aspect-square md:aspect-auto bg-aring-ink-100 overflow-hidden">
           {item.photo_url
             ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
-            : <div className="w-full h-full bg-aring-grad-pastel" />
+            : <div className="w-full h-full bg-aring-ink-100" />
           }
-          <div className="absolute top-2.5 left-2.5"><MatchBadge score={matchScore.totalScore} type="similar" /></div>
-          <div className="absolute top-2.5 right-2.5"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
-        </div>
-        <div className="flex flex-col justify-between flex-1 px-4 py-3 md:px-6 md:py-5">
-          <div>
-            <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
-            <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
-            <p className="mt-0.5 text-[14px] md:text-[15px] font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-            {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
-            <ReasonBox reasons={matchScore.reasons} type="similar" />
+          <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
+          <div className="absolute top-3 right-3">
+            <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+              {statusLabel(item.status)}
+            </span>
           </div>
-          <div className="mt-3 flex items-center justify-between">
+        </div>
+        <div className="flex flex-col justify-between flex-1 px-4 py-3 md:px-5 md:py-4">
+          <div>
+            {matchScore.label && (
+              <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
+            )}
+            <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
+            <p className="mt-0.5 text-[14px] md:text-[15px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+            {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
+            <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
+          </div>
+          <div className="mt-3 flex items-center justify-between gap-2">
             <p className="text-[10px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
             <div className="flex gap-2">
-              <Link href={`/items/${item.id}#comments`} className="flex items-center gap-1 rounded-pill border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition"><IconChat className="w-3.5 h-3.5" /> 댓글</Link>
-              <Link href={`/items/${item.id}`} className="flex items-center gap-1 rounded-pill bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">상세 보기 <IconChevronRight className="w-3.5 h-3.5" /></Link>
+              <Link href={`/items/${item.id}#comments`} className="inline-flex items-center gap-1 rounded-full border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
+                <IconChat className="w-3.5 h-3.5" /> 댓글
+              </Link>
+              <Link href={`/items/${item.id}`} className="inline-flex items-center gap-1 rounded-full bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
+                상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReferenceCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
-  const st = statusLabel(item.status);
-  return (
-    <div className="rounded-2xl border border-aring-ink-100 bg-white overflow-hidden hover:border-aring-ink-200 transition-colors">
-      <div className="flex flex-row">
-        {/* 이미지 영역 */}
-        <div className="relative w-40 shrink-0 bg-aring-ink-100 overflow-hidden" style={{ minHeight: '200px' }}>
-          {item.photo_url
-            ? <img src={item.photo_url} alt={item.brand ?? ''} className="w-full h-full object-cover" loading="lazy" />
-            : <div className="w-full h-full bg-aring-grad-pastel" />
-          }
-          <div className="absolute top-2 left-2"><MatchBadge score={matchScore.totalScore} type="reference" /></div>
-          <div className="absolute top-2 right-2"><span className={`rounded-pill px-2 py-0.5 text-[10px] font-bold ${st.color}`}>{st.text}</span></div>
-        </div>
-        {/* 텍스트 영역 */}
-        <div className="flex flex-col justify-between flex-1 px-5 py-4">
-          <div className="flex flex-col gap-3">
-            {/* 상품 기본 정보 묶음 */}
-            <div>
-              {/* 캡션: 라벨 */}
-              <p className="text-[11px] font-extrabold text-aring-ink-400 mb-1">{matchScore.label}</p>
-              {/* 본문: 브랜드 */}
-              <p className="text-[13px] font-semibold text-aring-ink-500 truncate">{item.brand ?? '브랜드 미상'}</p>
-              {/* 카드 타이틀: 상품명 */}
-              <p className="mt-0.5 text-[14px] font-extrabold text-aring-ink-900 line-clamp-2 leading-snug">{item.detail ?? item.shape ?? '한 짝'}</p>
-              {/* 캡션: 등록자 한마디 */}
-              {item.story && <p className="mt-1.5 text-[11px] font-medium text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>}
-            </div>
-            {/* 이유 설명 박스 */}
-            <ReasonBox reasons={matchScore.reasons.slice(0, 2)} type="reference" />
-          </div>
-          {/* 버튼 영역 */}
-          <div className="mt-4 flex gap-2">
-            <Link href={`/items/${item.id}#comments`} className="flex items-center gap-1 rounded-pill border border-aring-ink-200 bg-white px-3 py-1.5 text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-50 transition">
-              <IconChat className="w-3.5 h-3.5" /> 댓글
-            </Link>
-            <Link href={`/items/${item.id}`} className="flex items-center gap-1 rounded-pill bg-aring-ink-900 px-4 py-1.5 text-[13px] font-extrabold text-white hover:opacity-90 transition">
-              상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
       </div>
@@ -143,34 +118,27 @@ function MyItemSummary({ item }: { item: Listing }) {
     item.brand && item.brand !== '브랜드 미상' && item.brand,
   ].filter(Boolean) as string[];
   return (
-    <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden shadow-sm">
-      <div className="flex gap-0">
-        {/* 이미지 */}
-        <div className="w-28 h-28 md:w-32 md:h-32 shrink-0 overflow-hidden bg-aring-grad-pastel">
+    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
+      <div className="flex">
+        <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0 bg-aring-ink-100 overflow-hidden">
           {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}
         </div>
-        {/* 정보 */}
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
-          {/* 캡션: 내 귀걸이 라벨 */}
           <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase">
             <IconSparkle className="w-3 h-3" /> 내 귀걸이
           </span>
-          {/* 카드 타이틀: 상품명 */}
           <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-          {/* 본문: 브랜드 */}
-          {item.brand && <p className="text-[13px] font-semibold text-aring-ink-500">{item.brand}</p>}
-          {/* 속성 칩 */}
+          {item.brand && <p className="text-[12px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
           <div className="flex flex-wrap gap-1 mt-0.5">
             {tags.slice(0, 4).map(t => (
-              <span key={t} className="rounded-pill bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
+              <span key={t} className="rounded-full bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
             ))}
           </div>
         </div>
       </div>
-      {/* 캡션: 등록자 한마디 */}
       {item.story && (
-        <div className="border-t border-aring-ink-100 px-4 py-2.5">
-          <p className="text-[11px] font-medium text-aring-ink-400 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
+        <div className="border-t border-aring-ink-100 bg-aring-ink-50 px-4 py-2.5">
+          <p className="text-[11px] font-medium text-aring-ink-500 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
         </div>
       )}
     </div>
@@ -179,18 +147,17 @@ function MyItemSummary({ item }: { item: Listing }) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center px-8 py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-aring-grad-pastel flex items-center justify-center mb-5">
+    <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
+      <div className="w-16 h-16 rounded-full bg-aring-ink-100 flex items-center justify-center mb-5">
         <IconSparkle className="w-7 h-7 text-aring-ink-500" />
       </div>
-      <p className="text-[17px] font-extrabold text-aring-ink-900 leading-snug">아직 꼭 닮은 짝을<br />찾지 못했어요</p>
+      <p className="text-[17px] font-extrabold text-aring-ink-900 leading-snug">아직 딱 맞는 짝을<br />찾지 못했어요</p>
       <p className="mt-3 text-[13px] text-aring-ink-500 leading-[1.8] max-w-[280px]">
-        하지만 끝난 건 아니에요.<br />새로운 귀걸이가 등록될 때마다 비슷한 짝을 다시 찾아볼 수 있어요.<br />
-        <span className="text-aring-ink-700 font-semibold">잃어버린 반쪽을 찾는 여정, aring이 함께할게요.</span>
+        함께 기다려 볼까요?<br />새로운 귀걸이가 등록될 때마다 비슷한 짝을 다시 찾아볼 수 있어요.
       </p>
       <div className="mt-8 flex flex-col gap-2.5 w-full max-w-[240px]">
-        <Link href="/products" className="flex items-center justify-center rounded-pill bg-aring-ink-900 py-3 text-[13px] font-extrabold text-white">비슷한 귀걸이 둘러보기</Link>
-        <Link href="/my" className="flex items-center justify-center rounded-pill border border-aring-green-line py-3 text-[13px] font-extrabold text-aring-ink-900">내 상품 보러가기</Link>
+        <Link href="/products" className="inline-flex items-center justify-center rounded-full bg-aring-ink-900 py-3 text-[13px] font-extrabold text-white">비슷한 귀걸이 둘러보기</Link>
+        <Link href="/my" className="inline-flex items-center justify-center rounded-full bg-white border border-aring-ink-200 py-3 text-[13px] font-extrabold text-aring-ink-900">내 상품 보러가기</Link>
       </div>
     </div>
   );
@@ -198,7 +165,7 @@ function EmptyState() {
 
 function LoadingScreen() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+    <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4">
       <div className="w-10 h-10 rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
       <div className="text-center">
         <p className="text-[14px] font-extrabold text-aring-ink-900">짝을 찾는 중이에요</p>
@@ -245,117 +212,101 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
   const isEmpty      = state.status === 'ok' && !hasSimilar && !hasReference;
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="flex justify-center">
-        <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone md:max-w-none md:my-0 md:min-h-screen md:rounded-none md:shadow-none md:overflow-visible">
+    <main className="min-h-screen flex justify-center bg-white">
+      <div className="relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white">
+        <div className="pb-28 lg:pb-12">
           <TopNav />
 
-          <div className="pb-28 md:pb-16">
-            {/* 전체 1컬럼 — 가로폭 풀 사용, 중앙 max-w 제한 없음 */}
-            <div className="w-full px-5 md:px-10 lg:px-16">
-
-              {/* 헤더 */}
-              <div className="pt-6 pb-4 md:pt-8 md:pb-6">
-                <button onClick={() => router.back()} className="mb-4 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-700 transition">
-                  <IconArrowLeft className="w-4 h-4" /> 뒤로
-                </button>
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <IconSparkle className="w-3.5 h-3.5 text-aring-accent" />
-                  <span className="text-[10.5px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span>
-                </div>
-                <h1 className="text-[22px] md:text-[28px] font-extrabold text-aring-ink-900 leading-snug">
-                  AI가 비슷한 짝을 찾아봤어요
-                </h1>
-                <p className="mt-2 text-[12.5px] text-aring-ink-500 leading-relaxed">
-                  방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
-                </p>
+          <div className="px-5 lg:px-8">
+            {/* Header */}
+            <div className="pt-3 pb-4">
+              <button onClick={() => router.back()} className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-700 transition">
+                <IconArrowLeft className="w-4 h-4" /> 뒤로
+              </button>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <IconSparkle className="w-3.5 h-3.5 text-aring-accent" />
+                <span className="text-[10.5px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span>
               </div>
-
-              {/* 내 귀걸이 요약 */}
-              <div className="mb-6">
-                {state.status === 'ok' && <MyItemSummary item={state.myItem} />}
-                {state.status === 'loading' && <div className="h-24 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
-              </div>
-
-              {/* 로딩 / 에러 / 빈 상태 */}
-              {state.status === 'loading' && <LoadingScreen />}
-              {state.status === 'error' && (
-                <div className="pt-4 text-center">
-                  <p className="text-[14px] font-bold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
-                  <p className="mt-1 text-[12px] text-aring-ink-500">잠시 후 다시 시도해주세요</p>
-                  <Link href="/my" className="mt-5 inline-flex rounded-pill bg-aring-ink-900 px-5 py-2.5 text-[13px] font-extrabold text-white">내 상품 보기</Link>
-                </div>
-              )}
-              {isEmpty && <EmptyState />}
-
-              {/* 결과 요약 박스 */}
-              {state.status === 'ok' && (hasSimilar || hasReference) && (
-                <div className="mb-6 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-5 py-4">
-                  {!hasSimilar && hasReference ? (
-                    <>
-                      <p className="text-[13px] font-extrabold text-aring-ink-900">아직 꼭 닮은 짝을 찾지 못했어요</p>
-                      <p className="mt-1 text-[12px] text-aring-ink-500">대신 참고해볼 수 있는 후보 {state.reference.length}개를 모아봤어요</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-[13px] font-extrabold text-aring-ink-900">
-                        {hasSimilar ? `유사한 후보 ${state.similar.length}개` : ''}{hasSimilar && hasReference ? ' · ' : ''}{hasReference ? `참고 후보 ${state.reference.length}개` : ''}를 찾았어요
-                      </p>
-                      <p className="mt-1 text-[12px] text-aring-ink-500">매칭률이 높을수록 더 비슷한 귀걸이예요</p>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* 유사 후보 섹션 */}
-              {hasSimilar && state.status === 'ok' && (
-                <section className="mb-8">
-                  <div className="flex items-center gap-2.5 mb-5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-aring-green shrink-0" />
-                    <div>
-                      <h2 className="text-[15px] md:text-[17px] font-extrabold text-aring-ink-900">
-                        가장 비슷한 짝을 찾아봤어요
-                        <span className="ml-2 text-[12px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
-                      </h2>
-                      <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 60% 이상</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3 md:grid md:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] md:gap-4">
-                    {state.similar.map(c => <SimilarCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                  </div>
-                </section>
-              )}
-
-              {/* 구분선 */}
-              {hasSimilar && hasReference && state.status === 'ok' && (
-                <div className="mb-8 border-t border-aring-ink-100" />
-              )}
-
-              {/* 참고 후보 섹션 */}
-              {hasReference && state.status === 'ok' && (
-                <section>
-                  <div className="flex items-center gap-2.5 mb-5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-aring-ink-300 shrink-0" />
-                    <div>
-                      <h2 className="text-[14px] md:text-[15px] font-extrabold text-aring-ink-600">
-                        완전히 같진 않지만, 이런 후보도 있어요
-                        <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
-                      </h2>
-                      <p className="text-[11px] text-aring-ink-400 mt-0.5">aring Match 40~59%</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    {state.reference.map(c => <ReferenceCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                  </div>
-                </section>
-              )}
-
-              <div className="h-8" />
+              <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900 leading-snug">
+                AI가 비슷한 짝을 찾아봤어요
+              </h1>
+              <p className="mt-1 text-[13px] text-aring-ink-400">
+                방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
+              </p>
             </div>
-          </div>
 
-          <BottomNav />
+            {/* My item summary */}
+            <div className="mb-5">
+              {state.status === 'ok' && <MyItemSummary item={state.myItem} />}
+              {state.status === 'loading' && <div className="h-28 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
+            </div>
+
+            {/* Loading / Error / Empty */}
+            {state.status === 'loading' && <LoadingScreen />}
+            {state.status === 'error' && (
+              <div className="pt-4 text-center">
+                <p className="text-[14px] font-extrabold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
+                <p className="mt-1 text-[12px] text-aring-ink-500">잠시 후 다시 시도해주세요</p>
+                <Link href="/my" className="mt-5 inline-flex rounded-full bg-aring-ink-900 px-5 py-2.5 text-[13px] font-extrabold text-white">내 상품 보기</Link>
+              </div>
+            )}
+            {isEmpty && <EmptyState />}
+
+            {/* Result summary */}
+            {state.status === 'ok' && (hasSimilar || hasReference) && (
+              <div className="mb-5 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-4 py-3.5">
+                {hasSimilar ? (
+                  <>
+                    <p className="text-[14px] font-extrabold text-aring-green">딱 맞는 짝을 찾았어요!</p>
+                    <p className="mt-1 text-[12px] text-aring-ink-500">
+                      {`유사한 후보 ${state.similar.length}개${hasReference ? ` · 참고 후보 ${state.reference.length}개` : ''}를 찾았어요`}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[14px] font-extrabold text-aring-ink-900">아직 딱 맞는 짝을 찾지 못했어요. 함께 기다려 볼까요?</p>
+                    <p className="mt-1 text-[12px] text-aring-ink-500">대신 참고해볼 수 있는 후보 {state.reference.length}개를 모아봤어요</p>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* 유사 후보 섹션 */}
+            {hasSimilar && state.status === 'ok' && (
+              <section className="mb-6">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
+                  <h2 className="text-[15px] lg:text-[16px] font-extrabold text-aring-ink-900">
+                    가장 비슷한 짝을 찾아봤어요
+                    <span className="ml-2 text-[11px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
+                  </h2>
+                </div>
+                <p className="ml-4 text-[11px] text-aring-ink-400 mb-3">aring Match 60% 이상</p>
+                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+                  {state.similar.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                </div>
+              </section>
+            )}
+
+            {/* 참고 후보 섹션 */}
+            {hasReference && state.status === 'ok' && (
+              <section>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-2 h-2 rounded-full bg-aring-ink-300 shrink-0" />
+                  <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-700">
+                    완전히 같진 않지만, 이런 후보도 있어요
+                    <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
+                  </h2>
+                </div>
+                <p className="ml-4 text-[11px] text-aring-ink-400 mb-3">aring Match 40~59%</p>
+                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+                  {state.reference.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                </div>
+              </section>
+            )}
+          </div>
         </div>
+        <BottomNav />
       </div>
     </main>
   );
