@@ -94,7 +94,7 @@ function SignupLeftPanel() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
       <div className="relative z-20 mt-auto px-9 pb-12">
         <p className="text-[22px] font-bold leading-snug text-white mb-3 break-keep">
-          버리기엔 아깝고, 다시 사기엔 아쉬운 귀걸이
+          버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
         <p className="text-[13px] leading-relaxed text-white/80 mb-4 break-keep">
           서랍 속에 한 짝만 남겨둔 경험이 있다면{' '}
@@ -133,7 +133,7 @@ function SignupMobileBanner() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 px-5 pb-5">
         <p className="text-[15px] font-bold text-white leading-snug mb-1 break-keep">
-          버리기엔 아깝고, 다시 사기엔 아쉬운 귀걸이
+          버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
         <p className="text-[12px] text-white/70 leading-relaxed break-keep">
           한 짝만 남은 귀걸이를 등록하면 같거나 비슷한 짝을 찾아드립니다
