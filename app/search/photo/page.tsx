@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createBrowserClient } from '@supabase/ssr';
 import Image from 'next/image';
 
 const ANON_ID_KEY = 'aring_anon_user_id';
@@ -41,15 +41,19 @@ export default function SearchPhotoPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     (async () => {
-      const { data: { session } } = await supabase!a.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       let userId = session?.user?.id ?? '';
       if (!userId) {
         userId = localStorage.getItem(ANON_ID_KEY) ?? '';
       }
       if (!userId) { setLoading(false); return; }
 
-      const { data } = await supabase!
+      const { data } = await supabase
         .from('listings')
         .select('id, title, brand, photo_url, status')
         .eq('user_id', userId)
