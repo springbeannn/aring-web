@@ -42,7 +42,7 @@ export default function SearchPhotoPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase!.auth.getSession();
       let userId = session?.user?.id ?? '';
       if (!userId) {
         userId = localStorage.getItem(ANON_ID_KEY) ?? '';
