@@ -54,14 +54,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/`);
   }
 
-  // 동일 이메일 다른 계정 확인
+  // 동일 이메일 다른 계정 확인 (nickname 체크 포함)
   const { data: emailExisting } = await supabase
     .from('profiles')
-    .select('id, provider')
+    .select('id, provider, nickname')
     .eq('email', email)
     .maybeSingle();
 
   if (emailExisting) {
+    if (!emailExisting.nickname) {
+      return NextResponse.redirect(`${origin}/signup/nickname`);
+    }
     return NextResponse.redirect(`${origin}/`);
   }
 
