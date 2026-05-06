@@ -271,64 +271,36 @@ export default function MyMatchPage() {
                         : '아직 딱 맞는 짝을 찾지 못했어요. 함께 기다려 볼까요?'}
                     </p>
 
-                    {data && (
-                      data.reference.length > 0 ? (
-                        <div className='mt-3 rounded-xl bg-aring-ink-50 p-3'>
-                          <p className='text-[12px] font-bold text-aring-ink-800'>
-                            그래도 이런 후보들이 있어요
+                    <div className='mt-auto pt-3 border-t border-aring-ink-100'>
+                      {data && data.reference.length > 0 && (
+                        <div className='mb-3'>
+                          <p className='text-[12px] font-bold text-aring-ink-700'>
+                            완전히 같진 않지만, 이런 후보도 있어요
                           </p>
-                          <p className='mt-0.5 text-[10px] font-semibold text-aring-ink-500'>
+                          <p className='mt-0.5 text-[11px] text-aring-ink-400'>
                             참고 후보 {data.reference.length}개 · {refRangeText(data.reference)}
                           </p>
-                          <div className='mt-2.5 flex items-center gap-2'>
-                            {data.reference.slice(0, 3).map((c) => (
-                              <button
-                                key={c.id}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push('/items/' + c.id);
-                                }}
-                                aria-label={(c.brand ?? '후보') + ' 상세 보기'}
-                                className='relative w-12 h-12 rounded-lg overflow-hidden bg-aring-ink-100 ring-1 ring-aring-ink-100 hover:ring-aring-ink-300 transition'
-                              >
-                                {c.photo_url && (
-                                  <Image
-                                    src={c.photo_url}
-                                    alt={c.brand ?? ''}
-                                    fill
-                                    sizes='48px'
-                                    className='object-cover'
-                                  />
-                                )}
-                              </button>
-                            ))}
-                          </div>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               router.push('/match/' + item.id);
                             }}
-                            className='mt-2.5 inline-flex items-center gap-0.5 text-[11px] font-bold text-aring-ink-700 hover:text-aring-ink-900 transition-colors'
+                            className='mt-1 text-[11px] font-semibold text-aring-green hover:underline'
                           >
-                            자세히 보기
-                            <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
-                              <polyline points='9 18 15 12 9 6'/>
-                            </svg>
+                            자세히 보기 →
                           </button>
                         </div>
-                      ) : data.similar.length === 0 ? (
-                        <div className='mt-3 rounded-xl bg-aring-ink-50 p-3 text-center'>
-                          <p className='text-[11px] text-aring-ink-500 leading-relaxed'>
-                            아직 등록된 다른 한 짝이 없어요.<br/>
-                            새 귀걸이가 올라오는 대로 다시 분석해드릴게요.
-                          </p>
-                        </div>
-                      ) : null
-                    )}
-
-                    <div className='mt-auto pt-3 flex items-center gap-3 border-t border-aring-ink-100'>
-                      <HeartButton itemId={item.id} />
-                      <ViewCount value={item.view_count ?? 0} />
+                      )}
+                      {data && data.reference.length === 0 && data.similar.length === 0 && (
+                        <p className='mb-3 text-[11px] text-aring-ink-500 leading-relaxed'>
+                          아직 등록된 다른 한 짝이 없어요.<br/>
+                          새 귀걸이가 올라오는 대로 다시 분석해드릴게요.
+                        </p>
+                      )}
+                      <div className='flex items-center gap-3'>
+                        <HeartButton itemId={item.id} />
+                        <ViewCount value={item.view_count ?? 0} />
+                      </div>
                     </div>
                   </div>
                 </div>
