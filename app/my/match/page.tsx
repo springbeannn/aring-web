@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { calculateAringMatch } from '@/lib/aringMatch';
+import { readLikedIds, writeLikedIds } from '@/lib/mock';
 import Image from 'next/image';
 import { TopNav, BottomNav } from '@/components/Nav';
 
 const ANON_ID_KEY = 'aring_anon_user_id';
+const PAGE_SIZE = 9;
+const PAGE_STEP = 3;
 
 interface MyListing {
   id: string;
@@ -18,6 +21,7 @@ interface MyListing {
   photo_url: string;
   status: 'open' | 'matched' | 'closed';
   view_count: number;
+  likes_count: number | null;
 }
 
 interface MatchSummary {
@@ -74,11 +78,48 @@ function AnalyzingBadge() {
   );
 }
 
+function HeartButton({ itemId, baseCount }: { itemId: string; baseCount: number }) {
+  const [liked, setLiked] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setLiked(readLikedIds().includes(itemId));
+    setMounted(true);
+  }, [itemId]);
+
+  function toggle(e: React.MouseEvent) {
+    e.stopPropagation();
+    const ids = readLikedIds();
+    const next = ids.includes(itemId) ? ids.filter((id) => id !== itemId) : [...ids, itemId];
+    writeLikedIds(next);
+    setLiked(next.includes(itemId));
+  }
+
+  const count = baseCount + (mounted && liked ? 1 : 0);
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label='찜하기'
+      className={[
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition active:scale-95',
+        liked ? 'bg-aring-pastel-pink text-aring-accent' : 'bg-aring-ink-100 text-aring-ink-500 hover:bg-aring-ink-100/80',
+      ].join(' ')}
+    >
+      <svg className='w-3.5 h-3.5' viewBox='0 0 24 24' fill={liked ? 'currentColor' : 'none'} stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
+        <path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' />
+      </svg>
+      <span suppressHydrationWarning>{count}</span>
+    </button>
+  );
+}
+
 export default function MyMatchPage() {
   const router = useRouter();
   const [listings, setListings] = useState<MyListing[]>([]);
   const [matchMap, setMatchMap] = useState<Record<string, MatchSummary>>({});
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     if (!supabase) { setLoading(false); return; }
@@ -87,7 +128,7 @@ export default function MyMatchPage() {
       if (!userId) { setLoading(false); return; }
       const { data: myItems } = await supabase!
         .from('listings')
-        .select('id, brand, shape, detail, color, material, photo_url, status, view_count')
+        .select('id, brand, shape, detail, color, material, photo_url, status, view_count, likes_count')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
       const items = (myItems ?? []) as MyListing[];
@@ -149,80 +190,109 @@ export default function MyMatchPage() {
       </>
     );
   } else {
-    content = (
-      <>
-        <div className='px-5 lg:px-8 pt-3 pb-2'>
-          <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
-          <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
-        </div>
+    const visibleListings = listings.slice(0, visibleCount);
+    const hasMore = visibleCount < listings.length;
+    return (
+      <main className='min-h-screen flex justify-center bg-white'>
+        <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
+          <div className='pb-28 lg:pb-12'>
+            <TopNav />
+            <div className='px-5 lg:px-8 pt-3 pb-2'>
+              <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
+              <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
+            </div>
 
-        <div className='mt-4 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-4'>
-          {listings.map((item, idx) => {
-            const m = matchMap[item.id] ?? null;
-            const hasMatch = m && m.topScore >= 40;
-            return (
-              <div
-                key={item.id}
-                onClick={() => router.push('/match/' + item.id)}
-                className='group rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all'
-              >
-                <div className='relative aspect-square bg-aring-ink-100'>
-                  {item.photo_url && (
-                    <Image
-                      src={item.photo_url}
-                      alt={item.brand ?? ''}
-                      fill
-                      sizes='(min-width: 1024px) 50vw, 100vw'
-                      className='object-cover'
-                    />
-                  )}
-                  <div className='absolute top-3 left-3 flex items-center gap-1.5'>
-                    <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
-                      No.{listings.length - idx}
-                    </span>
-                    <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
-                      {statusLabel(item.status)}
-                    </span>
+            <div className='mt-4 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-4'>
+              {visibleListings.map((item, idx) => {
+                const m = matchMap[item.id] ?? null;
+                const hasMatch = m && m.topScore >= 40;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => router.push('/match/' + item.id)}
+                    className='group rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col'
+                  >
+                    <div className='relative aspect-square bg-aring-ink-100'>
+                      {item.photo_url && (
+                        <Image
+                          src={item.photo_url}
+                          alt={item.brand ?? ''}
+                          fill
+                          sizes='(min-width: 1024px) 33vw, 100vw'
+                          className='object-cover'
+                        />
+                      )}
+                      <div className='absolute top-3 left-3 flex items-center gap-1.5'>
+                        <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
+                          No.{listings.length - idx}
+                        </span>
+                        <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+                          {statusLabel(item.status)}
+                        </span>
+                      </div>
+                      <div className='absolute bottom-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black/40 text-white backdrop-blur'>
+                        <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+                          <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/>
+                          <circle cx='12' cy='12' r='3'/>
+                        </svg>
+                        {item.view_count ?? 0}
+                      </div>
+                    </div>
+
+                    <div className='p-4 flex-1 flex flex-col'>
+                      <p className='text-[15px] font-extrabold text-aring-ink-900 truncate'>
+                        {item.brand ?? '브랜드 미상'}
+                      </p>
+
+                      <div className='mt-2'>
+                        {hasMatch ? (
+                          <span className={'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ' + scoreRangeColor(m!.topScore)}>
+                            {scoreRange(m!.topScore)}
+                          </span>
+                        ) : (
+                          <AnalyzingBadge />
+                        )}
+                      </div>
+
+                      <p className='mt-2 text-[12px] text-aring-ink-600 leading-relaxed'>
+                        {matchSummaryText(m)}
+                      </p>
+
+                      <div className='mt-3 pt-3 border-t border-aring-ink-100 flex items-center justify-between gap-2'>
+                        <HeartButton itemId={item.id} baseCount={item.likes_count ?? 0} />
+                        <span className='inline-flex items-center gap-0.5 text-[11px] font-semibold text-aring-ink-500 group-hover:text-aring-ink-900 transition-colors'>
+                          자세히 보기
+                          <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+                            <polyline points='9 18 15 12 9 6'/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className='absolute bottom-3 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black/40 text-white backdrop-blur'>
-                    <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
-                      <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/>
-                      <circle cx='12' cy='12' r='3'/>
-                    </svg>
-                    {item.view_count ?? 0}
-                  </div>
-                </div>
+                );
+              })}
+            </div>
 
-                <div className='p-4 lg:p-5'>
-                  <p className='text-[15px] font-extrabold text-aring-ink-900 truncate'>
-                    {item.brand ?? '브랜드 미상'}
-                  </p>
-
-                  <p className='mt-2 text-[13px] text-aring-ink-600 leading-relaxed'>
-                    {matchSummaryText(m)}
-                  </p>
-
-                  <div className='mt-3 flex items-center justify-between gap-2'>
-                    {hasMatch ? (
-                      <span className={'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ' + scoreRangeColor(m!.topScore)}>
-                        {scoreRange(m!.topScore)}
-                      </span>
-                    ) : (
-                      <AnalyzingBadge />
-                    )}
-                    <span className='inline-flex items-center gap-0.5 text-[11px] font-semibold text-aring-ink-500 group-hover:text-aring-ink-900 transition-colors'>
-                      자세히 보기
-                      <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
-                        <polyline points='9 18 15 12 9 6'/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
+            {hasMore && (
+              <div className='mt-6 px-4 lg:px-8 flex justify-center'>
+                <button
+                  onClick={() => setVisibleCount((c) => Math.min(c + PAGE_STEP, listings.length))}
+                  className='inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-white border border-aring-ink-200 text-sm font-bold text-aring-ink-900 shadow-sm hover:bg-aring-ink-100 hover:shadow active:scale-95 transition-all'
+                >
+                  더보기
+                  <span className='text-[11px] font-semibold text-aring-ink-400'>
+                    ({Math.min(PAGE_STEP, listings.length - visibleCount)}개 더)
+                  </span>
+                  <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
+                    <polyline points='6 9 12 15 18 9'/>
+                  </svg>
+                </button>
               </div>
-            );
-          })}
+            )}
+          </div>
+          <BottomNav active='my' />
         </div>
-      </>
+      </main>
     );
   }
 
