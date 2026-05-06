@@ -27,7 +27,7 @@ function LoginLeftPanel() {
   return (
     <div className="hidden lg:flex flex-col relative overflow-hidden w-[420px] xl:w-[480px] flex-shrink-0 min-h-full">
       <Image
-        src="/images/login_table2.jpg"
+        src="/images/login_table1.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"

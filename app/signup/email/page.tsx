@@ -85,7 +85,7 @@ function SignupLeftPanel() {
   return (
     <div className="hidden lg:flex flex-col relative overflow-hidden w-[420px] xl:w-[480px] flex-shrink-0 min-h-full">
       <Image
-        src="/images/login_table1.jpg"
+        src="/images/login_table3.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
@@ -124,7 +124,7 @@ function SignupMobileBanner() {
   return (
     <div className="lg:hidden relative mx-5 mt-4 mb-2 rounded-2xl overflow-hidden h-[200px]">
       <Image
-        src="/images/login_table1.jpg"
+        src="/images/signup-pinktable.jpg"
         alt="aring 귀걸이 모델"
         fill
         className="object-cover object-[center_65%]"
