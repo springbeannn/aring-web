@@ -48,6 +48,14 @@ function statusColor(s: string) {
   return 'bg-gray-50 text-gray-500 border-gray-200';
 }
 
+function refRangeText(refs: CandidateItem[]): string {
+  if (refs.length === 0) return '';
+  const min = Math.min(...refs.map((r) => r.score));
+  const max = Math.max(...refs.map((r) => r.score));
+  if (min === max) return `aring Match ${min}%`;
+  return `aring Match ${min}~${max}%`;
+}
+
 function HeartButton({ itemId }: { itemId: string }) {
   const [liked, setLiked] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -134,15 +142,32 @@ export default function MyMatchPage() {
           for (const c of candidates) {
             const tgt = { shape: c.shape ?? '', color: c.color ?? '', material: c.material ?? '', detail: c.detail ?? '', brand: c.brand };
             const r = calculateAringMatch(src, tgt);
-            if (r.type === 'similar' || r.type === 'reference') {
-              scored.push({ id: c.id, brand: c.brand, photo_url: c.photo_url, score: r.totalScore, type: r.type });
+            if (r.totalScore > 0) {
+              scored.push({
+                id: c.id,
+                brand: c.brand,
+                photo_url: c.photo_url,
+                score: r.totalScore,
+                type: r.totalScore >= 60 ? 'similar' : 'reference',
+              });
             }
           }
           scored.sort((a, b) => b.score - a.score);
-          map[item.id] = {
-            similar: scored.filter((s) => s.type === 'similar'),
-            reference: scored.filter((s) => s.type === 'reference'),
-          };
+          const similar = scored.filter((s) => s.type === 'similar');
+          const reference = scored.filter((s) => s.type === 'reference');
+          map[item.id] = { similar, reference };
+          if (typeof window !== 'undefined') {
+            // eslint-disable-next-line no-console
+            console.log('[my/match] match computed', {
+              itemId: item.id,
+              brand: item.brand,
+              candidates: candidates.length,
+              scored: scored.length,
+              similar: similar.length,
+              reference: reference.length,
+              topScores: scored.slice(0, 5).map((s) => s.score),
+            });
+          }
         }
         setMatchMap(map);
       }
@@ -255,7 +280,7 @@ export default function MyMatchPage() {
                           그래도 이런 후보들이 있어요
                         </p>
                         <p className='mt-0.5 text-[10px] font-semibold text-aring-ink-500'>
-                          참고 후보 {data!.reference.length}개 · aring Match 40~59%
+                          참고 후보 {data!.reference.length}개 · {refRangeText(data!.reference)}
                         </p>
                         <div className='mt-2.5 flex items-center gap-2'>
                           {data!.reference.slice(0, 3).map((c) => (
