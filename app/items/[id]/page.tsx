@@ -516,7 +516,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
     <Link
       href={`/items/${item.id}`}
       onClick={log('similar:tap', item.id)}
-      className="shrink-0 w-[150px] flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
+      className="shrink-0 w-[calc((100vw-64px)/2.3)] lg:w-[150px] flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
       <div
         className="relative aspect-square overflow-hidden"
