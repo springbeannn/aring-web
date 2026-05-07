@@ -405,7 +405,7 @@ function FindByPhotoCTA() {
           <IconCamera className="w-5 h-5 text-aring-ink-900" strokeWidth={2.2} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[12px] font-bold tracking-wider text-aring-accent">FIND BY PHOTO</p>
+          <p className="text-[12px] font-bold tracking-wider text-aring-green">FIND BY PHOTO</p>
           <p className="mt-0.5 text-[14px] font-bold text-aring-ink-900">이 귀걸이와 비슷한 한 짝 찾기</p>
           <p className="mt-0.5 text-[13px] text-aring-ink-500">사진을 올리면 AI가 5초 안에 후보를 보여드려요</p>
         </div>

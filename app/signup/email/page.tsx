@@ -300,7 +300,7 @@ export default function SignupEmailPage() {
               </div>
 
               {!allRequired && (
-                <p className="mb-3 text-[13px] text-amber-500 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
+                <p className="mb-3 text-[13px] text-amber-700 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
               )}
               {submitError && <p className="mb-3 text-[13px] text-rose-400 text-center">{submitError}</p>}
 
