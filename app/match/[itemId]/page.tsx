@@ -265,8 +265,8 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <div className="rounded-full h-1.5 bg-aring-ink-100 overflow-hidden">
-                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '60%' }} />
+                  <div className="w-full h-1.5 rounded-full bg-aring-ink-100 mt-1 overflow-hidden">
+                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '65%' }} />
                   </div>
                   <span className="mt-1.5 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-green-50 text-green-700 border-green-200">
                     aring Match 60% 이상
@@ -289,8 +289,8 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <div className="rounded-full h-1.5 bg-aring-ink-100 overflow-hidden">
-                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '40%' }} />
+                  <div className="w-full h-1.5 rounded-full bg-aring-ink-100 mt-1 overflow-hidden">
+                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '50%' }} />
                   </div>
                   <span className="mt-1.5 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
                     aring Match 40~59%
