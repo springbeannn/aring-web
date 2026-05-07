@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, type Listing } from '@/lib/supabase';
 import { calculateAringMatch, splitMatchCandidates, type MatchResult } from '@/lib/aringMatch';
-import { optimizeImage } from '@/lib/imageUrl';
 import { TopNav, BottomNav } from '@/components/Nav';
 
 type IP = { className?: string };
@@ -89,7 +88,13 @@ function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchR
     <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
       <div className="relative aspect-square bg-aring-ink-100">
         {item.photo_url
-          ? <img src={optimizeImage(item.photo_url, 1000)} alt={item.brand ?? ''} className="absolute inset-0 w-full h-full max-w-[1000px] object-cover" loading="lazy" />
+          ? <img
+              src={item.photo_url}
+              alt={item.brand ?? ''}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+            />
           : <div className="absolute inset-0 bg-aring-ink-100" />
         }
         <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
@@ -134,7 +139,14 @@ function MyItemSummary({ item }: { item: Listing }) {
     <div className="mx-5 lg:mx-8 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
       <div className="flex">
         <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0 bg-aring-ink-100 overflow-hidden">
-          {item.photo_url && <img src={optimizeImage(item.photo_url, 1000)} alt="내 귀걸이" className="w-full h-full max-w-[1000px] object-cover" />}
+          {item.photo_url && (
+            <img
+              src={item.photo_url}
+              alt="내 귀걸이"
+              className="w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+            />
+          )}
         </div>
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
           <p className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
@@ -169,6 +181,49 @@ function EmptyState() {
         <Link href="/products" className="inline-flex items-center justify-center rounded-full bg-aring-ink-900 py-3 text-[13px] font-extrabold text-white">비슷한 귀걸이 둘러보기</Link>
         <Link href="/my" className="inline-flex items-center justify-center rounded-full bg-white border border-aring-ink-200 py-3 text-[13px] font-extrabold text-aring-ink-900">내 상품 보러가기</Link>
       </div>
+    </div>
+  );
+}
+
+function WaitingBanner({ referenceCount }: { referenceCount: number }) {
+  return (
+    <div className="relative mb-5 rounded-2xl overflow-hidden bg-gradient-to-br from-aring-green/15 via-aring-green/5 to-transparent border border-aring-green/20 p-5">
+      {/* 우측 상단 장식 */}
+      <div aria-hidden className="pointer-events-none absolute -top-3 -right-3 opacity-10 rotate-12 select-none">
+        <IconSparkle className="w-20 h-20 text-aring-green" />
+      </div>
+
+      {/* 펄스 인디케이터 + 라벨 */}
+      <div className="relative flex items-center gap-2 mb-3">
+        <span className="relative inline-flex w-2.5 h-2.5">
+          <span className="absolute inset-0 rounded-full bg-aring-green opacity-60 animate-ping" />
+          <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-aring-green" />
+        </span>
+        <span className="text-[12px] font-extrabold tracking-[0.08em] text-aring-green uppercase">
+          AI가 탐색 중이에요
+        </span>
+      </div>
+
+      {/* 중앙 카피 */}
+      <p className="relative text-[16px] lg:text-[17px] font-extrabold text-aring-ink-900 leading-snug">
+        아직 딱 맞는 짝을 못 찾았어요
+      </p>
+      <p className="relative mt-1 text-[13px] lg:text-[14px] text-aring-ink-600 leading-relaxed">
+        하지만 매일 새로운 귀걸이가 등록되고 있어요 🔔
+      </p>
+      {referenceCount > 0 && (
+        <p className="relative mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">
+          그동안 참고할 수 있는 후보 {referenceCount}개를 모아봤어요
+        </p>
+      )}
+
+      {/* 액션 버튼 */}
+      <button
+        type="button"
+        className="relative mt-4 inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] border-aring-green bg-white/70 hover:bg-white text-aring-green px-4 py-2 text-[13px] font-bold transition active:scale-95"
+      >
+        🔔 새 매치 알림 받기
+      </button>
     </div>
   );
 }
@@ -254,23 +309,19 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
             )}
             {isEmpty && <EmptyState />}
 
-            {/* Result summary */}
-            {state.status === 'ok' && (hasSimilar || hasReference) && (
+            {/* Result summary — 딱 맞는 짝(>=60) 발견 시 */}
+            {state.status === 'ok' && hasSimilar && (
               <div className="mb-5 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-4 py-3.5">
-                {hasSimilar ? (
-                  <>
-                    <p className="text-[14px] font-extrabold text-aring-green">딱 맞는 짝을 찾았어요!</p>
-                    <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">
-                      {`유사한 후보 ${state.similar.length}개${hasReference ? ` · 참고 후보 ${state.reference.length}개` : ''}를 찾았어요`}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">아직 딱 맞는 짝을 찾지 못했어요. 함께 기다려 볼까요?</p>
-                    <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">대신 참고해볼 수 있는 후보 {state.reference.length}개를 모아봤어요</p>
-                  </>
-                )}
+                <p className="text-[14px] font-extrabold text-aring-green">딱 맞는 짝을 찾았어요!</p>
+                <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">
+                  {`유사한 후보 ${state.similar.length}개${hasReference ? ` · 참고 후보 ${state.reference.length}개` : ''}를 찾았어요`}
+                </p>
               </div>
+            )}
+
+            {/* Waiting banner — 딱 맞는 짝 미발견 + 참고 후보 존재 시 */}
+            {state.status === 'ok' && !hasSimilar && hasReference && (
+              <WaitingBanner referenceCount={state.reference.length} />
             )}
 
             {/* 유사 후보 섹션 — 항상 3 슬롯, 부족하면 SeekingCard로 채움 */}
@@ -288,7 +339,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 60% 이상
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-3 lg:gap-4">
+                <div className="grid grid-cols-3 gap-3 max-w-[440px] mx-auto">
                   {state.similar.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
                   {Array.from({ length: Math.max(0, 3 - state.similar.length) }).map((_, i) => <SeekingCard key={`sim-seek-${i}`} />)}
                 </div>
@@ -310,7 +361,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 40~59%
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-3 lg:gap-4">
+                <div className="grid grid-cols-3 gap-3 max-w-[440px] mx-auto">
                   {state.reference.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
                   {Array.from({ length: Math.max(0, 3 - state.reference.length) }).map((_, i) => <SeekingCard key={`ref-seek-${i}`} />)}
                 </div>
