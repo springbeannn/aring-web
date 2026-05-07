@@ -88,7 +88,7 @@ export default function SignupPage() {
           <SignupLeftPanel />
           <div className="flex-1 flex flex-col lg:overflow-y-auto">
             <SignupMobileBanner />
-            <div className="px-5 pt-4 pb-32 lg:pt-12 lg:pb-16 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
+            <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
 
               <div className="text-center mb-2 lg:text-left lg:mb-7">
                 <h1 className="text-[22px] font-extrabold text-aring-ink-900">에이링 시작하기</h1>

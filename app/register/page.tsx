@@ -307,7 +307,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
   onAnalyze: () => void;
 }) {
   return (
-    <div className="px-5 pb-32">
+    <div className="px-5 pb-28">
       <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
       <h1 className="text-[22px] font-extrabold tracking-tight leading-[1.3] mb-2">
         <span className="grad-text-green">사진을 올려주세요</span>
@@ -446,7 +446,7 @@ function ReviewStep({
   submitting: boolean;
 }) {
   return (
-    <div className="px-5 pb-32">
+    <div className="px-5 pb-28">
 
       {/* 이미지 */}
       <div className="relative rounded-card overflow-hidden border border-aring-green-line bg-white mb-5 shadow-card">
