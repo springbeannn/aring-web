@@ -326,7 +326,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
 
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
-      <p className="text-[11px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
+      <p className="text-[13px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
       <h1 className="mt-1 text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
@@ -340,7 +340,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span className="text-[11px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
+              <span className="text-[13px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
             </div>
             <button
           onClick={toggle}
@@ -370,7 +370,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
       <div className="rounded-card border border-aring-green-line bg-white p-4 lg:p-5">
         <div className="flex items-center gap-1.5 mb-3">
           <IconSparkle className="w-3.5 h-3.5 text-aring-green" />
-          <p className="text-[11px] font-extrabold tracking-wider text-aring-green">
+          <p className="text-[13px] font-extrabold tracking-wider text-aring-green">
             AI 분석
           </p>
         </div>
@@ -399,7 +399,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10px] font-medium text-aring-ink-500">{label}</p>
+      <p className="text-[12px] font-medium text-aring-ink-500">{label}</p>
       <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">
         {value}
       </p>
@@ -426,7 +426,7 @@ function ColorChip({ value }: { value: string }) {
   const info = COLOR_MAP[value];
   return (
     <div>
-      <p className="text-[10px] font-medium text-aring-ink-500">컬러</p>
+      <p className="text-[12px] font-medium text-aring-ink-500">컬러</p>
       {info ? (
         <div className="mt-0.5 flex items-center gap-1.5">
           <span
@@ -454,7 +454,7 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
         등록자 한마디
       </h2>
       <p className="text-[13px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
-      <p className="mt-2 text-[11px] text-aring-ink-500">{ago}</p>
+      <p className="mt-2 text-[13px] text-aring-ink-500">{ago}</p>
     </section>
   );
 }
@@ -493,11 +493,11 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
           <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
-          <p className="mt-0.5 text-[11px] text-aring-ink-500">
+          <p className="mt-0.5 text-[13px] text-aring-ink-500">
             AI가 형태·소재·디테일을 분석해 추천
           </p>
         </div>
-        <span className="text-[11px] font-semibold text-aring-ink-500">
+        <span className="text-[13px] font-semibold text-aring-ink-500">
           {items.length}개
         </span>
       </div>
@@ -535,14 +535,14 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         )}
       </div>
       <div className="px-2.5 py-2">
-        <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {item.brand}
         </p>
-        <p className="mt-0.5 text-[11px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
           {item.name}
         </p>
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[11px] font-extrabold text-aring-ink-900">
+          <p className="mt-1 text-[13px] font-extrabold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}
@@ -571,7 +571,7 @@ function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
           <p className="text-[13px] font-bold text-aring-ink-900 truncate">
             {seller.nickname}
           </p>
-          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-aring-ink-500">
+          <div className="mt-0.5 flex items-center gap-2 text-[13px] text-aring-ink-500">
             <span className="inline-flex items-center gap-0.5 text-aring-ink-700 font-semibold">
               <IconStar className="w-3 h-3 text-aring-accent" />
               {seller.rating.toFixed(1)}
@@ -600,7 +600,7 @@ function LoadingScreen() {
     <main className="min-h-screen flex items-center justify-center bg-white">
       <div className="text-center">
         <div className="w-10 h-10 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-        <p className="mt-3 text-[11px] text-aring-ink-500">불러오는 중…</p>
+        <p className="mt-3 text-[13px] text-aring-ink-500">불러오는 중…</p>
       </div>
     </main>
   );

@@ -42,33 +42,33 @@ type DupState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 
 function EmailHint({ state, email }: { state: DupState; email: string }) {
   if (!email) return null;
-  if (!isValidEmail(email)) return <p className="mt-1.5 text-[11px] text-amber-500">이메일 형식을 확인해주세요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[11px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[11px] text-aring-ink-400">확인 중...</p>;
-  if (state === 'available') return <p className="mt-1.5 text-[11px] text-emerald-500">✓ 사용 가능한 이메일이에요.</p>;
-  if (state === 'taken') return <p className="mt-1.5 text-[11px] text-rose-400">이미 가입된 이메일이에요.</p>;
-  return <p className="mt-1.5 text-[11px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
+  if (!isValidEmail(email)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일 형식을 확인해주세요.</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] text-aring-ink-400">확인 중...</p>;
+  if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 이메일이에요.</p>;
+  if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 가입된 이메일이에요.</p>;
+  return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
 }
 
 function NicknameHint({ state, nickname }: { state: DupState; nickname: string }) {
   if (!nickname) return null;
-  if (looksLikePII(nickname)) return <p className="mt-1.5 text-[11px] text-amber-500">이메일이나 전화번호는 사용할 수 없어요.</p>;
-  if (!isValidNickname(nickname)) return <p className="mt-1.5 text-[11px] text-amber-500">닉네임은 2~12자, 한글/영문/숫자만 사용할 수 있어요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[11px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[11px] text-aring-ink-400">확인 중...</p>;
-  if (state === 'available') return <p className="mt-1.5 text-[11px] text-emerald-500">✓ 사용 가능한 닉네임이에요.</p>;
-  if (state === 'taken') return <p className="mt-1.5 text-[11px] text-rose-400">이미 사용 중인 닉네임이에요.</p>;
-  return <p className="mt-1.5 text-[11px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
+  if (looksLikePII(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일이나 전화번호는 사용할 수 없어요.</p>;
+  if (!isValidNickname(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">닉네임은 2~12자, 한글/영문/숫자만 사용할 수 있어요.</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] text-aring-ink-400">확인 중...</p>;
+  if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 닉네임이에요.</p>;
+  if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 사용 중인 닉네임이에요.</p>;
+  return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
 }
 
 function PasswordHint({ pw }: { pw: string }) {
-  if (!pw) return <p className="mt-1.5 text-[11px] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
-  if (/\s/.test(pw)) return <p className="mt-1.5 text-[11px] text-rose-400">공백은 사용할 수 없어요.</p>;
-  if (pw.length < 8) return <p className="mt-1.5 text-[11px] text-amber-500">8자 이상 입력해주세요. ({pw.length}/20)</p>;
-  if (pw.length > 20) return <p className="mt-1.5 text-[11px] text-rose-400">20자 이하로 입력해주세요.</p>;
+  if (!pw) return <p className="mt-1.5 text-[13px] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
+  if (/\s/.test(pw)) return <p className="mt-1.5 text-[13px] text-rose-400">공백은 사용할 수 없어요.</p>;
+  if (pw.length < 8) return <p className="mt-1.5 text-[13px] text-amber-500">8자 이상 입력해주세요. ({pw.length}/20)</p>;
+  if (pw.length > 20) return <p className="mt-1.5 text-[13px] text-rose-400">20자 이하로 입력해주세요.</p>;
   const combos = [/[a-zA-Z]/.test(pw), /[0-9]/.test(pw), /[^a-zA-Z0-9]/.test(pw)].filter(Boolean).length;
-  if (combos < 2) return <p className="mt-1.5 text-[11px] text-amber-500">영문/숫자/특수문자 중 2가지 이상 조합해주세요.</p>;
-  return <p className="mt-1.5 text-[11px] text-emerald-500">✓ 사용 가능한 비밀번호예요. ({pw.length}/20)</p>;
+  if (combos < 2) return <p className="mt-1.5 text-[13px] text-amber-500">영문/숫자/특수문자 중 2가지 이상 조합해주세요.</p>;
+  return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 비밀번호예요. ({pw.length}/20)</p>;
 }
 
 function DupButton({ label, onClick, disabled, checking }: { label: string; onClick: () => void; disabled: boolean; checking: boolean }) {
@@ -219,7 +219,7 @@ export default function SignupEmailPage() {
 
               {/* 이메일 */}
               <div className="mb-4">
-                <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">이메일</label>
+                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">이메일</label>
                 <input type="email" placeholder="이메일" value={email}
                   onChange={(e) => { setEmail(e.target.value); setEmailDup('idle'); }}
                   className={inputBase}
@@ -232,7 +232,7 @@ export default function SignupEmailPage() {
 
               {/* 비밀번호 */}
               <div className="mb-4">
-                <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">비밀번호</label>
+                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">비밀번호</label>
                 <div className="relative">
                   <input type={showPw ? 'text' : 'password'} placeholder="비밀번호" value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -247,7 +247,7 @@ export default function SignupEmailPage() {
 
               {/* 비밀번호 확인 */}
               <div className="mb-4">
-                <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">비밀번호 확인</label>
+                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">비밀번호 확인</label>
                 <div className="relative">
                   <input type={showPwC ? 'text' : 'password'} placeholder="비밀번호 확인" value={passwordConfirm}
                     onChange={(e) => { setPasswordConfirm(e.target.value); setPwConfirmTouched(true); }}
@@ -258,7 +258,7 @@ export default function SignupEmailPage() {
                   </button>
                 </div>
                 {pwConfirmTouched && passwordConfirm.length > 0 && (
-                  <p className={`mt-1.5 text-[11px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
+                  <p className={`mt-1.5 text-[13px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
                     {pwMatch ? '✓ 비밀번호가 일치해요.' : '비밀번호가 일치하지 않아요.'}
                   </p>
                 )}
@@ -266,7 +266,7 @@ export default function SignupEmailPage() {
 
               {/* 닉네임 */}
               <div className="mb-6">
-                <label className="block text-[11.5px] font-bold text-aring-ink-700 mb-1.5">닉네임</label>
+                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">닉네임</label>
                 <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname}
                   onChange={(e) => { setNickname(e.target.value); setNickDup('idle'); }}
                   className={inputBase}
@@ -294,15 +294,15 @@ export default function SignupEmailPage() {
                     className="w-full flex items-center gap-3 px-4 py-3 border-b border-aring-ink-100 last:border-b-0 bg-white">
                     <IconCheck checked={terms[key as keyof typeof terms]} />
                     <span className="flex-1 text-left text-[13px] text-aring-ink-700">{label}</span>
-                    {link && <Link href={link} onClick={(e) => e.stopPropagation()} className="text-[11px] text-aring-ink-400 underline shrink-0">보기</Link>}
+                    {link && <Link href={link} onClick={(e) => e.stopPropagation()} className="text-[13px] text-aring-ink-400 underline shrink-0">보기</Link>}
                   </button>
                 ))}
               </div>
 
               {!allRequired && (
-                <p className="mb-3 text-[11px] text-amber-500 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
+                <p className="mb-3 text-[13px] text-amber-500 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
               )}
-              {submitError && <p className="mb-3 text-[11px] text-rose-400 text-center">{submitError}</p>}
+              {submitError && <p className="mb-3 text-[13px] text-rose-400 text-center">{submitError}</p>}
 
               <button onClick={handleSubmit} disabled={!canSubmit || loading}
                 className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>

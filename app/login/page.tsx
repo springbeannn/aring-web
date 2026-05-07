@@ -175,7 +175,7 @@ export default function LoginPage() {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px bg-aring-ink-100" />
-                <span className="text-[11px] text-aring-ink-400 font-medium">또는</span>
+                <span className="text-[13px] text-aring-ink-400 font-medium">또는</span>
                 <div className="flex-1 h-px bg-aring-ink-100" />
               </div>
 
@@ -204,7 +204,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {error && <p className="mb-3 text-[11px] text-red-500 text-center">{error}</p>}
+              {error && <p className="mb-3 text-[13px] text-red-500 text-center">{error}</p>}
 
               <button
                 onClick={handleEmailLogin}

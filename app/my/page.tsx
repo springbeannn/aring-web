@@ -421,7 +421,7 @@ function ProfileHeader({
           <p className="text-[17px] lg:text-[18px] font-extrabold text-aring-ink-900 truncate">
             {nickname || '아링 친구'}
           </p>
-          <p className="mt-0.5 text-[11px] text-aring-ink-500 truncate">
+          <p className="mt-0.5 text-[13px] text-aring-ink-500 truncate">
             {bio}
           </p>
         </div>
@@ -450,7 +450,7 @@ function Stat({ label, value, mounted }: { label: string; value: number; mounted
       <p className="text-[22px] font-extrabold tracking-tight text-aring-ink-900" suppressHydrationWarning>
         {mounted ? value : 0}
       </p>
-      <p className="mt-0.5 text-[10px] font-medium text-aring-ink-500">
+      <p className="mt-0.5 text-[12px] font-medium text-aring-ink-500">
         {label}
       </p>
     </div>
@@ -563,13 +563,13 @@ function MyListingCard({
 
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         <Link href={`/items/${listing.id}`} className="block">
-          <p className="text-[10px] font-bold tracking-wider text-aring-ink-400 truncate uppercase">
+          <p className="text-[12px] font-bold tracking-wider text-aring-ink-400 truncate uppercase">
             {listing.brand ?? '브랜드 미상'}
           </p>
           <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate leading-snug">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
-          <p className="mt-0.5 text-[10px] text-aring-ink-400">
+          <p className="mt-0.5 text-[12px] text-aring-ink-400">
             {relativeTime(listing.created_at)}
           </p>
         </Link>
@@ -641,7 +641,7 @@ function StatusStepper({
                   )}
                 </div>
                 <span className={[
-                  'text-[9px] lg:text-[10px] font-extrabold tracking-wide whitespace-nowrap',
+                  'text-[9px] lg:text-[12px] font-extrabold tracking-wide whitespace-nowrap',
                   isCurrent ? 'text-aring-ink-900' : isPast ? 'text-aring-ink-300' : 'text-aring-ink-300 group-hover:text-aring-ink-500',
                 ].join(' ')}>
                   {STEP_LABEL[step]}
@@ -750,10 +750,10 @@ function LikedCard({ listing }: { listing: Listing }) {
         )}
       </Link>
       <div className="p-2.5">
-        <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {listing.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-0.5 text-[11px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link
@@ -869,17 +869,17 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
             {tag.label}
           </span>
         </div>
-        <p className="mt-1 text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="mt-1 text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {s.brand}
         </p>
         <p className="text-[13px] font-bold text-aring-ink-900 truncate">
           {s.productName}
         </p>
-        <p className="mt-1 text-[11px] text-aring-ink-700 truncate">
+        <p className="mt-1 text-[13px] text-aring-ink-700 truncate">
           <span className="font-semibold">{s.lastAuthor}</span>{' '}
           <span className="text-aring-ink-500">·</span> {s.lastMessage}
         </p>
-        <p className="mt-0.5 text-[10px] text-aring-ink-500">
+        <p className="mt-0.5 text-[12px] text-aring-ink-500">
           {relativeTime(s.lastAt)}
         </p>
       </div>
@@ -913,7 +913,7 @@ function SectionHead({
           )}
         </div>
         {sub && (
-          <p className="mt-1 text-[11px] text-aring-ink-500">{sub}</p>
+          <p className="mt-1 text-[13px] text-aring-ink-500">{sub}</p>
         )}
       </div>
     </div>
@@ -934,7 +934,7 @@ function EmptyBlock({
   return (
     <div className="rounded-card bg-aring-ink-100 px-5 py-8 text-center">
       <p className="text-[14px] font-extrabold text-aring-ink-900">{title}</p>
-      <p className="mt-1 text-[11px] text-aring-ink-500">{sub}</p>
+      <p className="mt-1 text-[13px] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
         className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold active:scale-95 transition"

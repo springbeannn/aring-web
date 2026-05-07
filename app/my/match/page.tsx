@@ -248,10 +248,10 @@ export default function MyMatchPage() {
                       />
                     )}
                     <div className='absolute top-3 left-3 flex items-center gap-1.5'>
-                      <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
+                      <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
                         No.{listings.length - idx}
                       </span>
-                      <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+                      <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
                         {statusLabel(item.status)}
                       </span>
                     </div>
@@ -277,7 +277,7 @@ export default function MyMatchPage() {
                           <p className='text-[12px] font-bold text-aring-ink-700'>
                             완전히 같진 않지만, 이런 후보도 있어요
                           </p>
-                          <p className='mt-0.5 text-[11px] text-aring-ink-400'>
+                          <p className='mt-0.5 text-[13px] text-aring-ink-400'>
                             참고 후보 {data.reference.length}개 · {refRangeText(data.reference)}
                           </p>
                           <button
@@ -285,14 +285,14 @@ export default function MyMatchPage() {
                               e.stopPropagation();
                               router.push('/match/' + item.id);
                             }}
-                            className='mt-1 text-[11px] font-semibold text-aring-green hover:underline'
+                            className='mt-1 text-[13px] font-semibold text-aring-green hover:underline'
                           >
                             자세히 보기 →
                           </button>
                         </div>
                       )}
                       {data && data.reference.length === 0 && data.similar.length === 0 && (
-                        <p className='mb-3 text-[11px] text-aring-ink-500 leading-relaxed'>
+                        <p className='mb-3 text-[13px] text-aring-ink-500 leading-relaxed'>
                           아직 등록된 다른 한 짝이 없어요.<br/>
                           새 귀걸이가 올라오는 대로 다시 분석해드릴게요.
                         </p>
@@ -315,7 +315,7 @@ export default function MyMatchPage() {
                 className='inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-white border border-aring-ink-200 text-sm font-bold text-aring-ink-900 shadow-sm hover:bg-aring-ink-100 hover:shadow active:scale-95 transition-all'
               >
                 더보기
-                <span className='text-[11px] font-semibold text-aring-ink-400'>
+                <span className='text-[13px] font-semibold text-aring-ink-400'>
                   ({Math.min(PAGE_STEP, listings.length - visibleCount)}개 더)
                 </span>
                 <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>

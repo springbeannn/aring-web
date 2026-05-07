@@ -143,7 +143,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[10px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[12px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
@@ -384,7 +384,7 @@ export default function DiscoverPage() {
               ))}
               <button
                 onClick={resetAll}
-                className="ml-auto text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
+                className="ml-auto text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
               >
                 전체 해제
               </button>
@@ -458,13 +458,13 @@ export default function DiscoverPage() {
               <p className="text-[13px] font-extrabold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
-                  <span className="ml-2 text-[11px] font-semibold text-aring-ink-500">
+                  <span className="ml-2 text-[13px] font-semibold text-aring-ink-500">
                     · 필터 {activeCount}개
                   </span>
                 )}
               </p>
               {activeCount > 0 && (
-                <button onClick={resetAll} className="text-[11px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+                <button onClick={resetAll} className="text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
                   초기화
                 </button>
               )}
@@ -481,7 +481,7 @@ export default function DiscoverPage() {
             ) : filtered.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-                <p className="mt-1 text-[11px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
+                <p className="mt-1 text-[13px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}

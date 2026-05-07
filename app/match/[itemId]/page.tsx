@@ -46,7 +46,7 @@ function scoreColor(score: number) {
 
 function MatchBadge({ score }: { score: number }) {
   return (
-    <span className={'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold border ' + scoreColor(score)}>
+    <span className={'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-semibold border ' + scoreColor(score)}>
       <IconSparkle className="w-3 h-3" />
       aring Match {score}%
     </span>
@@ -59,7 +59,7 @@ function ReasonBox({ reasons }: { reasons: string[] }) {
       {reasons.map((r, i) => (
         <div key={i} className="flex items-start gap-2">
           <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0 bg-aring-ink-400" />
-          <p className="text-[11.5px] text-aring-ink-600 leading-snug">{r}</p>
+          <p className="text-[13px] text-aring-ink-600 leading-snug">{r}</p>
         </div>
       ))}
     </div>
@@ -72,11 +72,11 @@ function SeekingCard() {
       <div className="relative aspect-square bg-aring-ink-50 flex items-center justify-center">
         <div className="text-center px-2">
           <div className="w-8 h-8 mx-auto mb-1.5 rounded-full border-2 border-aring-ink-200 border-t-aring-ink-400 animate-spin" />
-          <p className="text-[11px] font-semibold text-aring-ink-500">찾고 있어요</p>
+          <p className="text-[13px] font-semibold text-aring-ink-500">찾고 있어요</p>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-3">
-        <p className="text-[10px] text-aring-ink-400 text-center leading-relaxed">
+        <p className="text-[12px] text-aring-ink-400 text-center leading-relaxed">
           새 귀걸이가 등록되면<br/>알려드릴게요
         </p>
       </div>
@@ -94,21 +94,21 @@ function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchR
         }
         <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
         <div className="absolute top-3 right-3">
-          <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+          <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
             {statusLabel(item.status)}
           </span>
         </div>
       </div>
       <div className="flex-1 flex flex-col p-4">
         {matchScore.label && (
-          <p className="text-[11px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
+          <p className="text-[13px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
         )}
         <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
         <p className="mt-0.5 text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-        {item.story && <p className="mt-1.5 text-[11px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
+        {item.story && <p className="mt-1.5 text-[13px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
         <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
         <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-aring-ink-100">
-          <p className="text-[10px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
+          <p className="text-[12px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
           <div className="flex items-center gap-2">
             <Link href={`/items/${item.id}#comments`} className="inline-flex items-center justify-center gap-1 h-9 px-4 rounded-full border border-aring-ink-200 bg-white text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-50 transition">
               <IconChat className="w-3.5 h-3.5" /> 댓글
@@ -141,14 +141,14 @@ function MyItemSummary({ item }: { item: Listing }) {
           {item.brand && <p className="text-[12px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
           <div className="flex flex-wrap gap-1.5 mt-0.5">
             {tags.slice(0, 4).map(t => (
-              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[11px] font-medium whitespace-nowrap">{t}</span>
+              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[13px] font-medium whitespace-nowrap">{t}</span>
             ))}
           </div>
         </div>
       </div>
       {item.story && (
         <div className="border-t border-aring-ink-100 bg-aring-ink-50 px-4 py-2.5">
-          <p className="text-[11px] font-medium text-aring-ink-500 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
+          <p className="text-[13px] font-medium text-aring-ink-500 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
         </div>
       )}
     </div>
@@ -179,7 +179,7 @@ function LoadingScreen() {
       <div className="w-10 h-10 rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
       <div className="text-center">
         <p className="text-[14px] font-extrabold text-aring-ink-900">짝을 찾는 중이에요</p>
-        <p className="mt-1 text-[11px] text-aring-ink-500">aring이 비슷한 귀걸이를 분석하고 있어요</p>
+        <p className="mt-1 text-[13px] text-aring-ink-500">aring이 비슷한 귀걸이를 분석하고 있어요</p>
       </div>
     </div>
   );
@@ -280,11 +280,11 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                   <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
                   <h2 className="text-[15px] lg:text-[16px] font-extrabold text-aring-ink-900">
                     가장 비슷한 짝을 찾아봤어요
-                    <span className="ml-2 text-[11px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
+                    <span className="ml-2 text-[13px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-green-50 text-green-700 border-green-200">
+                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[13px] font-semibold border bg-green-50 text-green-700 border-green-200">
                     aring Match 60% 이상
                   </span>
                 </div>
@@ -302,11 +302,11 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                   <span className="w-2 h-2 rounded-full bg-aring-ink-300 shrink-0" />
                   <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-700">
                     완전히 같진 않지만, 이런 후보도 있어요
-                    <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
+                    <span className="ml-2 text-[13px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
+                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[13px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
                     aring Match 40~59%
                   </span>
                 </div>

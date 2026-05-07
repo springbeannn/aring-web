@@ -52,8 +52,8 @@ export default function NicknamePage() {
               style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }}
               autoFocus
             />
-            <p className="mt-2 text-right text-[11px] text-aring-ink-400">{nickname.length}/12</p>
-            {error && <p className="mt-1 text-[11px] text-red-500 text-center">{error}</p>}
+            <p className="mt-2 text-right text-[13px] text-aring-ink-400">{nickname.length}/12</p>
+            {error && <p className="mt-1 text-[13px] text-red-500 text-center">{error}</p>}
           </div>
 
           <button

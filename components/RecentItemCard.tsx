@@ -57,14 +57,14 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
                 </span>
             </div>
             <div className="px-3 py-3">
-                <p className="text-[10px] font-bold tracking-wider text-aring-ink-500 truncate">{it.brand}</p>
+                <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">{it.brand}</p>
                 <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">{it.name}</p>
-                {it.story && <p className="mt-1 text-[10px] text-aring-ink-500 truncate">{it.story}</p>}
+                {it.story && <p className="mt-1 text-[12px] text-aring-ink-500 truncate">{it.story}</p>}
                 <div className="mt-2 flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-aring-ink-900">{formatKRW(it.price)}</span>
+                    <span className="text-[13px] font-bold text-aring-ink-900">{formatKRW(it.price)}</span>
                     <div className="flex items-center gap-2">
                         {typeof it.viewCount === 'number' && it.viewCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[10px] text-aring-ink-400">
+                            <span className="inline-flex items-center gap-0.5 text-[12px] text-aring-ink-400">
                                 <IconEye />
                                 {it.viewCount}
                             </span>
@@ -72,7 +72,7 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
                         <button
                             onClick={handleLike}
                             aria-label="찜하기"
-                            className={['inline-flex items-center gap-1 text-[10px] transition', liked ? 'text-aring-accent' : 'text-aring-ink-500'].join(' ')}
+                            className={['inline-flex items-center gap-1 text-[12px] transition', liked ? 'text-aring-accent' : 'text-aring-ink-500'].join(' ')}
                         >
                             <IconHeart className="w-3 h-3" filled={liked} />
                             {it.likes + (liked ? 1 : 0)}

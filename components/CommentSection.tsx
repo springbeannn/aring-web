@@ -191,7 +191,7 @@ export function CommentSection({
         <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
           문의 댓글
         </h2>
-        <p className="mt-0.5 text-[11px] text-aring-ink-500">
+        <p className="mt-0.5 text-[13px] text-aring-ink-500">
           이 상품에 대해 궁금한 점을 남겨보세요
         </p>
       </div>
@@ -214,12 +214,12 @@ export function CommentSection({
           {replyTo && (
             <button
               onClick={() => setReplyTo(null)}
-              className="text-[11px] font-semibold text-aring-ink-500 hover:text-aring-ink-900"
+              className="text-[13px] font-semibold text-aring-ink-500 hover:text-aring-ink-900"
             >
               답글 취소
             </button>
           )}
-          <span className="text-[10px] text-aring-ink-500 ml-auto">
+          <span className="text-[12px] text-aring-ink-500 ml-auto">
             {message.length}/1000
           </span>
           <button
@@ -235,15 +235,15 @@ export function CommentSection({
       {/* 리스트 */}
       <div className="px-5 lg:px-8">
         {loading ? (
-          <p className="text-center py-6 text-[11px] text-aring-ink-500">
+          <p className="text-center py-6 text-[13px] text-aring-ink-500">
             불러오는 중…
           </p>
         ) : error ? (
-          <p className="text-center py-6 text-[11px] text-aring-ink-500">
+          <p className="text-center py-6 text-[13px] text-aring-ink-500">
             {error}
           </p>
         ) : roots.length === 0 ? (
-          <p className="text-center py-6 text-[11px] text-aring-ink-500">
+          <p className="text-center py-6 text-[13px] text-aring-ink-500">
             아직 문의가 없어요. 첫 문의를 남겨보세요.
           </p>
         ) : (
@@ -336,7 +336,7 @@ function CommentItem({
               {isReply ? '판매자 답글' : '판매자'}
             </span>
           )}
-          <span className="ml-auto shrink-0 text-[10px] text-aring-ink-500">
+          <span className="ml-auto shrink-0 text-[12px] text-aring-ink-500">
             {relativeTime(comment.created_at)}
             {wasEdited && ' · 수정됨'}
           </span>
@@ -356,7 +356,7 @@ function CommentItem({
             <div className="mt-1.5 flex items-center justify-end gap-2">
               <button
                 onClick={onCancelEdit}
-                className="text-[11px] font-semibold text-aring-ink-500 px-2 py-1"
+                className="text-[13px] font-semibold text-aring-ink-500 px-2 py-1"
               >
                 취소
               </button>
@@ -381,7 +381,7 @@ function CommentItem({
             {!isReply && (
               <button
                 onClick={() => onReply(comment.id)}
-                className="text-[11px] font-semibold text-aring-ink-500 hover:text-aring-ink-900 transition"
+                className="text-[13px] font-semibold text-aring-ink-500 hover:text-aring-ink-900 transition"
               >
                 {replyTo === comment.id ? '답글 작성 중…' : '답글'}
               </button>
@@ -389,7 +389,7 @@ function CommentItem({
             {isMine && (
               <button
                 onClick={() => onStartEdit(comment.id, comment.message)}
-                className="text-[11px] font-semibold text-aring-ink-500 hover:text-aring-ink-900 transition"
+                className="text-[13px] font-semibold text-aring-ink-500 hover:text-aring-ink-900 transition"
               >
                 수정
               </button>

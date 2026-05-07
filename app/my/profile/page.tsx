@@ -140,7 +140,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[18px] lg:text-[22px] font-extrabold text-aring-ink-900 truncate">{profile.nickname}</p>
-                    <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[10px] font-bold text-aring-ink-500">
+                    <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[12px] font-bold text-aring-ink-500">
                       {providerLabel[profile.provider] ?? profile.provider} 계정
                     </span>
                   </div>
@@ -151,11 +151,11 @@ export default function ProfilePage() {
               <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden">
                 <div className="px-5 py-4 lg:px-6 lg:py-5">
                   <div className="flex items-center justify-between mb-1">
-                    <p className="text-[11px] font-bold text-aring-ink-400 tracking-wider uppercase">대화명</p>
+                    <p className="text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase">대화명</p>
                     {!editingNick && (
                       <button
                         onClick={() => { setEditingNick(true); setNickMsg(''); setNewNick(profile.nickname); }}
-                        className="text-[11px] font-bold text-aring-ink-900 underline underline-offset-2"
+                        className="text-[13px] font-bold text-aring-ink-900 underline underline-offset-2"
                       >
                         변경
                       </button>
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                         autoFocus
                       />
                       {nickMsg && (
-                        <p className={`text-[11px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
+                        <p className={`text-[13px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
                       )}
                       <div className="flex gap-2 lg:max-w-[320px]">
                         <button
@@ -200,12 +200,12 @@ export default function ProfilePage() {
               {/* 계정 정보 */}
               <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden">
                 <div className="px-5 py-3.5 lg:px-6 lg:py-4 border-b border-aring-ink-100">
-                  <p className="text-[11px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">이메일</p>
+                  <p className="text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">이메일</p>
                   <p className="text-[14px] font-semibold text-aring-ink-900 break-all">{profile.email}</p>
                 </div>
                 {profile.created_at && (
                   <div className="px-5 py-3.5 lg:px-6 lg:py-4">
-                    <p className="text-[11px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">가입일</p>
+                    <p className="text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">가입일</p>
                     <p className="text-[14px] font-semibold text-aring-ink-900">{relativeDate(profile.created_at)}</p>
                   </div>
                 )}

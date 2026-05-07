@@ -69,7 +69,7 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
           <textarea value={detail} onChange={e => setDetail(e.target.value.slice(0,MAX))}
             placeholder="신고 사유를 조금 더 자세히 적어주세요" rows={3}
             className="w-full px-3 py-2.5 rounded-2xl border border-aring-green-line bg-aring-ink-100 text-[13px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none resize-none" />
-          <span className="absolute bottom-2 right-3 text-[11px] text-aring-ink-500">{detail.length}/{MAX}</span>
+          <span className="absolute bottom-2 right-3 text-[13px] text-aring-ink-500">{detail.length}/{MAX}</span>
         </div>
         {err && <p className="mt-2 text-[12px] text-red-400 text-center">{err}</p>}
         <div className="mt-5 flex gap-2">

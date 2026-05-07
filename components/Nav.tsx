@@ -86,7 +86,7 @@ export function TopNav() {
         <div className="flex items-center gap-8">
           <Link className="flex items-baseline gap-1" href="/">
             <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[10px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+            <sup className="text-[12px] font-medium text-aring-ink-500">한 짝의 짝</sup>
           </Link>
           <nav className="hidden lg:flex items-center gap-1">
             {desktopMenu.map((m) => (
@@ -133,7 +133,7 @@ export function BottomNav({ active }: { active?: Tab }) {
       <Link
         href={href}
         aria-label={label}
-        className={`flex-1 text-[11px] lg:text-[13px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}
+        className={`flex-1 text-[13px] lg:text-[13px] font-semibold ${isActive ? 'text-aring-ink-900' : 'text-aring-ink-500'} active:opacity-70`}
       >
         <div className="flex flex-col items-center gap-1 py-2 relative">
           {dot && (
@@ -167,7 +167,7 @@ export function BottomNav({ active }: { active?: Tab }) {
           {item('discover', '탐색', '/discover', <IconCompass />)}
           <div className="flex-1 flex flex-col items-center gap-1.5 py-2 select-none">
             <IconPlus />
-            <span className="mt-0.5 text-[11px]">등록</span>
+            <span className="mt-0.5 text-[13px]">등록</span>
           </div>
           {item('chat', '댓글', '/comments', <IconComments />, 'unread')}
           {item('my', 'MY', '/my', <IconUser />, 'new')}

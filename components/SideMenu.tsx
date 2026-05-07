@@ -63,7 +63,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                       <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgb(229,229,229)] flex-shrink-0">
                                 <div className="flex items-baseline gap-1">
                                             <span className="text-[22px] font-black tracking-tight text-aring-green leading-none">aring</span>
-                                            <sup className="text-[10px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+                                            <sup className="text-[12px] font-medium text-aring-ink-500">한 짝의 짝</sup>
                                 </div>
                                 <button
                                               onClick={onClose}
