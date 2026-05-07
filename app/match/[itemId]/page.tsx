@@ -120,9 +120,9 @@ function MyItemSummary({ item }: { item: Listing }) {
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
           <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
           {item.brand && <p className="text-[12px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
-          <div className="grid grid-cols-3 gap-1.5 mt-0.5">
+          <div className="flex flex-wrap gap-1.5 mt-0.5">
             {tags.slice(0, 4).map(t => (
-              <span key={t} className="inline-flex items-center justify-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[11px] font-medium truncate">{t}</span>
+              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[11px] font-medium whitespace-nowrap">{t}</span>
             ))}
           </div>
         </div>
@@ -200,6 +200,8 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
   const hasSimilar   = state.status === 'ok' && state.similar.length > 0;
   const hasReference = state.status === 'ok' && state.reference.length > 0;
   const isEmpty      = state.status === 'ok' && !hasSimilar && !hasReference;
+  const totalCount   = state.status === 'ok' ? state.similar.length + state.reference.length : 0;
+  const showMerged   = state.status === 'ok' && totalCount > 0 && totalCount < 3;
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
@@ -254,8 +256,26 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               </div>
             )}
 
+            {/* 후보 섹션 — 후보 3개 미만이면 합쳐서 보여줌 */}
+            {showMerged && state.status === 'ok' && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
+                  <h2 className="text-[15px] lg:text-[16px] font-extrabold text-aring-ink-900">
+                    비슷한 후보를 찾았어요
+                    <span className="ml-2 text-[11px] font-bold text-aring-green">후보 {totalCount}개</span>
+                  </h2>
+                </div>
+                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
+                  {[...state.similar, ...state.reference].map(c => (
+                    <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* 유사 후보 섹션 */}
-            {hasSimilar && state.status === 'ok' && (
+            {!showMerged && hasSimilar && state.status === 'ok' && (
               <section className="mb-6">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
@@ -279,7 +299,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
             )}
 
             {/* 참고 후보 섹션 */}
-            {hasReference && state.status === 'ok' && (
+            {!showMerged && hasReference && state.status === 'ok' && (
               <section>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-ink-300 shrink-0" />
