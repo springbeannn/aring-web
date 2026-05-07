@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import {
@@ -86,9 +86,15 @@ case 'negotiable': return price === 0 || price == null;
 // ─────────────────────────────────────────────────────────────
 // UI atoms
 // ─────────────────────────────────────────────────────────────
-function CategoryRow({ title, children }: { title: string; children: React.ReactNode }) {
+function CategoryRow({ title, id, highlighted, children }: { title: string; id?: string; highlighted?: boolean; children: React.ReactNode }) {
   return (
-    <div className="px-5 py-3 border-b border-aring-ink-100">
+    <div
+      id={id}
+      className={[
+        'px-5 py-3 border-b border-aring-ink-100 transition-colors',
+        highlighted ? 'bg-aring-green/5 ring-2 ring-aring-green/30 ring-inset' : '',
+      ].join(' ')}
+    >
       <h3 className="text-[13px] font-bold text-aring-ink-700 mb-2">
         {title}
       </h3>
@@ -173,8 +179,44 @@ function SelectedChip({ label, onRemove }: { label: string; onRemove: () => void
 // ─────────────────────────────────────────────────────────────
 // MAIN
 // ─────────────────────────────────────────────────────────────
+const VALID_FILTERS = ['shape', 'material', 'price', 'brand'] as const;
+type FilterFocus = (typeof VALID_FILTERS)[number];
+
 export default function DiscoverPage() {
+  return (
+    <Suspense fallback={null}>
+      <DiscoverPageInner />
+    </Suspense>
+  );
+}
+
+function DiscoverPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const focusFilter = (() => {
+    const f = searchParams.get('filter');
+    return f && (VALID_FILTERS as readonly string[]).includes(f) ? (f as FilterFocus) : null;
+  })();
+  const [highlightFilter, setHighlightFilter] = useState<FilterFocus | null>(null);
+
+  // ?filter= 쿼리 → 해당 섹션 스크롤 + 일정 시간 하이라이트
+  useEffect(() => {
+    if (!focusFilter) {
+      setHighlightFilter(null);
+      return;
+    }
+    setHighlightFilter(focusFilter);
+    const scrollTimer = setTimeout(() => {
+      const el = document.getElementById(`filter-${focusFilter}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+    const fadeTimer = setTimeout(() => setHighlightFilter(null), 2800);
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(fadeTimer);
+    };
+  }, [focusFilter]);
+
   const materialScrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = materialScrollRef.current;
@@ -392,7 +434,7 @@ export default function DiscoverPage() {
           )}
 
           <div className="border-t border-aring-ink-100">
-            <CategoryRow title="모양">
+            <CategoryRow title="모양" id="filter-shape" highlighted={highlightFilter === 'shape'}>
               <div className="flex gap-2 flex-wrap">
                 {SHAPE_OPTIONS.map((opt) => (
                   <PillChip
@@ -405,7 +447,7 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            <CategoryRow title="소재">
+            <CategoryRow title="소재" id="filter-material" highlighted={highlightFilter === 'material'}>
               <div ref={materialScrollRef} className="no-scrollbar flex gap-[2px] overflow-x-auto pr-8">
                 <MaterialThumb
                   bg="linear-gradient(135deg,#F5F5F5,#E8E8E8)"
@@ -425,7 +467,7 @@ export default function DiscoverPage() {
               </div>
             </CategoryRow>
 
-            <CategoryRow title="가격대">
+            <CategoryRow title="가격대" id="filter-price" highlighted={highlightFilter === 'price'}>
               <div className="flex gap-2 flex-wrap">
                 {PRICE_LIST.map((opt) => (
                   <PillChip
@@ -439,7 +481,7 @@ export default function DiscoverPage() {
             </CategoryRow>
 
             {/* 브랜드 — 칩 클릭 시 /brands/[브랜드명] 으로 이동 */}
-            <CategoryRow title="브랜드">
+            <CategoryRow title="브랜드" id="filter-brand" highlighted={highlightFilter === 'brand'}>
               <div className="flex gap-2 flex-wrap">
                 {brandOptions.map((b) => (
                   <PillChip
