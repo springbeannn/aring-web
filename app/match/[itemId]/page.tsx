@@ -90,11 +90,11 @@ function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchR
         <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
         <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-aring-ink-100">
           <p className="text-[10px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
-          <div className="flex gap-2">
-            <Link href={`/items/${item.id}#comments`} className="inline-flex items-center gap-1 rounded-full border border-aring-ink-200 bg-white px-3 py-1.5 text-[11px] font-bold text-aring-ink-700 hover:bg-aring-ink-50 transition">
+          <div className="flex items-center gap-2">
+            <Link href={`/items/${item.id}#comments`} className="inline-flex items-center justify-center gap-1 h-9 px-4 rounded-full border border-aring-ink-200 bg-white text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-50 transition">
               <IconChat className="w-3.5 h-3.5" /> 댓글
             </Link>
-            <Link href={`/items/${item.id}`} className="inline-flex items-center gap-1 rounded-full bg-aring-ink-900 px-3 py-1.5 text-[11px] font-extrabold text-white hover:opacity-90 transition">
+            <Link href={`/items/${item.id}`} className="inline-flex items-center justify-center gap-1 h-9 px-4 rounded-full bg-aring-ink-900 text-[13px] font-semibold text-white hover:opacity-90 transition">
               상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -120,9 +120,9 @@ function MyItemSummary({ item }: { item: Listing }) {
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
           <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
           {item.brand && <p className="text-[12px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
-          <div className="flex flex-wrap gap-1 mt-0.5">
+          <div className="grid grid-cols-3 gap-1.5 mt-0.5">
             {tags.slice(0, 4).map(t => (
-              <span key={t} className="rounded-full bg-aring-ink-100 px-2 py-0.5 text-[10px] font-semibold text-aring-ink-600">{t}</span>
+              <span key={t} className="inline-flex items-center justify-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[11px] font-medium truncate">{t}</span>
             ))}
           </div>
         </div>
@@ -264,7 +264,14 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     <span className="ml-2 text-[11px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
                   </h2>
                 </div>
-                <p className="ml-4 text-[11px] text-aring-ink-400 mb-3">aring Match 60% 이상</p>
+                <div className="ml-4 mb-3">
+                  <div className="rounded-full h-1.5 bg-aring-ink-100 overflow-hidden">
+                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '60%' }} />
+                  </div>
+                  <span className="mt-1.5 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-green-50 text-green-700 border-green-200">
+                    aring Match 60% 이상
+                  </span>
+                </div>
                 <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
                   {state.similar.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
                 </div>
@@ -281,7 +288,14 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     <span className="ml-2 text-[11px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
                   </h2>
                 </div>
-                <p className="ml-4 text-[11px] text-aring-ink-400 mb-3">aring Match 40~59%</p>
+                <div className="ml-4 mb-3">
+                  <div className="rounded-full h-1.5 bg-aring-ink-100 overflow-hidden">
+                    <div className="h-full bg-aring-green rounded-full transition-all" style={{ width: '40%' }} />
+                  </div>
+                  <span className="mt-1.5 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
+                    aring Match 40~59%
+                  </span>
+                </div>
                 <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
                   {state.reference.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
                 </div>
