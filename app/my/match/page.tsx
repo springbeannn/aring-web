@@ -177,7 +177,7 @@ export default function MyMatchPage() {
     return (
       <main className='min-h-screen flex justify-center bg-white'>
         <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
-          <div className='pb-28 lg:pb-12'>
+          <div className='pb-28 lg:pb-10'>
             <TopNav />
             <div className='flex items-center justify-center py-32'>
               <div className='w-6 h-6 border-2 border-gray-300 border-t-aring-ink-900 rounded-full animate-spin' />
@@ -193,7 +193,7 @@ export default function MyMatchPage() {
     return (
       <main className='min-h-screen flex justify-center bg-white'>
         <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
-          <div className='pb-28 lg:pb-12'>
+          <div className='pb-28 lg:pb-10'>
             <TopNav />
             <div className='px-5 lg:px-8 pt-3 pb-2'>
               <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
@@ -219,7 +219,7 @@ export default function MyMatchPage() {
   return (
     <main className='min-h-screen flex justify-center bg-white'>
       <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
-        <div className='pb-28 lg:pb-12'>
+        <div className='pb-28 lg:pb-10'>
           <TopNav />
           <div className='px-5 lg:px-8 pt-3 pb-2'>
             <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>

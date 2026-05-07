@@ -153,7 +153,7 @@ function ProductsContent() {
     : '지금 매칭을 기다리는 모든 한 짝';
 
   return (
-    <div className="pb-28 lg:pb-12">
+    <div className="pb-28 lg:pb-10">
       <TopNav />
 
       <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-4 lg:pb-6 flex items-center gap-3">

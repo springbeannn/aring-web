@@ -372,7 +372,7 @@ function SuccessSection() {
   return (
     <section className="pt-2 pb-5">
       <SectionHeader title="매칭 성공 사례" sub="실제 짝을 찾은 이야기" />
-      <div className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-8">
+      <div className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-7">
         <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 w-[180px] h-[180px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle at center, #FBC8DC 0%, transparent 70%)' }} />
         <div aria-hidden className="pointer-events-none absolute -left-10 -bottom-12 w-[160px] h-[160px] rounded-full opacity-25" style={{ background: 'radial-gradient(circle at center, #C5DDF0 0%, transparent 70%)' }} />
         <span className="relative inline-flex items-center gap-1.5 rounded-pill border border-white/30 px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-white">
@@ -399,7 +399,7 @@ function SuccessSection() {
 function FindByPhotoCTA() {
   const router = useRouter();
   return (
-    <section className="px-5 lg:px-8 pt-2 pb-7 lg:pb-12">
+    <section className="px-5 lg:px-8 pt-2 pb-5 lg:pb-10">
       <button onClick={() => { log('cta:find-by-photo'); router.push('/my/match'); }} className="w-full flex items-center gap-3 rounded-card bg-white border border-aring-green-line px-4 py-4 shadow-card active:scale-[0.99] transition text-left">
         <div className="relative w-12 h-12 shrink-0 rounded-tile bg-aring-grad-pastel flex items-center justify-center">
           <IconCamera className="w-5 h-5 text-aring-ink-900" strokeWidth={2.2} />
@@ -478,7 +478,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen flex justify-center bg-white">
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
-        <div className="pb-28 lg:pb-12">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
           <SearchBar />
           <HeroBanner />

@@ -348,7 +348,7 @@ export default function MyPage() {
           lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible
         "
       >
-        <div className="pb-28 lg:pb-12">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
 
           {/* 1) Profile */}

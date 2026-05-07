@@ -725,7 +725,7 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
         "
       >
         {/* 본문 — BottomNav(64px) + safe-area 만큼 padding */}
-        <div className="pb-28 lg:pb-12">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
           <GallerySection
             images={item.images}

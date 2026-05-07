@@ -126,7 +126,7 @@ export default function PopularPage() {
         sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone
         lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible
       ">
-        <div className="pb-28 lg:pb-12">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
 
           {/* 페이지 헤더 */}

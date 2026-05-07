@@ -239,7 +239,7 @@ export default function CommentsPage() {
   return (
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-pink-50 via-yellow-50 to-green-50">
       <div className="relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
-        <div className="pb-28 lg:pb-12">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
 
           {/* 헤더 */}
