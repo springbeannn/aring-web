@@ -60,11 +60,11 @@ function SearchCard({ row }: { row: Listing }) {
         <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {row.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
           {row.detail ?? row.shape ?? '한 짝'}
         </p>
         {row.story && (
-          <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">· {row.story}</p>
+          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">· {row.story}</p>
         )}
         <div className="mt-2">
           <span className="text-[13px] font-bold text-aring-ink-900">

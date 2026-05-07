@@ -330,7 +330,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
       <h1 className="mt-1 text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
-      <div className="mt-2 flex items-center justify-between">
+      <div className="mt-1.5 flex items-center justify-between">
         <p className="text-[22px] lg:text-[26px] font-extrabold text-aring-ink-900">
           {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
         </p>
@@ -538,7 +538,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {item.brand}
         </p>
-        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
           {item.name}
         </p>
         {typeof item.price === 'number' && item.price > 0 && (

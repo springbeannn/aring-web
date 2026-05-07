@@ -753,7 +753,7 @@ function LikedCard({ listing }: { listing: Listing }) {
         <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {listing.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link

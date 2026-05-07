@@ -58,9 +58,9 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
             </div>
             <div className="px-3 py-3">
                 <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">{it.brand}</p>
-                <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">{it.name}</p>
-                {it.story && <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">{it.story}</p>}
-                <div className="mt-2 flex items-center justify-between">
+                <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">{it.name}</p>
+                {it.story && <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">{it.story}</p>}
+                <div className="mt-1.5 flex items-center justify-between">
                     <span className="text-[13px] font-bold text-aring-ink-900">{formatKRW(it.price)}</span>
                     <div className="flex items-center gap-2">
                         {typeof it.viewCount === 'number' && it.viewCount > 0 && (
