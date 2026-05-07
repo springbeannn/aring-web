@@ -36,8 +36,8 @@ export default function NicknamePage() {
         <div className="px-5 pt-16 pb-24 lg:max-w-[480px] lg:mx-auto">
 
           <div className="mb-10 text-center">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
-            <p className="mt-2 text-[13px] text-aring-ink-500 leading-snug">aring에서 사용할 이름이에요<br />나중에 변경할 수 있어요</p>
+            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
+            <p className="mt-2 text-[13px] lg:text-[14px] text-aring-ink-500 leading-snug">aring에서 사용할 이름이에요<br />나중에 변경할 수 있어요</p>
           </div>
 
           <div className="mb-4">
@@ -48,11 +48,11 @@ export default function NicknamePage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
+              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
               style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }}
               autoFocus
             />
-            <p className="mt-2 text-right text-[13px] text-aring-ink-400">{nickname.length}/12</p>
+            <p className="mt-2 text-right text-[13px] lg:text-[14px] text-aring-ink-400">{nickname.length}/12</p>
             {error && <p className="mt-1 text-[13px] text-red-500 text-center">{error}</p>}
           </div>
 

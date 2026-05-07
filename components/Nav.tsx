@@ -86,7 +86,7 @@ export function TopNav() {
         <div className="flex items-center gap-8">
           <Link className="flex items-baseline gap-1" href="/">
             <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[12px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+            <sup className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">한 짝의 짝</sup>
           </Link>
           <nav className="hidden lg:flex items-center gap-1">
             {desktopMenu.map((m) => (

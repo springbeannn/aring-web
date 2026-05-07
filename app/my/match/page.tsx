@@ -80,7 +80,7 @@ function HeartButton({ itemId }: { itemId: string }) {
       onClick={toggle}
       aria-label='찜하기'
       className={[
-        'inline-flex items-center gap-1 text-[12px] font-semibold transition active:scale-95',
+        'inline-flex items-center gap-1 text-[12px] lg:text-[13px] font-semibold transition active:scale-95',
         liked ? 'text-aring-accent' : 'text-aring-ink-400 hover:text-aring-ink-600',
       ].join(' ')}
     >
@@ -94,7 +94,7 @@ function HeartButton({ itemId }: { itemId: string }) {
 
 function ViewCount({ value }: { value: number }) {
   return (
-    <span className='inline-flex items-center gap-1 text-[12px] font-semibold text-aring-ink-400'>
+    <span className='inline-flex items-center gap-1 text-[12px] lg:text-[13px] font-semibold text-aring-ink-400'>
       <svg className='w-3.5 h-3.5' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'>
         <path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' />
         <circle cx='12' cy='12' r='3' />
@@ -196,7 +196,7 @@ export default function MyMatchPage() {
           <div className='pb-28 lg:pb-10'>
             <TopNav />
             <div className='px-5 lg:px-8 pt-3 pb-2'>
-              <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
+              <h1 className='text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
               <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 0건</p>
             </div>
             <div className='mx-4 lg:mx-8 mt-4 rounded-2xl bg-white shadow-card border border-aring-ink-100 flex flex-col items-center justify-center py-16 px-6 text-center'>
@@ -222,7 +222,7 @@ export default function MyMatchPage() {
         <div className='pb-28 lg:pb-10'>
           <TopNav />
           <div className='px-5 lg:px-8 pt-3 pb-2'>
-            <h1 className='text-[22px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
+            <h1 className='text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
             <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
           </div>
 
@@ -251,7 +251,7 @@ export default function MyMatchPage() {
                       <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-bold bg-white/90 backdrop-blur text-aring-ink-700 shadow-sm'>
                         No.{listings.length - idx}
                       </span>
-                      <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
+                      <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[12px] lg:text-[13px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
                         {statusLabel(item.status)}
                       </span>
                     </div>
@@ -277,7 +277,7 @@ export default function MyMatchPage() {
                           <p className='text-[12px] font-bold text-aring-ink-700'>
                             완전히 같진 않지만, 이런 후보도 있어요
                           </p>
-                          <p className='mt-0.5 text-[13px] text-aring-ink-400'>
+                          <p className='mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-400'>
                             참고 후보 {data.reference.length}개 · {refRangeText(data.reference)}
                           </p>
                           <button

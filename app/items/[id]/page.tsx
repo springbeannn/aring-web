@@ -223,7 +223,7 @@ function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => voi
               {!isOwner && (
                 <button
                   onClick={() => setMenuOpen(false)}
-                  className="w-full text-left px-4 py-3 text-[13px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition"
+                  className="w-full text-left px-4 py-3 text-[13px] lg:text-[14px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition"
                 >
                   🚨 신고하기
                 </button>
@@ -399,8 +399,8 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[12px] font-medium text-aring-ink-500">{label}</p>
-      <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">
+      <p className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">{label}</p>
+      <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-tight">
         {value}
       </p>
     </div>
@@ -426,17 +426,17 @@ function ColorChip({ value }: { value: string }) {
   const info = COLOR_MAP[value];
   return (
     <div>
-      <p className="text-[12px] font-medium text-aring-ink-500">컬러</p>
+      <p className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">컬러</p>
       {info ? (
         <div className="mt-0.5 flex items-center gap-1.5">
           <span
             className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
             style={info.hex.startsWith('linear') ? { background: info.hex } : { backgroundColor: info.hex }}
           />
-          <p className="text-[13px] font-bold text-aring-ink-900 leading-tight">{info.label}</p>
+          <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-tight">{info.label}</p>
         </div>
       ) : (
-        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 leading-tight">—</p>
+        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-tight">—</p>
       )}
     </div>
   );
@@ -450,11 +450,11 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
   const ago = relativeTime(createdAt);
   return (
     <section className="px-5 lg:px-8 mt-6">
-      <h2 className="text-[14px] font-extrabold text-aring-ink-900 mb-2">
+      <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
       <p className="text-[13px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
-      <p className="mt-2 text-[13px] text-aring-ink-500">{ago}</p>
+      <p className="mt-2 text-[13px] lg:text-[14px] text-aring-ink-500">{ago}</p>
     </section>
   );
 }
@@ -493,11 +493,11 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
           <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
-          <p className="mt-0.5 text-[13px] text-aring-ink-500">
+          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
             AI가 형태·소재·디테일을 분석해 추천
           </p>
         </div>
-        <span className="text-[13px] font-semibold text-aring-ink-500">
+        <span className="text-[13px] lg:text-[14px] font-semibold text-aring-ink-500">
           {items.length}개
         </span>
       </div>
@@ -538,11 +538,11 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
           {item.brand}
         </p>
-        <p className="mt-0.5 text-[13px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
           {item.name}
         </p>
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[13px] font-extrabold text-aring-ink-900">
+          <p className="mt-1 text-[13px] lg:text-[14px] font-extrabold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}
@@ -557,18 +557,18 @@ function SimilarCard({ item }: { item: ItemSummary }) {
 function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
   return (
     <section className="px-5 lg:px-8 mt-7">
-      <h2 className="text-[14px] font-extrabold text-aring-ink-900 mb-2">
+      <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 mb-2">
         등록자
       </h2>
       <button
         onClick={log('detail:seller')}
         className="w-full flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 text-left active:scale-[0.99] transition"
       >
-        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] font-extrabold text-aring-ink-900">
+        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">
           {seller.nickname.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold text-aring-ink-900 truncate">
+          <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
             {seller.nickname}
           </p>
           <div className="mt-0.5 flex items-center gap-2 text-[13px] text-aring-ink-500">
@@ -613,7 +613,7 @@ function NotFoundScreen() {
         <p className="text-[17px] font-extrabold text-aring-ink-900">
           상품을 찾을 수 없습니다
         </p>
-        <p className="mt-1 text-[13px] text-aring-ink-500">
+        <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">
           등록이 종료되었거나 잘못된 링크일 수 있어요.
         </p>
         <Link

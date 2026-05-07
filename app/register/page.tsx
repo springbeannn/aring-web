@@ -218,7 +218,7 @@ export default function RegisterPage() {
           <Link href="/" aria-label="닫기" className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
             <IconClose />
           </Link>
-          <div className="text-[14px] font-extrabold text-aring-ink-900">한 짝 등록</div>
+          <div className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
 
@@ -308,8 +308,8 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
 }) {
   return (
     <div className="px-5 pb-28">
-      <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
-      <h1 className="text-[22px] font-extrabold tracking-tight leading-[1.3] mb-2">
+      <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
+      <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight leading-[1.3] mb-2">
         <span className="grad-text-green">사진을 올려주세요</span>
       </h1>
       <p className="text-[12.5px] text-aring-ink-500 mb-5 leading-[1.55]">
@@ -330,8 +330,8 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
                 <IconCamera className="w-6 h-6 text-aring-ink-900" />
               </div>
               <div className="text-center">
-                <p className="text-[14px] font-extrabold text-aring-ink-900">사진 올리기</p>
-                <p className="mt-1 text-[13px] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
+                <p className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">사진 올리기</p>
+                <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
               </div>
             </div>
             <p className="text-[10.5px] text-aring-ink-700 mt-1">탭해서 갤러리 / 카메라 선택</p>
@@ -464,7 +464,7 @@ function ReviewStep({
         <div className="flex items-center gap-2 mb-1.5">
           <span className="text-[13px] font-extrabold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
         </div>
-        <p className="text-[12px] text-aring-ink-500 mb-3 leading-[1.55]">
+        <p className="text-[12px] lg:text-[13px] text-aring-ink-500 mb-3 leading-[1.55]">
           AI가 먼저 분석한 결과예요. 실제 정보와 다르면 직접 수정해 주세요.<br />
           <span className="text-aring-ink-400">수정한 내용이 최종 등록 정보로 저장됩니다.</span>
         </p>
@@ -530,7 +530,7 @@ function ReviewStep({
           placeholder="이 귀걸이에 담긴 이야기를 자유롭게 적어주세요."
           maxLength={1000}
           rows={4}
-          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
+          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
         />
       </div>
       <div className="flex justify-end mb-2">
@@ -563,7 +563,7 @@ function ReviewStep({
 // ─────────────────────────────────────────────────────────────
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
+  return <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
 }
 
 function Input({ value, onChange, placeholder, suffix, maxLength }: {
@@ -576,7 +576,7 @@ function Input({ value, onChange, placeholder, suffix, maxLength }: {
   return (
     <div className="relative mb-4">
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength}
-        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
+        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
       {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-aring-ink-500">{suffix}</span>}
     </div>
   );

@@ -168,7 +168,7 @@ function ProductsContent() {
           <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
             {pageTitle}
           </h1>
-          <p className="mt-0.5 text-[13px] text-aring-ink-500">
+          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
             {pageDesc}
             {filtered.length > 0 && (
               <> · <span className="font-semibold">{filtered.length}</span>개 등록</>
@@ -197,7 +197,7 @@ function ProductsContent() {
       ) : filtered.length === 0 ? (
         <div className="px-5 lg:px-8 py-16 text-center">
           <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-          <p className="mt-1 text-[13px] text-aring-ink-500">필터를 초기화하거나 다른 조건을 선택해 주세요</p>
+          <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">필터를 초기화하거나 다른 조건을 선택해 주세요</p>
         </div>
       ) : (
         <>

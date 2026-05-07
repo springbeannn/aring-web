@@ -373,8 +373,8 @@ export default function DiscoverPage() {
           <TopNav />
 
           <div className="px-5 pt-3 pb-3">
-            <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
-            <p className="mt-0.5 text-[13px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
+            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
+            <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
           {activeCount > 0 && (
@@ -458,7 +458,7 @@ export default function DiscoverPage() {
               <p className="text-[13px] font-extrabold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
-                  <span className="ml-2 text-[13px] font-semibold text-aring-ink-500">
+                  <span className="ml-2 text-[13px] lg:text-[14px] font-semibold text-aring-ink-500">
                     · 필터 {activeCount}개
                   </span>
                 )}
@@ -481,7 +481,7 @@ export default function DiscoverPage() {
             ) : filtered.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-                <p className="mt-1 text-[13px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
+                <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}

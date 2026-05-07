@@ -43,8 +43,8 @@ type DupState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 function EmailHint({ state, email }: { state: DupState; email: string }) {
   if (!email) return null;
   if (!isValidEmail(email)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일 형식을 확인해주세요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[13px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[13px] text-aring-ink-400">확인 중...</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">확인 중...</p>;
   if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 이메일이에요.</p>;
   if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 가입된 이메일이에요.</p>;
   return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
@@ -54,15 +54,15 @@ function NicknameHint({ state, nickname }: { state: DupState; nickname: string }
   if (!nickname) return null;
   if (looksLikePII(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일이나 전화번호는 사용할 수 없어요.</p>;
   if (!isValidNickname(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">닉네임은 2~12자, 한글/영문/숫자만 사용할 수 있어요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[13px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[13px] text-aring-ink-400">확인 중...</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">확인 중...</p>;
   if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 닉네임이에요.</p>;
   if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 사용 중인 닉네임이에요.</p>;
   return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
 }
 
 function PasswordHint({ pw }: { pw: string }) {
-  if (!pw) return <p className="mt-1.5 text-[13px] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
+  if (!pw) return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
   if (/\s/.test(pw)) return <p className="mt-1.5 text-[13px] text-rose-400">공백은 사용할 수 없어요.</p>;
   if (pw.length < 8) return <p className="mt-1.5 text-[13px] text-amber-500">8자 이상 입력해주세요. ({pw.length}/20)</p>;
   if (pw.length > 20) return <p className="mt-1.5 text-[13px] text-rose-400">20자 이하로 입력해주세요.</p>;
@@ -199,7 +199,7 @@ export default function SignupEmailPage() {
     router.push('/login');
   }
 
-  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
+  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
@@ -214,12 +214,12 @@ export default function SignupEmailPage() {
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
               <div className="mb-7 text-center lg:text-left">
-                <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">회원가입</h1>
+                <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">회원가입</h1>
               </div>
 
               {/* 이메일 */}
               <div className="mb-4">
-                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">이메일</label>
+                <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">이메일</label>
                 <input type="email" placeholder="이메일" value={email}
                   onChange={(e) => { setEmail(e.target.value); setEmailDup('idle'); }}
                   className={inputBase}
@@ -232,7 +232,7 @@ export default function SignupEmailPage() {
 
               {/* 비밀번호 */}
               <div className="mb-4">
-                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">비밀번호</label>
+                <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">비밀번호</label>
                 <div className="relative">
                   <input type={showPw ? 'text' : 'password'} placeholder="비밀번호" value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -247,7 +247,7 @@ export default function SignupEmailPage() {
 
               {/* 비밀번호 확인 */}
               <div className="mb-4">
-                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">비밀번호 확인</label>
+                <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">비밀번호 확인</label>
                 <div className="relative">
                   <input type={showPwC ? 'text' : 'password'} placeholder="비밀번호 확인" value={passwordConfirm}
                     onChange={(e) => { setPasswordConfirm(e.target.value); setPwConfirmTouched(true); }}
@@ -266,7 +266,7 @@ export default function SignupEmailPage() {
 
               {/* 닉네임 */}
               <div className="mb-6">
-                <label className="block text-[13px] font-bold text-aring-ink-700 mb-1.5">닉네임</label>
+                <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">닉네임</label>
                 <input type="text" placeholder="닉네임 (2~12자)" maxLength={12} value={nickname}
                   onChange={(e) => { setNickname(e.target.value); setNickDup('idle'); }}
                   className={inputBase}
@@ -294,7 +294,7 @@ export default function SignupEmailPage() {
                     className="w-full flex items-center gap-3 px-4 py-3 border-b border-aring-ink-100 last:border-b-0 bg-white">
                     <IconCheck checked={terms[key as keyof typeof terms]} />
                     <span className="flex-1 text-left text-[13px] text-aring-ink-700">{label}</span>
-                    {link && <Link href={link} onClick={(e) => e.stopPropagation()} className="text-[13px] text-aring-ink-400 underline shrink-0">보기</Link>}
+                    {link && <Link href={link} onClick={(e) => e.stopPropagation()} className="text-[13px] lg:text-[14px] text-aring-ink-400 underline shrink-0">보기</Link>}
                   </button>
                 ))}
               </div>

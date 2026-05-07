@@ -162,7 +162,7 @@ export function ItemActionBar({ onBack, isOwner, itemId, itemTitle }: {
                 <button
                   onClick={() => { setMenuOpen(false); setShowReport(true); }}
                   className={[
-                    "w-full text-left px-4 py-3 text-[13px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition flex items-center gap-2",
+                    "w-full text-left px-4 py-3 text-[13px] lg:text-[14px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition flex items-center gap-2",
                     isOwner ? "border-t border-aring-ink-100" : "",
                   ].join(" ")}
                 >

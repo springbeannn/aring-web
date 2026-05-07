@@ -62,8 +62,8 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 {/* 헤더 */}
                       <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgb(229,229,229)] flex-shrink-0">
                                 <div className="flex items-baseline gap-1">
-                                            <span className="text-[22px] font-black tracking-tight text-aring-green leading-none">aring</span>
-                                            <sup className="text-[12px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+                                            <span className="text-[22px] lg:text-[26px] font-black tracking-tight text-aring-green leading-none">aring</span>
+                                            <sup className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">한 짝의 짝</sup>
                                 </div>
                                 <button
                                               onClick={onClose}
@@ -84,7 +84,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                                                     key={item.href}
                                                     href={item.href}
                                                     onClick={onClose}
-                                                    className="flex items-center px-6 py-4 text-[17px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition border-b border-[rgb(243,243,245)] last:border-none"
+                                                    className="flex items-center px-6 py-4 text-[17px] lg:text-[20px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition border-b border-[rgb(243,243,245)] last:border-none"
                                                   >
                                       {item.label}
                                     </Link>

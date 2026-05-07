@@ -92,7 +92,7 @@ export default function SignupPage() {
 
               <div className="text-center mb-2 lg:text-left lg:mb-7">
                 <h1 className="text-[22px] font-extrabold text-aring-ink-900">에이링 시작하기</h1>
-                <p className="text-[13px] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
+                <p className="text-[13px] lg:text-[14px] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
               </div>
 
               <div className="w-full flex flex-col gap-6">
@@ -112,7 +112,7 @@ export default function SignupPage() {
 
                 <div className="flex items-center gap-3">
                   <div className="flex-1 h-px bg-aring-ink-100" />
-                  <span className="text-[12px] text-aring-ink-400">또는</span>
+                  <span className="text-[12px] lg:text-[13px] text-aring-ink-400">또는</span>
                   <div className="flex-1 h-px bg-aring-ink-100" />
                 </div>
 
@@ -123,7 +123,7 @@ export default function SignupPage() {
                   이메일로 가입하기
                 </button>
 
-                <p className="text-center text-[13px] text-aring-ink-400">
+                <p className="text-center text-[13px] lg:text-[14px] text-aring-ink-400">
                   이미 계정이 있으신가요?{' '}
                   <button
                     onClick={() => router.push('/login')}

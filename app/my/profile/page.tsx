@@ -126,7 +126,7 @@ export default function ProfilePage() {
             {/* 헤더 */}
             <div className="px-5 pt-3 pb-3 lg:pt-6 lg:pb-6">
               <h1 className="text-[22px] lg:text-[28px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
-              <p className="mt-0.5 text-[13px] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
+              <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
             </div>
 
             {/* 카드 영역 */}
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                         onChange={(e) => { setNewNick(e.target.value); setNickMsg(''); }}
                         maxLength={12}
                         placeholder="새 대화명 입력 (2~12자)"
-                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[14px] text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
+                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
                         autoFocus
                       />
                       {nickMsg && (

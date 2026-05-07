@@ -138,7 +138,7 @@ export default function LoginPage() {
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
               <div className="mb-7 text-center lg:text-left">
-                <h1 className="text-[22px] font-extrabold tracking-tight text-aring-ink-900">로그인</h1>
+                <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">로그인</h1>
                 <p className="mt-1.5 text-[13px] text-aring-ink-500 leading-snug">aring에 다시 오셨군요 :)</p>
               </div>
 
@@ -162,7 +162,7 @@ export default function LoginPage() {
                 </button>
 
                 <button onClick={() => handleOAuth('google')}
-                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
+                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] lg:text-[15px] text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
                   <svg width="18" height="18" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -175,7 +175,7 @@ export default function LoginPage() {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px bg-aring-ink-100" />
-                <span className="text-[13px] text-aring-ink-400 font-medium">또는</span>
+                <span className="text-[13px] lg:text-[14px] text-aring-ink-400 font-medium">또는</span>
                 <div className="flex-1 h-px bg-aring-ink-100" />
               </div>
 
@@ -185,7 +185,7 @@ export default function LoginPage() {
                   placeholder="이메일"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                   style={{ background: 'linear-gradient(to right, rgba(235,218,210,0.5), rgba(225,205,212,0.5))' }}
                 />
                 <div className="relative">
@@ -195,7 +195,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleEmailLogin()}
-                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                     style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }}
                   />
                   <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-aring-ink-400 hover:text-aring-ink-700 transition">

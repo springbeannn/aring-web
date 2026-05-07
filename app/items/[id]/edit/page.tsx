@@ -122,7 +122,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
               <input
                 type="text" value={brand} onChange={e => setBrand(e.target.value)}
                 placeholder="브랜드명 입력"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
 
@@ -132,7 +132,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
               <input
                 type="text" value={price} onChange={e => setPrice(e.target.value)}
                 placeholder="예: 35000"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
 
@@ -143,9 +143,9 @@ export default function EditPage({ params }: { params: { id: string } }) {
                 value={story} onChange={e => setStory(e.target.value)}
                 placeholder="이 귀걸이에 대해 한마디 남겨주세요"
                 rows={4} maxLength={1000}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition resize-none"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition resize-none"
               />
-              <p className="mt-1 text-right text-[13px] text-aring-ink-400">{story.length}/1000</p>
+              <p className="mt-1 text-right text-[13px] lg:text-[14px] text-aring-ink-400">{story.length}/1000</p>
             </div>
 
             {/* 지역 */}
@@ -154,7 +154,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
               <input
                 type="text" value={region} onChange={e => setRegion(e.target.value)}
                 placeholder="예: 서울 · 강남구"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
           </div>
