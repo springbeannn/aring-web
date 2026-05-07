@@ -64,7 +64,7 @@ function SearchCard({ row }: { row: Listing }) {
           {row.detail ?? row.shape ?? '한 짝'}
         </p>
         {row.story && (
-          <p className="mt-1 text-[12px] text-aring-ink-500 truncate">· {row.story}</p>
+          <p className="mt-1 text-[13px] text-aring-ink-500 truncate">· {row.story}</p>
         )}
         <div className="mt-2">
           <span className="text-[13px] font-bold text-aring-ink-900">
