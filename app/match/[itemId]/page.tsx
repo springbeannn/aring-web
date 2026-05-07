@@ -65,6 +65,24 @@ function ReasonBox({ reasons }: { reasons: string[] }) {
   );
 }
 
+function SeekingCard() {
+  return (
+    <div className="rounded-2xl bg-white border border-dashed border-aring-ink-200 overflow-hidden flex flex-col">
+      <div className="relative aspect-square bg-aring-ink-50 flex items-center justify-center">
+        <div className="text-center px-2">
+          <div className="w-8 h-8 mx-auto mb-1.5 rounded-full border-2 border-aring-ink-200 border-t-aring-ink-400 animate-spin" />
+          <p className="text-[11px] font-semibold text-aring-ink-500">찾고 있어요</p>
+        </div>
+      </div>
+      <div className="flex-1 flex items-center justify-center p-3">
+        <p className="text-[10px] text-aring-ink-400 text-center leading-relaxed">
+          새 귀걸이가 등록되면<br/>알려드릴게요
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
   return (
     <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
@@ -200,8 +218,6 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
   const hasSimilar   = state.status === 'ok' && state.similar.length > 0;
   const hasReference = state.status === 'ok' && state.reference.length > 0;
   const isEmpty      = state.status === 'ok' && !hasSimilar && !hasReference;
-  const totalCount   = state.status === 'ok' ? state.similar.length + state.reference.length : 0;
-  const showMerged   = state.status === 'ok' && totalCount > 0 && totalCount < 3;
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
@@ -256,26 +272,8 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               </div>
             )}
 
-            {/* 후보 섹션 — 후보 3개 미만이면 합쳐서 보여줌 */}
-            {showMerged && state.status === 'ok' && (
-              <section>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
-                  <h2 className="text-[15px] lg:text-[16px] font-extrabold text-aring-ink-900">
-                    비슷한 후보를 찾았어요
-                    <span className="ml-2 text-[11px] font-bold text-aring-green">후보 {totalCount}개</span>
-                  </h2>
-                </div>
-                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
-                  {[...state.similar, ...state.reference].map(c => (
-                    <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* 유사 후보 섹션 */}
-            {!showMerged && hasSimilar && state.status === 'ok' && (
+            {/* 유사 후보 섹션 — 항상 3 슬롯, 부족하면 SeekingCard로 채움 */}
+            {hasSimilar && state.status === 'ok' && (
               <section className="mb-6">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
@@ -289,14 +287,15 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 60% 이상
                   </span>
                 </div>
-                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
-                  {state.similar.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                <div className="grid grid-cols-3 gap-3 lg:gap-4">
+                  {state.similar.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                  {Array.from({ length: Math.max(0, 3 - state.similar.length) }).map((_, i) => <SeekingCard key={`sim-seek-${i}`} />)}
                 </div>
               </section>
             )}
 
-            {/* 참고 후보 섹션 */}
-            {!showMerged && hasReference && state.status === 'ok' && (
+            {/* 참고 후보 섹션 — 동일하게 3 슬롯 fill */}
+            {hasReference && state.status === 'ok' && (
               <section>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-ink-300 shrink-0" />
@@ -310,8 +309,9 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 40~59%
                   </span>
                 </div>
-                <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4">
-                  {state.reference.map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                <div className="grid grid-cols-3 gap-3 lg:gap-4">
+                  {state.reference.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
+                  {Array.from({ length: Math.max(0, 3 - state.reference.length) }).map((_, i) => <SeekingCard key={`ref-seek-${i}`} />)}
                 </div>
               </section>
             )}
