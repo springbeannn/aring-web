@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { supabase, type Listing } from '@/lib/supabase';
 import { calculateAringMatch, splitMatchCandidates, type MatchResult } from '@/lib/aringMatch';
 import { TopNav, BottomNav } from '@/components/Nav';
 
 type IP = { className?: string };
-const IconArrowLeft = ({ className = 'w-5 h-5' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5" /><path d="m12 19-7-7 7-7" /></svg>);
 const IconSparkle = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.5 5.5l2.8 2.8M15.7 15.7l2.8 2.8M5.5 18.5l2.8-2.8M15.7 8.3l2.8-2.8" /></svg>);
 const IconChat = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>);
 const IconChevronRight = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>);
@@ -114,15 +112,12 @@ function MyItemSummary({ item }: { item: Listing }) {
     item.brand && item.brand !== '브랜드 미상' && item.brand,
   ].filter(Boolean) as string[];
   return (
-    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
+    <div className="mx-5 lg:mx-8 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
       <div className="flex">
         <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0 bg-aring-ink-100 overflow-hidden">
           {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full object-cover" />}
         </div>
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
-          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-[0.1em] text-aring-accent uppercase">
-            <IconSparkle className="w-3 h-3" /> 내 귀걸이
-          </span>
           <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
           {item.brand && <p className="text-[12px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
           <div className="flex flex-wrap gap-1 mt-0.5">
@@ -177,7 +172,6 @@ type PageState =
   | { status: 'error' };
 
 export default function MatchPage({ params }: { params: { itemId: string } }) {
-  const router = useRouter();
   const [state, setState] = useState<PageState>({ status: 'loading' });
 
   useEffect(() => {
@@ -213,30 +207,23 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
         <div className="pb-28 lg:pb-12">
           <TopNav />
 
+          {/* Header */}
+          <div className="px-5 lg:px-8 pt-3 pb-4">
+            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900 leading-snug">
+              AI가 비슷한 짝을 찾아봤어요
+            </h1>
+            <p className="mt-1 text-[13px] text-aring-ink-400">
+              방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
+            </p>
+          </div>
+
+          {/* My item summary */}
+          <div className="mb-5">
+            {state.status === 'ok' && <MyItemSummary item={state.myItem} />}
+            {state.status === 'loading' && <div className="mx-5 lg:mx-8 h-28 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
+          </div>
+
           <div className="px-5 lg:px-8">
-            {/* Header */}
-            <div className="pt-3 pb-4">
-              <button onClick={() => router.back()} className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-aring-ink-500 hover:text-aring-ink-700 transition">
-                <IconArrowLeft className="w-4 h-4" /> 뒤로
-              </button>
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <IconSparkle className="w-3.5 h-3.5 text-aring-accent" />
-                <span className="text-[10.5px] font-extrabold tracking-[0.12em] text-aring-accent uppercase">AI Matching</span>
-              </div>
-              <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900 leading-snug">
-                AI가 비슷한 짝을 찾아봤어요
-              </h1>
-              <p className="mt-1 text-[13px] text-aring-ink-400">
-                방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
-              </p>
-            </div>
-
-            {/* My item summary */}
-            <div className="mb-5">
-              {state.status === 'ok' && <MyItemSummary item={state.myItem} />}
-              {state.status === 'loading' && <div className="h-28 rounded-2xl bg-aring-ink-100/50 animate-pulse" />}
-            </div>
-
             {/* Loading / Error / Empty */}
             {state.status === 'loading' && <LoadingScreen />}
             {state.status === 'error' && (
