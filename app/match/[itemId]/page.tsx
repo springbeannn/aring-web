@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, type Listing } from '@/lib/supabase';
 import { calculateAringMatch, splitMatchCandidates, type MatchResult } from '@/lib/aringMatch';
+import { optimizeImage } from '@/lib/imageUrl';
 import { TopNav, BottomNav } from '@/components/Nav';
 
 type IP = { className?: string };
@@ -88,7 +89,7 @@ function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchR
     <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
       <div className="relative aspect-square bg-aring-ink-100">
         {item.photo_url
-          ? <img src={item.photo_url} alt={item.brand ?? ''} className="absolute inset-0 w-full h-full max-w-[1000px] object-cover" loading="lazy" />
+          ? <img src={optimizeImage(item.photo_url, 1000)} alt={item.brand ?? ''} className="absolute inset-0 w-full h-full max-w-[1000px] object-cover" loading="lazy" />
           : <div className="absolute inset-0 bg-aring-ink-100" />
         }
         <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
@@ -133,7 +134,7 @@ function MyItemSummary({ item }: { item: Listing }) {
     <div className="mx-5 lg:mx-8 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
       <div className="flex">
         <div className="relative w-28 h-28 md:w-32 md:h-32 shrink-0 bg-aring-ink-100 overflow-hidden">
-          {item.photo_url && <img src={item.photo_url} alt="내 귀걸이" className="w-full h-full max-w-[1000px] object-cover" />}
+          {item.photo_url && <img src={optimizeImage(item.photo_url, 1000)} alt="내 귀걸이" className="w-full h-full max-w-[1000px] object-cover" />}
         </div>
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
           <p className="text-[14px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
