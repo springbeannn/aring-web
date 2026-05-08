@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import HamburgerButton from './HamburgerButton';
-import SideMenu from './SideMenu';
+import SplitNavDrawer from './SplitNavDrawer';
 import { supabase } from '@/lib/supabase';
 
 export type Tab = 'home' | 'discover' | 'register' | 'chat' | 'my';
@@ -121,7 +121,7 @@ export function TopNav() {
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
         </div>
       </div>
-      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SplitNavDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </>
   );
 }
