@@ -1,7 +1,7 @@
 -- ════════════════════════════════════════════════════════════════════
 -- 007_seed_admin_account.sql — aring 관리자 계정 시드
 -- ════════════════════════════════════════════════════════════════════
--- 사용자 요청: letitdigit@gmail.com / password1!H
+-- 사용자 요청: calli19999@naver.com / password1!H
 --
 -- 멱등성:
 --   - 이미 가입된 계정이면 → 비밀번호 갱신 + role='admin' 강제
@@ -17,7 +17,7 @@
 
 DO $$
 DECLARE
-  v_email   TEXT := 'letitdigit@gmail.com';
+  v_email   TEXT := 'calli19999@naver.com';
   v_pass    TEXT := 'password1!H';
   v_nick    TEXT := 'aring 관리자';
   v_user_id uuid;
@@ -74,6 +74,6 @@ END $$;
 -- ════════════════════════════════════════════════════════════════════
 -- 검증 (선택)
 -- ════════════════════════════════════════════════════════════════════
--- SELECT id, email, email_confirmed_at FROM auth.users WHERE email = 'letitdigit@gmail.com';
--- SELECT user_id, email, nickname, role, is_banned FROM profiles WHERE email = 'letitdigit@gmail.com';
+-- SELECT id, email, email_confirmed_at FROM auth.users WHERE email = 'calli19999@naver.com';
+-- SELECT user_id, email, nickname, role, is_banned FROM profiles WHERE email = 'calli19999@naver.com';
 -- ════════════════════════════════════════════════════════════════════
