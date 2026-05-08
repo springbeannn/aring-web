@@ -1,9 +1,11 @@
 -- ════════════════════════════════════════════════════════════════════
 -- 007_seed_admin_account.sql — aring 관리자 계정 시드
 -- ════════════════════════════════════════════════════════════════════
--- 사용자 요청: aring.admin / password1!H
--- Supabase Auth는 이메일 형식이 필수이므로 'aring.admin@aring.app' 사용.
--- 다른 도메인(예: gmail.com) 원하면 아래 두 곳의 이메일 문자열만 수정.
+-- 사용자 요청: letitdigit@gmail.com / password1!H
+--
+-- 멱등성:
+--   - 이미 가입된 계정이면 → 비밀번호 갱신 + role='admin' 강제
+--   - 미가입 계정이면 → auth.users + profiles 신규 생성
 --
 -- 사전 조건:
 --   - 006_profiles_admin.sql 먼저 실행 (role/is_banned 컬럼 + RLS 정책)
@@ -15,7 +17,7 @@
 
 DO $$
 DECLARE
-  v_email   TEXT := 'aring.admin@aring.app';
+  v_email   TEXT := 'letitdigit@gmail.com';
   v_pass    TEXT := 'password1!H';
   v_nick    TEXT := 'aring 관리자';
   v_user_id uuid;
@@ -49,7 +51,7 @@ BEGIN
 
     RAISE NOTICE '[seed] auth.users created: % (%)', v_email, v_user_id;
   ELSE
-    -- 이미 존재 → 비밀번호만 갱신 (멱등성 확보)
+    -- 이미 존재 → 비밀번호 갱신 + 이메일 인증 보강 (멱등성)
     UPDATE auth.users
        SET encrypted_password = crypt(v_pass, gen_salt('bf')),
            email_confirmed_at = COALESCE(email_confirmed_at, now()),
@@ -72,6 +74,6 @@ END $$;
 -- ════════════════════════════════════════════════════════════════════
 -- 검증 (선택)
 -- ════════════════════════════════════════════════════════════════════
--- SELECT id, email, email_confirmed_at FROM auth.users WHERE email = 'aring.admin@aring.app';
--- SELECT user_id, email, nickname, role, is_banned FROM profiles WHERE email = 'aring.admin@aring.app';
+-- SELECT id, email, email_confirmed_at FROM auth.users WHERE email = 'letitdigit@gmail.com';
+-- SELECT user_id, email, nickname, role, is_banned FROM profiles WHERE email = 'letitdigit@gmail.com';
 -- ════════════════════════════════════════════════════════════════════
