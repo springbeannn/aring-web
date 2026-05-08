@@ -147,10 +147,14 @@ return (
       <div className="aring-blob-c absolute -bottom-14 left-1/4 w-[180px] h-[180px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
     </div>
 
-    {/* 합쳐진 배지 */}
+    {/* 합쳐진 배지 — count 로딩 중에는 skeleton 처리 */}
     <span className="relative inline-flex items-center gap-1 rounded-pill glass px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-aring-green shadow-card">
       <span className="relative w-2 h-2 rounded-full bg-aring-accent" />
-      AI MATCH · NEW : {count ?? 0} 매칭 중
+      {count === null ? (
+        <>AI MATCH · NEW : <span className="inline-block h-2.5 w-12 align-middle rounded bg-aring-ink-100 animate-pulse" /></>
+      ) : (
+        <>AI MATCH · NEW : {count} 매칭 중</>
+      )}
     </span>
 
     <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-extrabold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
@@ -223,17 +227,31 @@ function SectionHeader({ title, sub, more, onMore }: {
 // ─────────────────────────────────────────────────────────────
 function TodayMatchSection() {
   const router = useRouter();
-  const [matches, setMatches] = useState<MatchCard[]>(todayMatches);
+  // const [matches, setMatches] = useState<MatchCard[]>(todayMatches); // 롤백용 mock 초기값 — 주석
+  const [matches, setMatches] = useState<MatchCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      setIsLoading(false);
+      return;
+    }
     let cancelled = false;
     const since = new Date(Date.now() - 604800000).toISOString();
     supabase.from('listings').select('*').eq('status', 'open')
       .gte('created_at', since).order('view_count', { ascending: false }).limit(5)
       .then(({ data, error }) => {
-        if (cancelled || error || !data?.length) return;
-        setMatches(data.map(r => listingToMatchCard(r as Listing)));
+        if (cancelled) return;
+        if (error) {
+          setIsError(true);
+          setIsLoading(false);
+          return;
+        }
+        if (data?.length) {
+          setMatches(data.map(r => listingToMatchCard(r as Listing)));
+        }
+        setIsLoading(false);
       });
     return () => { cancelled = true; };
   }, []);
@@ -241,9 +259,15 @@ function TodayMatchSection() {
   return (
     <section className="pt-2 pb-5">
       <SectionHeader title="오늘의 매칭 후보" sub="최근 일주일, 가장 많이 조회된 한 짝" more="전체보기" onMore={() => router.push('/popular')} />
-      <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
-        {matches.map(m => <TodayMatchCard key={m.id} m={m} />)}
-      </div>
+      {isLoading ? (
+        <TodayMatchSkeleton />
+      ) : isError ? (
+        <SectionErrorBox label="매칭 후보" />
+      ) : (
+        <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
+          {matches.map(m => <TodayMatchCard key={m.id} m={m} />)}
+        </div>
+      )}
     </section>
   );
 }
@@ -272,7 +296,7 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
 // ─────────────────────────────────────────────────────────────
 // RecentSection
 // ─────────────────────────────────────────────────────────────
-function RecentSection({ items }: { items: RecentItem[] }) {
+function RecentSection({ items, isLoading, isError }: { items: RecentItem[]; isLoading?: boolean; isError?: boolean }) {
   const router = useRouter();
     const { sort, setSort, price, setPrice } = useFilterBar();
     const filtered = items
@@ -291,7 +315,11 @@ function RecentSection({ items }: { items: RecentItem[] }) {
     <section className="pt-2 pb-5">
       <SectionHeader title="최근 등록된 한 짝" sub="짝을 찾아 완성하거나, 판매하세요" more="더보기" onMore={() => router.push('/products')} />
             <FilterBar sort={sort} onSort={setSort} price={price} onPrice={setPrice} />
-            {sortedFiltered.length === 0 ? (
+            {isLoading ? (
+        <RecentGridSkeleton />
+      ) : isError ? (
+        <SectionErrorBox label="최근 등록 한 짝" />
+      ) : sortedFiltered.length === 0 ? (
         <div className="px-5 lg:px-8 py-10 text-center">
           <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
           <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">다른 가격대로 찾아보거나 직접 등록해보세요.</p>
@@ -308,8 +336,9 @@ function RecentSection({ items }: { items: RecentItem[] }) {
 // ─────────────────────────────────────────────────────────────
 // BrandSection — 칩 클릭 시 /brands/[브랜드명] 으로 이동
 // ─────────────────────────────────────────────────────────────
-function BrandSection({ brandCounts }: {
+function BrandSection({ brandCounts, isLoading }: {
   brandCounts: Record<string, number>;
+  isLoading?: boolean;
 }) {
   const router = useRouter();
   const famousSet = new Set(FAMOUS_BRANDS.map(b => b.toLowerCase()));
@@ -337,6 +366,9 @@ function BrandSection({ brandCounts }: {
   return (
     <section className="pt-2 pb-5">
       <SectionHeader title="브랜드별 탐색" sub="가장 많이 등록된 브랜드" />
+      {isLoading ? (
+        <BrandSectionSkeleton />
+      ) : (
       <div className="flex flex-wrap gap-2 px-5 lg:px-8 pb-1">
         {allBrands.map(brand => {
           const count = brand === '전체'
@@ -361,6 +393,7 @@ function BrandSection({ brandCounts }: {
           );
         })}
       </div>
+      )}
     </section>
   );
 }
@@ -418,14 +451,82 @@ function FindByPhotoCTA() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Skeleton 컴포넌트
+// ─────────────────────────────────────────────────────────────
+function TodayMatchSkeleton() {
+  return (
+    <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div key={i} className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card">
+          <div className="w-[80px] h-[80px] shrink-0 rounded-tile bg-aring-ink-100 animate-pulse" />
+          <div className="flex-1 min-w-0 space-y-2">
+            <div className="h-4 w-2/3 rounded bg-aring-ink-100 animate-pulse" />
+            <div className="h-3 w-1/2 rounded bg-aring-ink-100 animate-pulse" />
+            <div className="h-3 w-1/3 rounded bg-aring-ink-100 animate-pulse" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RecentItemSkeleton() {
+  return (
+    <div className="rounded-tile bg-white border border-aring-green-line overflow-hidden">
+      <div className="aspect-square bg-aring-ink-100 animate-pulse" />
+      <div className="p-3 space-y-1.5">
+        <div className="h-3 w-1/2 rounded bg-aring-ink-100 animate-pulse" />
+        <div className="h-4 w-3/4 rounded bg-aring-ink-100 animate-pulse" />
+        <div className="h-3 w-2/3 rounded bg-aring-ink-100 animate-pulse" />
+      </div>
+    </div>
+  );
+}
+
+function RecentGridSkeleton() {
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <RecentItemSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+function BrandSectionSkeleton() {
+  const widths = ['w-12', 'w-16', 'w-20', 'w-14', 'w-20', 'w-16', 'w-12', 'w-20', 'w-14', 'w-16'];
+  return (
+    <div className="flex flex-wrap gap-2 px-5 lg:px-8 pb-1">
+      {widths.map((w, i) => (
+        <div key={i} className={`h-7 ${w} rounded-pill bg-aring-ink-100 animate-pulse`} />
+      ))}
+    </div>
+  );
+}
+
+function SectionErrorBox({ label }: { label: string }) {
+  return (
+    <div className="px-5 lg:px-8 py-8 text-center">
+      <p className="text-[13px] lg:text-[14px] text-aring-ink-500">{label}을 불러오지 못했어요</p>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // 메인 페이지
 // ─────────────────────────────────────────────────────────────
 export default function HomePage() {
-  const [allItems, setAllItems] = useState<RecentItem[]>(mockRecentItems);
+  // const [allItems, setAllItems] = useState<RecentItem[]>(mockRecentItems); // 롤백용 mock 초기값 — 주석
+  const [allItems, setAllItems] = useState<RecentItem[]>([]);
   const [brandCounts, setBrandCounts] = useState<Record<string, number>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      setIsLoading(false);
+      return;
+    }
     let cancelled = false;
     supabase
       .from('listings')
@@ -435,8 +536,16 @@ export default function HomePage() {
       .limit(50)
       .then(({ data, error }) => {
         if (cancelled) return;
-        if (error) { console.error('[aring] fetch listings error', error); return; }
-        if (!data?.length) return;
+        if (error) {
+          console.error('[aring] fetch listings error', error);
+          setIsError(true);
+          setIsLoading(false);
+          return;
+        }
+        if (!data?.length) {
+          setIsLoading(false);
+          return;
+        }
 
         setAllItems(data.map((row, i) => listingToRecentItem(row as Listing, i)));
 
@@ -468,8 +577,14 @@ export default function HomePage() {
               const displayName = dictEntry?.display_name ?? '기타';
               counts[displayName] = (counts[displayName] ?? 0) + 1;
             });
-            if (!cancelled) setBrandCounts(counts);
+            if (cancelled) return;
+            setBrandCounts(counts);
+            setIsLoading(false);
+          }).catch(() => {
+            if (!cancelled) setIsLoading(false);
           });
+        }).catch(() => {
+          if (!cancelled) setIsLoading(false);
         });
       });
     return () => { cancelled = true; };
@@ -483,8 +598,8 @@ export default function HomePage() {
           <SearchBar />
           <HeroBanner />
           <TodayMatchSection />
-          <RecentSection items={allItems.slice(0, 12)} />
-          <BrandSection brandCounts={brandCounts} />
+          <RecentSection items={allItems.slice(0, 12)} isLoading={isLoading} isError={isError} />
+          <BrandSection brandCounts={brandCounts} isLoading={isLoading} />
           <SuccessSection />
           <FindByPhotoCTA />
         </div>
