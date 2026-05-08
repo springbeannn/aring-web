@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { supabase, type Listing } from '@/lib/supabase';
 import { calculateAringMatch, splitMatchCandidates, type MatchResult } from '@/lib/aringMatch';
 import { TopNav, BottomNav } from '@/components/Nav';
@@ -12,6 +13,28 @@ const IconChat = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} 
 const IconChevronRight = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>);
 
 interface CandidateWithScore { listing: Listing; matchScore: MatchResult; }
+
+type CandidateItem = {
+  id: string;
+  brand: string | null;
+  name: string;
+  memo?: string;
+  imageUrl: string;
+  matchScore: number;
+};
+
+function buildSlots(candidates: CandidateWithScore[]): (CandidateItem | null)[] {
+  const slots: (CandidateItem | null)[] = candidates.slice(0, 3).map((c) => ({
+    id: c.listing.id,
+    brand: c.listing.brand ?? '브랜드 미상',
+    name: c.listing.detail ?? c.listing.shape ?? '한 짝',
+    memo: c.listing.story ?? undefined,
+    imageUrl: c.listing.photo_url,
+    matchScore: c.matchScore.totalScore,
+  }));
+  while (slots.length < 3) slots.push(null);
+  return slots;
+}
 
 function relativeTime(iso: string): string {
   try {
@@ -65,64 +88,158 @@ function ReasonBox({ reasons }: { reasons: string[] }) {
   );
 }
 
-function SeekingCard() {
+// ─── 새 CandidateCard — 컴팩트 가로 카드 ─────────────────────
+function CandidateCard({ item }: { item: CandidateItem }) {
   return (
-    <div className="rounded-2xl bg-white border border-dashed border-aring-ink-200 overflow-hidden flex flex-col">
-      <div className="relative aspect-square bg-aring-ink-50 flex items-center justify-center">
-        <div className="text-center px-2">
-          <div className="w-8 h-8 mx-auto mb-1.5 rounded-full border-2 border-aring-ink-200 border-t-aring-ink-400 animate-spin" />
-          <p className="text-[13px] lg:text-[14px] font-semibold text-aring-ink-500">찾고 있어요</p>
-        </div>
+    <div className="flex-1 min-w-0 flex items-center gap-3
+                    bg-white rounded-2xl border border-aring-ink-100
+                    shadow-card px-3 py-3
+                    hover:shadow-md hover:-translate-y-0.5
+                    transition-all duration-200 cursor-pointer">
+      {/* 작은 이미지 */}
+      <div className="relative w-14 h-14 shrink-0 rounded-xl
+                      bg-aring-ink-100 overflow-hidden">
+        <img
+          src={item.imageUrl}
+          alt={item.brand ?? ''}
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+        />
       </div>
-      <div className="flex-1 flex items-center justify-center p-3">
-        <p className="text-[12px] lg:text-[13px] text-aring-ink-400 text-center leading-relaxed">
-          새 귀걸이가 등록되면<br/>알려드릴게요
+      {/* 텍스트 */}
+      <div className="flex-1 min-w-0">
+        <p className="text-[10.5px] font-bold tracking-wider
+                      text-aring-ink-400 truncate uppercase">
+          {item.brand}
         </p>
+        <p className="mt-0.5 text-[13px] font-bold
+                      text-aring-ink-900 truncate leading-snug">
+          {item.name}
+        </p>
+        {item.memo && (
+          <p className="mt-0.5 text-[12px] text-aring-ink-400 truncate">
+            {item.memo}
+          </p>
+        )}
       </div>
+      {/* 화살표 */}
+      <svg className="shrink-0 text-aring-ink-300" width="16" height="16"
+           viewBox="0 0 16 16" fill="none">
+        <path d="M6 4l4 4-4 4" stroke="currentColor"
+              strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
     </div>
   );
 }
 
-function CandidateCard({ item, matchScore }: { item: Listing; matchScore: MatchResult }) {
+// ─── 후보 타임라인 — 좌측 % 인디케이터 + 우측 카드/플레이스홀더 ─
+function CandidateTimeline({ slots }: { slots: (CandidateItem | null)[] }) {
+  const router = useRouter();
   return (
-    <div className="rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-      <div className="relative aspect-square bg-aring-ink-100">
-        {item.photo_url
-          ? <img
-              src={item.photo_url}
-              alt={item.brand ?? ''}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.style.opacity = '0'; }}
-            />
-          : <div className="absolute inset-0 bg-aring-ink-100" />
-        }
-        <div className="absolute top-3 left-3"><MatchBadge score={matchScore.totalScore} /></div>
-        <div className="absolute top-3 right-3">
-          <span className={'inline-flex items-center px-2 py-0.5 rounded-full text-[12px] lg:text-[13px] font-semibold border backdrop-blur ' + statusColor(item.status)}>
-            {statusLabel(item.status)}
-          </span>
-        </div>
-      </div>
-      <div className="flex-1 flex flex-col p-4">
-        {matchScore.label && (
-          <p className="text-[13px] font-extrabold text-aring-green mb-1">{matchScore.label}</p>
-        )}
-        <p className="text-[10.5px] font-bold text-aring-ink-400 tracking-wide truncate">{item.brand ?? '브랜드 미상'}</p>
-        <p className="mt-0.5 text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
-        {item.story && <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400 leading-snug line-clamp-2 italic">&ldquo;{item.story}&rdquo;</p>}
-        <ReasonBox reasons={matchScore.reasons.slice(0, 3)} />
-        <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-aring-ink-100">
-          <p className="text-[12px] lg:text-[13px] text-aring-ink-400">{relativeTime(item.created_at)}</p>
-          <div className="flex items-center gap-2">
-            <Link href={`/items/${item.id}#comments`} className="inline-flex items-center justify-center gap-1 h-9 px-4 rounded-full border border-aring-ink-200 bg-white text-[13px] lg:text-[14px] font-semibold text-aring-ink-700 hover:bg-aring-ink-50 transition">
-              <IconChat className="w-3.5 h-3.5" /> 댓글
-            </Link>
-            <Link href={`/items/${item.id}`} className="inline-flex items-center justify-center gap-1 h-9 px-4 rounded-full bg-aring-ink-900 text-[13px] font-semibold text-white hover:opacity-90 transition">
-              상세 보기 <IconChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
+    <div className="relative">
+      {/* 세로 줄 */}
+      <div className="absolute left-[27px] top-2 bottom-2
+                      w-[2px] bg-aring-ink-100 rounded-full" />
+
+      <div className="flex flex-col gap-3">
+        {slots.map((slot, index) => {
+          const score = slot?.matchScore ?? 0;
+          const circumference = 138.2; // 2π × 22
+          const strokeColor =
+            score >= 80 ? '#00A878' :
+            score >= 60 ? '#4CAF8C' :
+            score >= 40 ? '#F59E0B' : '#CBD5E1';
+
+          return (
+            <div key={slot?.id ?? index} className="flex items-center gap-3">
+
+              {/* 원형 % 인디케이터 */}
+              <div className="relative shrink-0 z-10 w-14 h-14">
+                <svg width="56" height="56" viewBox="0 0 56 56"
+                     className="rotate-[-90deg]">
+                  {/* 배경 원 */}
+                  <circle cx="28" cy="28" r="22"
+                    fill="none" stroke="#E8EDF0" strokeWidth="4"/>
+                  {/* 진행 원 */}
+                  <circle cx="28" cy="28" r="22"
+                    fill="none"
+                    stroke={slot ? strokeColor : '#E8EDF0'}
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={
+                      slot ? circumference - (circumference * score / 100) : circumference
+                    }
+                    className="transition-all duration-700"/>
+                </svg>
+                {/* 중앙 텍스트 */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {slot ? (
+                    <span className="text-[11px] font-extrabold
+                                     text-aring-ink-900 leading-none">
+                      {score}%
+                    </span>
+                  ) : (
+                    <span className="text-[14px] font-bold text-aring-ink-300">
+                      ?
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* 카드 or 플레이스홀더 */}
+              {slot ? (
+                <div
+                  className="flex-1 min-w-0 flex items-center gap-3
+                              bg-white rounded-2xl border border-aring-ink-100
+                              shadow-card px-3 py-3
+                              hover:shadow-md hover:-translate-y-0.5
+                              transition-all duration-200 cursor-pointer"
+                  onClick={() => router.push(`/items/${slot.id}`)}>
+                  <div className="relative w-12 h-12 shrink-0 rounded-xl
+                                  bg-aring-ink-100 overflow-hidden">
+                    <img
+                      src={slot.imageUrl}
+                      alt={slot.brand ?? ''}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10.5px] font-bold tracking-wider
+                                  text-aring-ink-400 truncate uppercase">
+                      {slot.brand}
+                    </p>
+                    <p className="mt-0.5 text-[13px] font-bold
+                                  text-aring-ink-900 truncate leading-snug">
+                      {slot.name}
+                    </p>
+                    {slot.memo && (
+                      <p className="mt-0.5 text-[12px] text-aring-ink-400 truncate">
+                        {slot.memo}
+                      </p>
+                    )}
+                  </div>
+                  <svg className="shrink-0 text-aring-ink-300"
+                       width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 4l4 4-4 4" stroke="currentColor"
+                          strokeWidth="1.5" strokeLinecap="round"
+                          strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              ) : (
+                <div className="flex-1 min-w-0 flex items-center gap-3
+                                bg-aring-ink-50 rounded-2xl
+                                border border-dashed border-aring-ink-200
+                                px-3 py-3">
+                  <p className="text-[12px] text-aring-ink-400">
+                    새 귀걸이가 등록되면 알려드릴게요
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -339,10 +456,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 60% 이상
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-3 max-w-[440px] mx-auto">
-                  {state.similar.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                  {Array.from({ length: Math.max(0, 3 - state.similar.length) }).map((_, i) => <SeekingCard key={`sim-seek-${i}`} />)}
-                </div>
+                <CandidateTimeline slots={buildSlots(state.similar)} />
               </section>
             )}
 
@@ -361,10 +475,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
                     aring Match 40~59%
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-3 max-w-[440px] mx-auto">
-                  {state.reference.slice(0, 3).map(c => <CandidateCard key={c.listing.id} item={c.listing} matchScore={c.matchScore} />)}
-                  {Array.from({ length: Math.max(0, 3 - state.reference.length) }).map((_, i) => <SeekingCard key={`ref-seek-${i}`} />)}
-                </div>
+                <CandidateTimeline slots={buildSlots(state.reference)} />
               </section>
             )}
           </div>
