@@ -370,7 +370,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
       <div className="rounded-card border border-aring-green-line bg-white p-4 lg:p-5">
         <div className="flex items-center gap-1.5 mb-3">
           <IconSparkle className="w-3.5 h-3.5 text-aring-green" />
-          <p className="text-[13px] lg:text-[15px] font-bold tracking-wider text-aring-green">
+          <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-green">
             AI 분석
           </p>
         </div>
@@ -399,8 +399,8 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">{label}</p>
-      <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 leading-tight">
+      <p className="text-[11px] lg:text-[12px] font-semibold text-aring-ink-400">{label}</p>
+      <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">
         {value}
       </p>
     </div>
@@ -426,17 +426,17 @@ function ColorChip({ value }: { value: string }) {
   const info = COLOR_MAP[value];
   return (
     <div>
-      <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">컬러</p>
+      <p className="text-[11px] lg:text-[12px] font-semibold text-aring-ink-400">컬러</p>
       {info ? (
         <div className="mt-0.5 flex items-center gap-1.5">
           <span
             className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
             style={info.hex.startsWith('linear') ? { background: info.hex } : { backgroundColor: info.hex }}
           />
-          <p className="text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 leading-tight">{info.label}</p>
+          <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900">{info.label}</p>
         </div>
       ) : (
-        <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 leading-tight">—</p>
+        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">—</p>
       )}
     </div>
   );
