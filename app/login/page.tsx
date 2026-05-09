@@ -143,8 +143,9 @@ export default function LoginPage() {
               </div>
 
               <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
+                {/* 카카오 로그인 — 임시 숨김 (서비스 준비 중). 다시 노출하려면 className에서 hidden 제거 */}
                 <button onClick={handleKakao}
-                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#191919] transition active:scale-95 whitespace-nowrap"
+                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#191919] transition active:scale-95 whitespace-nowrap"
                   style={{ background: '#FEE500' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 3C6.477 3 2 6.82 2 11.5c0 2.98 1.86 5.607 4.68 7.186L5.5 22l4.174-2.304C10.42 19.893 11.2 20 12 20c5.523 0 10-3.82 10-8.5S17.523 3 12 3z" fill="#191919"/>
@@ -152,8 +153,9 @@ export default function LoginPage() {
                   카카오톡으로 로그인
                 </button>
 
+                {/* 네이버 로그인 — 임시 숨김 (서비스 준비 중). 다시 노출하려면 className에서 hidden 제거 */}
                 <button onClick={handleNaver}
-                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
+                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
                   style={{ background: '#03C75A' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                     <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/>
