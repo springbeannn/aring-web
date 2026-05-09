@@ -134,17 +134,17 @@ export default function AdminUsersPage() {
           placeholder="닉네임, 이메일 검색"
           className="flex-1 border border-aring-ink-200 rounded-xl px-4 py-2 text-[14px] outline-none focus:border-aring-green transition"
         />
-        <span className="text-[13px] text-aring-ink-500">총 {filtered.length}명</span>
+        <span className="text-[13px] lg:text-[15px] text-aring-ink-500">총 {filtered.length}명</span>
       </div>
 
       {err && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] px-4 py-3 rounded-lg">{err}</div>
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] lg:text-[15px] px-4 py-3 rounded-lg">{err}</div>
       )}
 
       {/* 테이블 */}
       <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-aring-ink-50 text-[13px] font-bold text-aring-ink-500">
+          <thead className="bg-aring-ink-50 text-[13px] lg:text-[15px] font-bold text-aring-ink-500">
             <tr>
               <th className="text-left px-4 py-3">닉네임</th>
               <th className="text-left px-3 py-3">이메일</th>
@@ -166,7 +166,7 @@ export default function AdminUsersPage() {
                 </tr>
               ))
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-10 text-center text-aring-ink-500 text-[13px]">회원이 없습니다</td></tr>
+              <tr><td colSpan={8} className="px-4 py-10 text-center text-aring-ink-500 text-[13px] lg:text-[15px]">회원이 없습니다</td></tr>
             ) : (
               filtered.map((u) => {
                 const stat = statsMap.get(u.user_id);
@@ -180,22 +180,22 @@ export default function AdminUsersPage() {
                       {u.role === 'admin' && <span className="ml-2 text-[10px] font-bold text-aring-green bg-aring-green/10 px-1.5 py-0.5 rounded">관리자</span>}
                     </td>
                     <td className="px-3 py-3 truncate max-w-[220px] text-aring-ink-600">{u.email}</td>
-                    <td className="px-3 py-3 text-[13px] text-aring-ink-500">{fmtDate(u.created_at)}</td>
+                    <td className="px-3 py-3 text-[13px] lg:text-[15px] text-aring-ink-500">{fmtDate(u.created_at)}</td>
                     <td className="px-3 py-3 text-right">{stat?.listingCount ?? 0}</td>
                     <td className="px-3 py-3 text-right">{stat?.receivedCommentCount ?? 0}</td>
                     <td className="px-3 py-3 text-right">{stat?.closedCount ?? 0}</td>
                     <td className="px-3 py-3">
                       {banned ? (
-                        <span className="text-[12px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">정지</span>
+                        <span className="text-[12px] lg:text-[13px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">정지</span>
                       ) : (
-                        <span className="text-[12px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">정상</span>
+                        <span className="text-[12px] lg:text-[13px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">정상</span>
                       )}
                     </td>
                     <td className="px-3 py-3">
                       <button
                         onClick={() => toggleBan(u.user_id, banned)}
                         className={[
-                          'text-[12px] font-semibold rounded-lg px-3 py-1',
+                          'text-[12px] lg:text-[13px] font-semibold rounded-lg px-3 py-1',
                           banned
                             ? 'bg-aring-green text-white hover:opacity-90'
                             : 'bg-red-500 text-white hover:opacity-90',
@@ -251,7 +251,7 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
         <div className="flex items-center justify-between p-6 border-b border-aring-ink-100">
           <div>
             <p className="text-[18px] font-bold text-aring-ink-900">{user.nickname}</p>
-            <p className="text-[13px] text-aring-ink-500">{user.email}</p>
+            <p className="text-[13px] lg:text-[15px] text-aring-ink-500">{user.email}</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-aring-ink-100 hover:bg-aring-ink-200 flex items-center justify-center" aria-label="닫기">✕</button>
         </div>
@@ -261,7 +261,7 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
           {loading ? (
             <div className="h-12 bg-aring-ink-100 animate-pulse rounded" />
           ) : listings.length === 0 ? (
-            <p className="text-[13px] text-aring-ink-500">없음</p>
+            <p className="text-[13px] lg:text-[15px] text-aring-ink-500">없음</p>
           ) : (
             <ul className="space-y-2">
               {listings.slice(0, 20).map((l) => (
@@ -270,10 +270,10 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
                     {l.photo_url && <img src={l.photo_url} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.opacity = '0'; }} />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-bold text-aring-ink-900 truncate">{l.detail ?? l.shape ?? '한 짝'}</p>
-                    <p className="text-[12px] text-aring-ink-500 truncate">{l.brand ?? '브랜드 미상'} · {l.status}</p>
+                    <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900 truncate">{l.detail ?? l.shape ?? '한 짝'}</p>
+                    <p className="text-[12px] lg:text-[13px] text-aring-ink-500 truncate">{l.brand ?? '브랜드 미상'} · {l.status}</p>
                   </div>
-                  <Link href={`/items/${l.id}`} target="_blank" rel="noopener noreferrer" className="text-[12px] font-semibold text-aring-green hover:underline shrink-0">→</Link>
+                  <Link href={`/items/${l.id}`} target="_blank" rel="noopener noreferrer" className="text-[12px] lg:text-[13px] font-semibold text-aring-green hover:underline shrink-0">→</Link>
                 </li>
               ))}
             </ul>
@@ -285,11 +285,11 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
           {loading ? (
             <div className="h-12 bg-aring-ink-100 animate-pulse rounded" />
           ) : comments.length === 0 ? (
-            <p className="text-[13px] text-aring-ink-500">없음</p>
+            <p className="text-[13px] lg:text-[15px] text-aring-ink-500">없음</p>
           ) : (
             <ul className="space-y-2">
               {comments.slice(0, 20).map((c) => (
-                <li key={c.id} className="text-[13px] text-aring-ink-700 border-b border-aring-ink-100 pb-2">
+                <li key={c.id} className="text-[13px] lg:text-[15px] text-aring-ink-700 border-b border-aring-ink-100 pb-2">
                   <p className="line-clamp-2">{c.message}</p>
                   <p className="text-[11px] text-aring-ink-400 mt-1">{new Date(c.created_at).toLocaleString('ko-KR')}</p>
                 </li>

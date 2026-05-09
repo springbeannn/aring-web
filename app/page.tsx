@@ -157,16 +157,16 @@ return (
       )}
     </span>
 
-    <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[40px] leading-[1.3] lg:leading-[1.2] font-bold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
+    <h1 className="relative z-10 mt-3.5 lg:mt-5 text-[22px] lg:text-[48px] lg:leading-[1.2] leading-[1.3] lg:leading-[1.2] font-bold tracking-tight text-aring-ink-900 max-w-[78%] lg:max-w-[55%]">
       하나만 남은 귀걸이,<br />
       <span className="grad-text-green">AI가 짝을 찾아드려요</span>
     </h1>
 
-    <p className="relative z-10 mt-2 lg:mt-4 text-[13px] lg:text-[14px] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
+    <p className="relative z-10 mt-2 lg:mt-4 text-[13px] lg:text-[15px] leading-[1.5] leading-[1.6] text-aring-ink-700 max-w-[80%] lg:max-w-[55%]">
       사진 한 장이면 충분합니다. 브랜드·형태·소재·디테일까지 분석해 비슷하거나 정확히 맞는 짝을 연결합니다.
     </p>
 
-    <Link href="/register" className="relative z-10 mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[14px] font-bold text-white shadow-cta active:scale-[0.98] transition">
+    <Link href="/register" className="relative z-10 mt-4 lg:mt-7 inline-flex items-center gap-2 rounded-pill bg-aring-ink-900 px-5 lg:px-7 py-3 lg:py-3.5 text-[13px] lg:text-[15px] leading-[1.5] font-bold text-white shadow-cta active:scale-[0.98] transition">
       등록하기<IconArrow className="w-3.5 h-3.5" />
     </Link>
 
@@ -211,11 +211,11 @@ function SectionHeader({ title, sub, more, onMore }: {
   return (
     <div className="flex items-end justify-between px-5 lg:px-8 mb-3">
       <div>
-        <h2 className="text-[16px] lg:text-[20px] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
-        {sub && <p className="mt-0.5 text-[13px] lg:text-[13px] text-aring-ink-500">{sub}</p>}
+        <h2 className="text-[16px] lg:text-[28px] lg:leading-[1.3] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
+        {sub && <p className="mt-0.5 text-[13px] lg:text-[15px] lg:leading-[1.6] text-aring-ink-500">{sub}</p>}
       </div>
       {more && onMore && (
-        <button onClick={onMore} className="text-[13px] lg:text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+        <button onClick={onMore} className="text-[13px] lg:text-[15px] lg:leading-[1.6] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
           {more}
         </button>
       )}
@@ -282,7 +282,7 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
         <ThumbImage src={m.leftImage} fallback={m.leftEmoji} tone={m.leftTone} alt={`${m.brand} ${m.name}`} className="w-full h-full" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900 truncate">{priceLabel}</p>
+        <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 truncate">{priceLabel}</p>
         <div className="mt-1.5 flex flex-col gap-1 text-[12px] lg:text-[13px] text-aring-ink-500">
           {m.region && <span className="inline-flex items-center gap-1 truncate"><span aria-hidden>📍</span><span className="truncate">{m.region}</span></span>}
           <span className="inline-flex items-center gap-1"><span aria-hidden>👁</span><span>조회 {viewLabel}</span></span>
@@ -321,8 +321,8 @@ function RecentSection({ items, isLoading, isError }: { items: RecentItem[]; isL
         <SectionErrorBox label="최근 등록 한 짝" />
       ) : sortedFiltered.length === 0 ? (
         <div className="px-5 lg:px-8 py-10 text-center">
-          <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-          <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">다른 가격대로 찾아보거나 직접 등록해보세요.</p>
+          <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
+          <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">다른 가격대로 찾아보거나 직접 등록해보세요.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
@@ -385,7 +385,7 @@ function BrandSection({ brandCounts, isLoading }: {
             >
               {brand}
               {count > 0 && (
-                <span className="ml-1.5 text-[13px] font-bold text-aring-ink-400">
+                <span className="ml-1.5 text-[13px] lg:text-[15px] font-bold text-aring-ink-400">
                   {count}
                 </span>
               )}
@@ -422,16 +422,16 @@ function SuccessSection() {
           <span className="w-1.5 h-1.5 rounded-full bg-aring-accent" />{successStory.badge}
         </span>
         <p className="relative mt-3 text-[14px] leading-[1.55] font-semibold text-white">&ldquo;{successStory.text}&rdquo;</p>
-        <p className="relative mt-2 text-[13px] text-white/70">{successStory.user}</p>
+        <p className="relative mt-2 text-[13px] lg:text-[15px] text-white/70">{successStory.user}</p>
         <div className="relative mt-4 grid grid-cols-3 gap-2">
           {successStory.metrics.map(m => (
             <div key={m.label} className="rounded-tile border border-white/15 px-3 py-2.5 text-center backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.08)' }}>
               <p className="text-[18px] font-bold text-white tracking-tight">{m.value}</p>
-              <p className="mt-0.5 text-[12px] font-semibold text-white/65 tracking-wide">{m.label}</p>
+              <p className="mt-0.5 text-[12px] lg:text-[13px] font-semibold text-white/65 tracking-wide">{m.label}</p>
             </div>
           ))}
         </div>
-        <div className="relative mt-4 flex items-center justify-end gap-1 text-[12px] font-bold text-white/90">
+        <div className="relative mt-4 flex items-center justify-end gap-1 text-[12px] lg:text-[13px] font-bold text-white/90">
           전체 사례 보기
           <IconArrow className="w-3 h-3" />
         </div>
@@ -452,9 +452,9 @@ function FindByPhotoCTA() {
           <IconCamera className="w-5 h-5 text-aring-ink-900" strokeWidth={2.2} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[12px] font-bold tracking-wider text-aring-green">FIND BY PHOTO</p>
+          <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-green">FIND BY PHOTO</p>
           <p className="mt-0.5 text-[14px] font-bold text-aring-ink-900">이 귀걸이와 비슷한 한 짝 찾기</p>
-          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">사진을 올리면 AI가 5초 안에 후보를 보여드려요</p>
+          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">사진을 올리면 AI가 5초 안에 후보를 보여드려요</p>
         </div>
         <span className="w-9 h-9 shrink-0 rounded-full bg-aring-ink-900 flex items-center justify-center text-white">
           <IconArrow />
@@ -521,7 +521,7 @@ function BrandSectionSkeleton() {
 function SectionErrorBox({ label }: { label: string }) {
   return (
     <div className="px-5 lg:px-8 py-8 text-center">
-      <p className="text-[13px] lg:text-[14px] text-aring-ink-500">{label}을 불러오지 못했어요</p>
+      <p className="text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{label}을 불러오지 못했어요</p>
     </div>
   );
 }

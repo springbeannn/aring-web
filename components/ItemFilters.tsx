@@ -103,7 +103,7 @@ export function ItemFilterChips({
               const selected = price === opt.value;
               return (
                 <button key={opt.value} onClick={() => { setPrice(opt.value); setOpen(false); }}
-                  className={['w-full text-left px-3.5 py-2.5 text-[13px] font-semibold transition',
+                  className={['w-full text-left px-3.5 py-2.5 text-[13px] lg:text-[15px] font-semibold transition',
                     selected ? 'bg-aring-ink-900 text-white' : 'text-aring-ink-700 hover:bg-aring-ink-100'].join(' ')}>
                   {opt.label}
                 </button>

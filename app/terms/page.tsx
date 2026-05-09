@@ -34,7 +34,7 @@ export default function TermsPage() {
         </Link>
 
         <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">aring 서비스 이용약관</h1>
-        <span className="inline-block px-2.5 py-1 rounded-full bg-aring-pastel-green text-[12px] font-semibold text-aring-olive mb-6">
+        <span className="inline-block px-2.5 py-1 rounded-full bg-aring-pastel-green text-[12px] lg:text-[13px] font-semibold text-aring-olive mb-6">
           2026년 5월 9일부터 적용
         </span>
 

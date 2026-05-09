@@ -20,12 +20,12 @@ function SignupLeftPanel() {
         <p className="text-[22px] font-bold leading-snug text-white mb-3 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
-        <p className="text-[13px] leading-relaxed text-white/80 mb-4 break-keep">
+        <p className="text-[13px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
           서랍 속에 한 짝만 남겨둔 경험이 있다면{' '}
           <span className="text-purple-300 font-semibold">aring에서 다시 찾아보세요</span>
         </p>
         <div className="pl-3 border-l-2 border-purple-400/50 mb-4">
-          <p className="text-[12px] leading-relaxed text-white/60 break-keep">
+          <p className="text-[12px] lg:text-[13px] leading-relaxed text-white/60 break-keep">
             aring은 한 짝만 남은 귀걸이를 등록하면<br />
             귀걸이를 찾아볼 수 있도록<br />
             돕는 매칭 서비스입니다.<br />
@@ -34,7 +34,7 @@ function SignupLeftPanel() {
             만들어가고 있습니다.
           </p>
         </div>
-        <p className="text-[12px] text-purple-300 font-semibold break-keep">
+        <p className="text-[12px] lg:text-[13px] text-purple-300 font-semibold break-keep">
           한 짝만 남은 귀걸이가 있다면{' '}
           <span className="text-white font-bold">버리지 말고 aring에 등록해보세요</span>
         </p>
@@ -58,7 +58,7 @@ function SignupMobileBanner() {
         <p className="text-[15px] font-bold text-white leading-snug mb-1 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
-        <p className="text-[12px] text-white/70 leading-relaxed break-keep">
+        <p className="text-[12px] lg:text-[13px] text-white/70 leading-relaxed break-keep">
           한 짝만 남은 귀걸이를 등록하면 같거나 비슷한 짝을 찾아드립니다
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function SignupPage() {
 
               <div className="text-center mb-2 lg:text-left lg:mb-7">
                 <h1 className="text-[22px] font-bold text-aring-ink-900">에이링 시작하기</h1>
-                <p className="text-[13px] lg:text-[14px] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
+                <p className="text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
               </div>
 
               <div className="w-full flex flex-col gap-6">
@@ -123,7 +123,7 @@ export default function SignupPage() {
                   이메일로 가입하기
                 </button>
 
-                <p className="text-center text-[13px] lg:text-[14px] text-aring-ink-400">
+                <p className="text-center text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">
                   이미 계정이 있으신가요?{' '}
                   <button
                     onClick={() => router.push('/login')}

@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-4 border-t border-aring-ink-100">
           <button
             onClick={handleLogout}
-            className="w-full text-[13px] font-semibold text-aring-ink-600 hover:text-aring-ink-900 border border-aring-ink-200 rounded-lg py-2 transition"
+            className="w-full text-[13px] lg:text-[15px] font-semibold text-aring-ink-600 hover:text-aring-ink-900 border border-aring-ink-200 rounded-lg py-2 transition"
           >
             로그아웃
           </button>
@@ -90,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* 상단 헤더 */}
         <header className="h-16 bg-white border-b border-aring-ink-100 flex items-center justify-between px-8 shrink-0">
           <h1 className="text-[18px] font-bold text-aring-ink-900">{pageTitle(pathname)}</h1>
-          <div className="flex items-center gap-2 text-[13px] text-aring-ink-500">
+          <div className="flex items-center gap-2 text-[13px] lg:text-[15px] text-aring-ink-500">
             <span>👤</span>
             <span className="font-semibold text-aring-ink-800">{email || '관리자'}</span>
           </div>

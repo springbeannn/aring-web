@@ -31,7 +31,7 @@ const STATUS_MAP: Record<string, { label: string; cls: string }> = {
 function StatusBadge({ status }: { status?: string | null }) {
   const s = STATUS_MAP[status ?? ''] ?? { label: '문의중', cls: 'bg-pink-100 text-pink-700' };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[12px] font-bold ${s.cls}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[12px] lg:text-[13px] font-bold ${s.cls}`}>
       {s.label}
     </span>
   );
@@ -43,7 +43,7 @@ function TagChips({ tags }: { tags: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {tags.map((t, i) => (
-        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[12px] font-semibold">
+        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[12px] lg:text-[13px] font-semibold">
           {t}
         </span>
       ))}
@@ -95,12 +95,12 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
           <div className="flex-1 min-w-0">
             {/* 상단: 번호 + 상태 */}
             <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="text-[12px] font-bold text-aring-ink-400">No.{no}</span>
+              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-400">No.{no}</span>
               <StatusBadge status={listing?.status} />
             </div>
 
             {/* 브랜드 */}
-            <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
+            <p className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900 truncate">{brand}</p>
 
             {/* 태그 */}
             {tags.length > 0 && (
@@ -110,7 +110,7 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
             )}
 
             {/* 댓글 내용 */}
-            <p className="mt-1 text-[12px] text-aring-ink-800 line-clamp-2 leading-relaxed">
+            <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-800 line-clamp-2 leading-relaxed">
               {c.message}
             </p>
           </div>
@@ -142,7 +142,7 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
     <Link href={`/items/${c.product_id}`} className="block">
       <div className="flex items-center gap-3 px-6 py-3 hover:bg-aring-ink-50 transition-colors border-b border-aring-ink-100 last:border-b-0">
         {/* No */}
-        <div className="w-10 text-center text-[13px] lg:text-[14px] text-aring-ink-400 font-bold flex-shrink-0">
+        <div className="w-10 text-center text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400 font-bold flex-shrink-0">
           {no}
         </div>
 
@@ -157,7 +157,7 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
 
         {/* 제품명 */}
         <div className="w-28 flex-shrink-0">
-          <p className="text-[12px] font-bold text-aring-ink-900 truncate">{brand}</p>
+          <p className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900 truncate">{brand}</p>
         </div>
 
         {/* 상태 */}
@@ -172,11 +172,11 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
 
         {/* 댓글 내용 */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] text-aring-ink-800 line-clamp-2 leading-relaxed">{c.message}</p>
+          <p className="text-[13px] lg:text-[15px] text-aring-ink-800 line-clamp-2 leading-relaxed">{c.message}</p>
         </div>
 
         {/* 작성자 */}
-        <div className="w-20 flex-shrink-0 text-[12px] text-aring-ink-600 font-semibold truncate">
+        <div className="w-20 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-600 font-semibold truncate">
           {c.user_name || '익명'}
         </div>
 
@@ -245,9 +245,9 @@ export default function CommentsPage() {
           {/* 헤더 */}
           <div className="px-5 lg:px-8 pt-3 pb-2">
             <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">댓글</h1>
-            <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">한 짝을 찾는 이야기들이 시간순으로 모였어요</p>
+            <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">한 짝을 찾는 이야기들이 시간순으로 모였어요</p>
             {!loading && (
-              <p className="mt-1 text-[13px] font-bold text-aring-ink-700">전체 댓글 {total}개</p>
+              <p className="mt-1 text-[13px] lg:text-[15px] font-bold text-aring-ink-700">전체 댓글 {total}개</p>
             )}
           </div>
 
@@ -277,7 +277,7 @@ export default function CommentsPage() {
           {!loading && comments.length > 0 && (
             <div className="hidden lg:block mt-2 mx-6 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
               {/* 헤더 */}
-              <div className="flex items-center gap-3 px-6 py-2.5 bg-aring-ink-50 border-b border-aring-ink-100 text-[13px] font-bold text-aring-ink-500 uppercase tracking-wide">
+              <div className="flex items-center gap-3 px-6 py-2.5 bg-aring-ink-50 border-b border-aring-ink-100 text-[13px] lg:text-[15px] font-bold text-aring-ink-500 uppercase tracking-wide">
                 <div className="w-10 text-center flex-shrink-0">No.</div>
                 <div className="w-14 flex-shrink-0">사진</div>
                 <div className="w-28 flex-shrink-0">제품명</div>

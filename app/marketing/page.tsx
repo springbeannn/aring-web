@@ -34,7 +34,7 @@ export default function MarketingPage() {
         </Link>
 
         <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">aring 마케팅 정보 수신 동의</h1>
-        <span className="inline-block px-2.5 py-1 rounded-full bg-aring-pastel-green text-[12px] font-semibold text-aring-olive mb-4">
+        <span className="inline-block px-2.5 py-1 rounded-full bg-aring-pastel-green text-[12px] lg:text-[13px] font-semibold text-aring-olive mb-4">
           2026년 5월 9일부터 적용
         </span>
 

@@ -49,14 +49,14 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
         onClick={e => e.stopPropagation()}
       >
         <h2 className="text-[17px] font-bold text-aring-ink-900 text-center">상품을 신고하시겠어요?</h2>
-        <p className="mt-1.5 text-[13px] text-aring-ink-500 text-center leading-relaxed">
+        <p className="mt-1.5 text-[13px] lg:text-[15px] text-aring-ink-500 text-center leading-relaxed">
           신고 사유를 남겨주시면 운영자가 확인할게요.
         </p>
         <div className="mt-4 space-y-2">
           {REASONS.map(r => (
             <button key={r} onClick={() => setReason(r)}
               className={[
-                "w-full text-left px-4 py-2.5 rounded-2xl border text-[13px] font-semibold transition",
+                "w-full text-left px-4 py-2.5 rounded-2xl border text-[13px] lg:text-[15px] font-semibold transition",
                 reason === r
                   ? "border-aring-ink-900 bg-aring-ink-100 text-aring-ink-900"
                   : "border-aring-green-line bg-white text-aring-ink-700 hover:bg-aring-ink-100",
@@ -68,17 +68,17 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
         <div className="mt-3 relative">
           <textarea value={detail} onChange={e => setDetail(e.target.value.slice(0,MAX))}
             placeholder="신고 사유를 조금 더 자세히 적어주세요" rows={3}
-            className="w-full px-3 py-2.5 rounded-2xl border border-aring-green-line bg-aring-ink-100 text-[13px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none resize-none" />
-          <span className="absolute bottom-2 right-3 text-[13px] text-aring-ink-500">{detail.length}/{MAX}</span>
+            className="w-full px-3 py-2.5 rounded-2xl border border-aring-green-line bg-aring-ink-100 text-[13px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none resize-none" />
+          <span className="absolute bottom-2 right-3 text-[13px] lg:text-[15px] text-aring-ink-500">{detail.length}/{MAX}</span>
         </div>
-        {err && <p className="mt-2 text-[12px] text-red-400 text-center">{err}</p>}
+        {err && <p className="mt-2 text-[12px] lg:text-[13px] text-red-400 text-center">{err}</p>}
         <div className="mt-5 flex gap-2">
           <button onClick={onClose}
-            className="flex-1 py-3 rounded-pill border border-aring-green-line text-[13px] font-bold text-aring-ink-700 hover:bg-aring-ink-100 transition active:scale-95">
+            className="flex-1 py-3 rounded-pill border border-aring-green-line text-[13px] lg:text-[15px] font-bold text-aring-ink-700 hover:bg-aring-ink-100 transition active:scale-95">
             취소
           </button>
           <button onClick={submit} disabled={!valid || sub}
-            className="flex-1 py-3 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
+            className="flex-1 py-3 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
             {sub ? "접수 중…" : "신고하기"}
           </button>
         </div>

@@ -168,7 +168,7 @@ function ProductsContent() {
           <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
             {pageTitle}
           </h1>
-          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
+          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
             {pageDesc}
             {filtered.length > 0 && (
               <> · <span className="font-semibold">{filtered.length}</span>개 등록</>
@@ -182,22 +182,22 @@ function ProductsContent() {
       {loading && items.length === 0 ? (
         <div className="px-5 lg:px-8 py-16 text-center">
           <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-          <p className="mt-3 text-[13px] text-aring-ink-500">불러오는 중…</p>
+          <p className="mt-3 text-[13px] lg:text-[15px] text-aring-ink-500">불러오는 중…</p>
         </div>
       ) : error ? (
         <div className="px-5 lg:px-8 py-16 text-center">
-          <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
+          <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold"
+            className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold"
           >
             다시 시도
           </button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="px-5 lg:px-8 py-16 text-center">
-          <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-          <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">필터를 초기화하거나 다른 조건을 선택해 주세요</p>
+          <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
+          <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">필터를 초기화하거나 다른 조건을 선택해 주세요</p>
         </div>
       ) : (
         <>
@@ -212,7 +212,7 @@ function ProductsContent() {
               <button
                 onClick={loadMore}
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center h-12 rounded-pill bg-aring-ink-100 text-aring-ink-900 text-[13px] font-bold active:scale-[0.99] transition disabled:opacity-60"
+                className="w-full inline-flex items-center justify-center h-12 rounded-pill bg-aring-ink-100 text-aring-ink-900 text-[13px] lg:text-[15px] font-bold active:scale-[0.99] transition disabled:opacity-60"
               >
                 {loading ? '불러오는 중…' : '더보기'}
               </button>
@@ -220,7 +220,7 @@ function ProductsContent() {
           )}
 
           {!hasMore && items.length > 0 && (
-            <p className="mt-6 text-center text-[13px] text-aring-ink-500">
+            <p className="mt-6 text-center text-[13px] lg:text-[15px] text-aring-ink-500">
               마지막 한 짝까지 모두 확인했어요
             </p>
           )}

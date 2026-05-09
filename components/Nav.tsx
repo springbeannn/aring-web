@@ -85,12 +85,12 @@ export function TopNav() {
       <div className="flex items-center justify-between px-5 lg:px-8 pt-2 lg:pt-5 pb-3.5 lg:pb-5 lg:border-b lg:border-aring-green-line">
         <div className="flex items-center gap-8">
           <Link className="flex items-baseline gap-1" href="/">
-            <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
+            <span className="text-[26px] lg:text-[32px] font-black tracking-tight text-aring-green leading-none">aring</span>
             <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
           </Link>
           <nav className="hidden lg:flex items-center gap-1">
             {desktopMenu.map((m) => (
-              <Link key={m.key} href={m.href} className="px-3.5 py-2 rounded-pill text-[13px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100 transition">
+              <Link key={m.key} href={m.href} className="px-3.5 py-2 rounded-pill text-[13px] lg:text-[15px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100 transition">
                 {m.label}
               </Link>
             ))}
@@ -101,7 +101,7 @@ export function TopNav() {
             <Link
               href="/register"
               aria-label="한 짝 등록"
-              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] font-bold text-white shadow-cta active:scale-95 transition"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
             >
               <IconPlus className="w-4 h-4" strokeWidth={2.4} />
               한 짝 등록

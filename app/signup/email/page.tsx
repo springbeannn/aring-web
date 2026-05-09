@@ -42,39 +42,39 @@ type DupState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 
 function EmailHint({ state, email }: { state: DupState; email: string }) {
   if (!email) return null;
-  if (!isValidEmail(email)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일 형식을 확인해주세요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">확인 중...</p>;
-  if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 이메일이에요.</p>;
-  if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 가입된 이메일이에요.</p>;
-  return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
+  if (!isValidEmail(email)) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">이메일 형식을 확인해주세요.</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">이메일 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">확인 중...</p>;
+  if (state === 'available') return <p className="mt-1.5 text-[13px] lg:text-[15px] text-emerald-500">✓ 사용 가능한 이메일이에요.</p>;
+  if (state === 'taken') return <p className="mt-1.5 text-[13px] lg:text-[15px] text-rose-400">이미 가입된 이메일이에요.</p>;
+  return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
 }
 
 function NicknameHint({ state, nickname }: { state: DupState; nickname: string }) {
   if (!nickname) return null;
-  if (looksLikePII(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">이메일이나 전화번호는 사용할 수 없어요.</p>;
-  if (!isValidNickname(nickname)) return <p className="mt-1.5 text-[13px] text-amber-500">닉네임은 2~12자, 한글/영문/숫자만 사용할 수 있어요.</p>;
-  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
-  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">확인 중...</p>;
-  if (state === 'available') return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 닉네임이에요.</p>;
-  if (state === 'taken') return <p className="mt-1.5 text-[13px] text-rose-400">이미 사용 중인 닉네임이에요.</p>;
-  return <p className="mt-1.5 text-[13px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
+  if (looksLikePII(nickname)) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">이메일이나 전화번호는 사용할 수 없어요.</p>;
+  if (!isValidNickname(nickname)) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">닉네임은 2~12자, 한글/영문/숫자만 사용할 수 있어요.</p>;
+  if (state === 'idle') return <p className="mt-1.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">닉네임 중복 확인이 필요해요.</p>;
+  if (state === 'checking') return <p className="mt-1.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">확인 중...</p>;
+  if (state === 'available') return <p className="mt-1.5 text-[13px] lg:text-[15px] text-emerald-500">✓ 사용 가능한 닉네임이에요.</p>;
+  if (state === 'taken') return <p className="mt-1.5 text-[13px] lg:text-[15px] text-rose-400">이미 사용 중인 닉네임이에요.</p>;
+  return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">오류가 발생했어요. 다시 시도해주세요.</p>;
 }
 
 function PasswordHint({ pw }: { pw: string }) {
-  if (!pw) return <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
-  if (/\s/.test(pw)) return <p className="mt-1.5 text-[13px] text-rose-400">공백은 사용할 수 없어요.</p>;
-  if (pw.length < 8) return <p className="mt-1.5 text-[13px] text-amber-500">8자 이상 입력해주세요. ({pw.length}/20)</p>;
-  if (pw.length > 20) return <p className="mt-1.5 text-[13px] text-rose-400">20자 이하로 입력해주세요.</p>;
+  if (!pw) return <p className="mt-1.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">8~20자, 영문/숫자/특수문자 중 2가지 이상 조합</p>;
+  if (/\s/.test(pw)) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-rose-400">공백은 사용할 수 없어요.</p>;
+  if (pw.length < 8) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">8자 이상 입력해주세요. ({pw.length}/20)</p>;
+  if (pw.length > 20) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-rose-400">20자 이하로 입력해주세요.</p>;
   const combos = [/[a-zA-Z]/.test(pw), /[0-9]/.test(pw), /[^a-zA-Z0-9]/.test(pw)].filter(Boolean).length;
-  if (combos < 2) return <p className="mt-1.5 text-[13px] text-amber-500">영문/숫자/특수문자 중 2가지 이상 조합해주세요.</p>;
-  return <p className="mt-1.5 text-[13px] text-emerald-500">✓ 사용 가능한 비밀번호예요. ({pw.length}/20)</p>;
+  if (combos < 2) return <p className="mt-1.5 text-[13px] lg:text-[15px] text-amber-500">영문/숫자/특수문자 중 2가지 이상 조합해주세요.</p>;
+  return <p className="mt-1.5 text-[13px] lg:text-[15px] text-emerald-500">✓ 사용 가능한 비밀번호예요. ({pw.length}/20)</p>;
 }
 
 function DupButton({ label, onClick, disabled, checking }: { label: string; onClick: () => void; disabled: boolean; checking: boolean }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled}
-      className={`w-full mt-2 py-2.5 rounded-2xl text-[13px] font-bold transition ${!disabled ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
+      className={`w-full mt-2 py-2.5 rounded-2xl text-[13px] lg:text-[15px] font-bold transition ${!disabled ? 'bg-aring-ink-900 text-white active:scale-95' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
       {checking ? '확인 중...' : label}
     </button>
   );
@@ -96,12 +96,12 @@ function SignupLeftPanel() {
         <p className="text-[22px] font-bold leading-snug text-white mb-3 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
-        <p className="text-[13px] leading-relaxed text-white/80 mb-4 break-keep">
+        <p className="text-[13px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
           서랍 속에 한 짝만 남겨둔 경험이 있다면{' '}
           <span className="text-purple-300 font-semibold">aring에서 다시 찾아보세요</span>
         </p>
         <div className="pl-3 border-l-2 border-purple-400/50 mb-4">
-          <p className="text-[12px] leading-relaxed text-white/60 break-keep">
+          <p className="text-[12px] lg:text-[13px] leading-relaxed text-white/60 break-keep">
             aring은 한 짝만 남은 귀걸이를 등록하면<br />
             귀걸이를 찾아볼 수 있도록<br />
             돕는 매칭 서비스입니다.<br />
@@ -110,7 +110,7 @@ function SignupLeftPanel() {
             만들어가고 있습니다.
           </p>
         </div>
-        <p className="text-[12px] text-purple-300 font-semibold break-keep">
+        <p className="text-[12px] lg:text-[13px] text-purple-300 font-semibold break-keep">
           한 짝만 남은 귀걸이가 있다면{' '}
           <span className="text-white font-bold">버리지 말고 aring에 등록해보세요</span>
         </p>
@@ -135,7 +135,7 @@ function SignupMobileBanner() {
         <p className="text-[15px] font-bold text-white leading-snug mb-1 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
-        <p className="text-[12px] text-white/70 leading-relaxed break-keep">
+        <p className="text-[12px] lg:text-[13px] text-white/70 leading-relaxed break-keep">
           한 짝만 남은 귀걸이를 등록하면 같거나 비슷한 짝을 찾아드립니다
         </p>
       </div>
@@ -227,7 +227,7 @@ export default function SignupEmailPage() {
     setTimeout(() => setResendState('idle'), 30000);
   }
 
-  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
+  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
@@ -293,7 +293,7 @@ export default function SignupEmailPage() {
                   </button>
                 </div>
                 {pwConfirmTouched && passwordConfirm.length > 0 && (
-                  <p className={`mt-1.5 text-[13px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
+                  <p className={`mt-1.5 text-[13px] lg:text-[15px] ${pwMatch ? 'text-emerald-500' : 'text-rose-400'}`}>
                     {pwMatch ? '✓ 비밀번호가 일치해요.' : '비밀번호가 일치하지 않아요.'}
                   </p>
                 )}
@@ -380,16 +380,16 @@ export default function SignupEmailPage() {
               </div>
 
               {!allRequired && (
-                <p className="mb-3 text-[13px] text-amber-700 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
+                <p className="mb-3 text-[13px] lg:text-[15px] text-amber-700 text-center">필수 약관에 동의해야 가입할 수 있어요.</p>
               )}
-              {submitError && <p className="mb-3 text-[13px] text-rose-400 text-center">{submitError}</p>}
+              {submitError && <p className="mb-3 text-[13px] lg:text-[15px] text-rose-400 text-center">{submitError}</p>}
 
               <button onClick={handleSubmit} disabled={!canSubmit || loading}
                 className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
                 {loading ? '가입 중...' : '가입하기'}
               </button>
 
-              <p className="mt-4 text-center text-[13px] text-aring-ink-500">
+              <p className="mt-4 text-center text-[13px] lg:text-[15px] text-aring-ink-500">
                 이미 계정이 있으신가요?{' '}
                 <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
               </p>
@@ -419,7 +419,7 @@ function EmailSentScreen({
       <div className="mb-6">
         <div className="inline-flex items-baseline gap-1">
           <span className="text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-          <sup className="text-[12px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
+          <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
         </div>
       </div>
 
@@ -441,13 +441,13 @@ function EmailSentScreen({
       </p>
 
       <div className="rounded-2xl bg-aring-ink-50 px-4 py-3 mb-6">
-        <p className="text-[13px] text-aring-ink-500 leading-relaxed">
+        <p className="text-[13px] lg:text-[15px] text-aring-ink-500 leading-relaxed">
           메일을 받지 못하셨나요?
         </p>
         <button
           onClick={onResend}
           disabled={resendState === 'loading' || resendState === 'sent'}
-          className="mt-1 text-[13px] font-bold text-aring-green hover:underline disabled:opacity-60 disabled:no-underline"
+          className="mt-1 text-[13px] lg:text-[15px] font-bold text-aring-green hover:underline disabled:opacity-60 disabled:no-underline"
         >
           {resendState === 'loading' ? '재발송 중…' :
            resendState === 'sent'    ? '✓ 재발송 완료' :
@@ -456,7 +456,7 @@ function EmailSentScreen({
         </button>
       </div>
 
-      <p className="text-[13px] text-aring-ink-500">
+      <p className="text-[13px] lg:text-[15px] text-aring-ink-500">
         이미 인증을 완료했나요?{' '}
         <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인하기</Link>
       </p>

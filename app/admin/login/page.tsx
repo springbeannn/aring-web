@@ -80,17 +80,17 @@ function AdminLoginInner() {
         <div className="text-center mb-6">
           <div className="inline-flex items-baseline gap-1">
             <span className="text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[12px] font-semibold text-aring-ink-500">관리자</sup>
+            <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">관리자</sup>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
           <h1 className="text-[18px] font-bold text-aring-ink-900 mb-1">관리자 로그인</h1>
-          <p className="text-[13px] text-aring-ink-500 mb-5">관리자 권한이 있는 계정으로만 접속할 수 있어요</p>
+          <p className="text-[13px] lg:text-[15px] text-aring-ink-500 mb-5">관리자 권한이 있는 계정으로만 접속할 수 있어요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <label className="block">
-              <span className="text-[13px] font-semibold text-aring-ink-700">이메일</span>
+              <span className="text-[13px] lg:text-[15px] font-semibold text-aring-ink-700">이메일</span>
               <input
                 type="email"
                 required
@@ -103,7 +103,7 @@ function AdminLoginInner() {
             </label>
 
             <label className="block">
-              <span className="text-[13px] font-semibold text-aring-ink-700">비밀번호</span>
+              <span className="text-[13px] lg:text-[15px] font-semibold text-aring-ink-700">비밀번호</span>
               <input
                 type="password"
                 required
@@ -116,7 +116,7 @@ function AdminLoginInner() {
             </label>
 
             {error && (
-              <p className="text-[13px] text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+              <p className="text-[13px] lg:text-[15px] text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
                 {error}
               </p>
             )}

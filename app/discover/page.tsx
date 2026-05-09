@@ -95,7 +95,7 @@ function CategoryRow({ title, id, highlighted, children }: { title: string; id?:
         highlighted ? 'bg-aring-green/5 ring-2 ring-aring-green/30 ring-inset' : '',
       ].join(' ')}
     >
-      <h3 className="text-[13px] font-bold text-aring-ink-700 mb-2">
+      <h3 className="text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-2">
         {title}
       </h3>
       {children}
@@ -149,7 +149,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[12px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[12px] lg:text-[13px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
@@ -416,7 +416,7 @@ function DiscoverPageInner() {
 
           <div className="px-5 pt-3 pb-3">
             <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">탐색</h1>
-            <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
+            <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
           {activeCount > 0 && (
@@ -426,7 +426,7 @@ function DiscoverPageInner() {
               ))}
               <button
                 onClick={resetAll}
-                className="ml-auto text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
+                className="ml-auto text-[13px] lg:text-[15px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition"
               >
                 전체 해제
               </button>
@@ -497,16 +497,16 @@ function DiscoverPageInner() {
 
           <div className="sticky top-0 z-20 glass-strong border-y border-aring-green-line">
             <div className="flex items-center justify-between px-5 py-3">
-              <p className="text-[13px] font-bold text-aring-ink-900">
+              <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
-                  <span className="ml-2 text-[13px] lg:text-[14px] font-semibold text-aring-ink-500">
+                  <span className="ml-2 text-[13px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500">
                     · 필터 {activeCount}개
                   </span>
                 )}
               </p>
               {activeCount > 0 && (
-                <button onClick={resetAll} className="text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+                <button onClick={resetAll} className="text-[13px] lg:text-[15px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
                   초기화
                 </button>
               )}
@@ -522,12 +522,12 @@ function DiscoverPageInner() {
               </div>
             ) : filtered.length === 0 ? (
               <div className="py-16 text-center">
-                <p className="text-[13px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
-                <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
+                <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">조건에 맞는 한 짝이 없어요</p>
+                <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">필터를 줄이거나 초기화해 주세요</p>
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}
-                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] font-bold"
+                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] lg:text-[15px] font-bold"
                     style={{ background: 'linear-gradient(135deg, rgba(251,200,220,0.2) 0%, rgba(197,221,240,0.2) 50%, rgba(200,230,201,0.2) 100%)', outline: '1.5px solid rgba(197,221,240,0.85)', color: '#1e1b2e' }}
                   >
                     필터 초기화

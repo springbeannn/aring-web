@@ -421,7 +421,7 @@ function ProfileHeader({
           <p className="text-[17px] lg:text-[18px] font-bold text-aring-ink-900 truncate">
             {nickname || '아링 친구'}
           </p>
-          <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">
+          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500 truncate">
             {bio}
           </p>
         </div>
@@ -429,7 +429,7 @@ function ProfileHeader({
 
       {/* 랜덤 상태 메시지 */}
       <div className="mt-4 rounded-card bg-aring-grad-pastel px-4 py-3">
-        <p className="text-[13px] font-bold text-aring-ink-900">
+        <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
           {message}
         </p>
       </div>
@@ -479,7 +479,7 @@ function QuickMenu({
             href={m.anchor}
             className="relative rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center active:scale-[0.99] transition"
           >
-            <p className="text-[13px] font-bold text-aring-ink-900">
+            <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
               {m.label}
             </p>
             {m.count > 0 && (
@@ -563,10 +563,10 @@ function MyListingCard({
 
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         <Link href={`/items/${listing.id}`} className="block">
-          <p className="text-[12px] font-bold tracking-wider text-aring-ink-400 truncate uppercase">
+          <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-400 truncate uppercase">
             {listing.brand ?? '브랜드 미상'}
           </p>
-          <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate leading-snug">
+          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate leading-snug">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
           <p className="mt-0.5 text-[12px] lg:text-[13px] text-aring-ink-400">
@@ -667,7 +667,7 @@ function StatusStepper({
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => setConfirm(null)}
-                className="flex-1 rounded-pill border border-aring-green-line py-2.5 text-[13px] font-bold text-aring-ink-600 hover:bg-aring-ink-100 transition"
+                className="flex-1 rounded-pill border border-aring-green-line py-2.5 text-[13px] lg:text-[15px] font-bold text-aring-ink-600 hover:bg-aring-ink-100 transition"
               >
                 취소
               </button>
@@ -676,7 +676,7 @@ function StatusStepper({
                   onStatusChange(listing, confirm);
                   setConfirm(null);
                 }}
-                className="flex-1 rounded-pill bg-aring-ink-900 py-2.5 text-[13px] font-bold text-white shadow-cta active:scale-95 transition"
+                className="flex-1 rounded-pill bg-aring-ink-900 py-2.5 text-[13px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
               >
                 변경하기
               </button>
@@ -750,10 +750,10 @@ function LikedCard({ listing }: { listing: Listing }) {
         )}
       </Link>
       <div className="p-2.5">
-        <p className="text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
           {listing.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
+        <p className="mt-px text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link
@@ -869,13 +869,13 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
             {tag.label}
           </span>
         </div>
-        <p className="mt-1 text-[12px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="mt-1 text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
           {s.brand}
         </p>
-        <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">
+        <p className="text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
           {s.productName}
         </p>
-        <p className="mt-1 text-[13px] text-aring-ink-700 truncate">
+        <p className="mt-1 text-[13px] lg:text-[15px] text-aring-ink-700 truncate">
           <span className="font-semibold">{s.lastAuthor}</span>{' '}
           <span className="text-aring-ink-500">·</span> {s.lastMessage}
         </p>
@@ -913,7 +913,7 @@ function SectionHead({
           )}
         </div>
         {sub && (
-          <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">{sub}</p>
+          <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
         )}
       </div>
     </div>
@@ -933,8 +933,8 @@ function EmptyBlock({
 }) {
   return (
     <div className="rounded-card bg-aring-ink-100 px-5 py-8 text-center">
-      <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">{title}</p>
-      <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">{sub}</p>
+      <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">{title}</p>
+      <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
         className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-95 transition"

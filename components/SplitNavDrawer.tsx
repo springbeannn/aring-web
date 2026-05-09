@@ -215,13 +215,13 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
               </ul>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[200px] px-6 text-center">
-                <p className="text-[13px] text-aring-ink-400 leading-relaxed">
+                <p className="text-[13px] lg:text-[15px] text-aring-ink-400 leading-relaxed">
                   선택한 메뉴는<br />바로 이동해요
                 </p>
                 <Link
                   href={selectedItem?.href ?? '/'}
                   onClick={onClose}
-                  className="mt-3 inline-flex items-center gap-1 px-4 py-2 rounded-full bg-aring-ink-900 text-white text-[12px] font-bold hover:opacity-90 transition"
+                  className="mt-3 inline-flex items-center gap-1 px-4 py-2 rounded-full bg-aring-ink-900 text-white text-[12px] lg:text-[13px] font-bold hover:opacity-90 transition"
                 >
                   {selectedItem?.label ?? ''} 페이지로
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">

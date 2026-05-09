@@ -87,7 +87,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
     <main className="min-h-screen flex justify-center bg-white">
       <div className="w-full max-w-[440px] min-h-screen px-5 pt-20 text-center">
         <p className="text-[14px] font-bold text-aring-ink-900">수정 권한이 없어요</p>
-        <Link href="/" className="mt-4 inline-flex px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold">홈으로</Link>
+        <Link href="/" className="mt-4 inline-flex px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold">홈으로</Link>
       </div>
     </main>
   );
@@ -118,43 +118,43 @@ export default function EditPage({ params }: { params: { id: string } }) {
           <div className="space-y-4">
             {/* 브랜드 */}
             <div>
-              <label className="block text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">브랜드</label>
+              <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">브랜드</label>
               <input
                 type="text" value={brand} onChange={e => setBrand(e.target.value)}
                 placeholder="브랜드명 입력"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
 
             {/* 가격 */}
             <div>
-              <label className="block text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">희망 가격</label>
+              <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">희망 가격</label>
               <input
                 type="text" value={price} onChange={e => setPrice(e.target.value)}
                 placeholder="예: 35000"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
 
             {/* 등록자 한마디 */}
             <div>
-              <label className="block text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">등록자 한마디</label>
+              <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">등록자 한마디</label>
               <textarea
                 value={story} onChange={e => setStory(e.target.value)}
                 placeholder="이 귀걸이에 대해 한마디 남겨주세요"
                 rows={4} maxLength={1000}
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition resize-none"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition resize-none"
               />
-              <p className="mt-1 text-right text-[13px] lg:text-[14px] text-aring-ink-400">{story.length}/1000</p>
+              <p className="mt-1 text-right text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">{story.length}/1000</p>
             </div>
 
             {/* 지역 */}
             <div>
-              <label className="block text-[13px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">지역</label>
+              <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1.5">지역</label>
               <input
                 type="text" value={region} onChange={e => setRegion(e.target.value)}
                 placeholder="예: 서울 · 강남구"
-                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
               />
             </div>
           </div>

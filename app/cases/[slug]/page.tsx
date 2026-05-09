@@ -165,7 +165,7 @@ export default async function CaseDetailPage({
       <div className="max-w-2xl mx-auto px-5 pt-10 pb-20">
         <Link
           href="/cases"
-          className="inline-flex items-center text-[13px] font-semibold text-aring-olive mb-6 hover:underline"
+          className="inline-flex items-center text-[13px] lg:text-[15px] font-semibold text-aring-olive mb-6 hover:underline"
         >
           ← 목록으로
         </Link>
@@ -182,7 +182,7 @@ export default async function CaseDetailPage({
           <p className="text-[15px] text-aring-gray leading-relaxed mb-4">{c.summary}</p>
 
           {/* 메타 + 태그 */}
-          <div className="flex items-center gap-3 flex-wrap text-[12px] text-aring-gray mb-8 pb-6 border-b border-aring-gray-light">
+          <div className="flex items-center gap-3 flex-wrap text-[12px] lg:text-[13px] text-aring-gray mb-8 pb-6 border-b border-aring-gray-light">
             <time dateTime={c.published_at}>
               {new Date(c.published_at).toLocaleDateString('ko-KR', {
                 year: 'numeric',

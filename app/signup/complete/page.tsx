@@ -32,7 +32,7 @@ export default function SignupCompletePage() {
         <div className="mb-8">
           <div className="inline-flex items-baseline gap-1">
             <span className="text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[12px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
+            <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
           </div>
         </div>
 

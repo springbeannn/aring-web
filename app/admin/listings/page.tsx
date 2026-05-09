@@ -133,7 +133,7 @@ export default function AdminListingsPage() {
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value as Status)}
-          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[13px] outline-none focus:border-aring-green"
+          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[13px] lg:text-[15px] outline-none focus:border-aring-green"
         >
           <option value="all">전체 상태</option>
           <option value="open">판매중</option>
@@ -143,22 +143,22 @@ export default function AdminListingsPage() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
-          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[13px] outline-none focus:border-aring-green"
+          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[13px] lg:text-[15px] outline-none focus:border-aring-green"
         >
           <option value="created_at">등록일 최신순</option>
           <option value="view_count">조회수 높은순</option>
         </select>
-        <span className="text-[13px] text-aring-ink-500">총 {filtered.length}건</span>
+        <span className="text-[13px] lg:text-[15px] text-aring-ink-500">총 {filtered.length}건</span>
       </div>
 
       {err && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] px-4 py-3 rounded-lg">{err}</div>
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] lg:text-[15px] px-4 py-3 rounded-lg">{err}</div>
       )}
 
       {/* 테이블 */}
       <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-aring-ink-50 text-[13px] font-bold text-aring-ink-500">
+          <thead className="bg-aring-ink-50 text-[13px] lg:text-[15px] font-bold text-aring-ink-500">
             <tr>
               <th className="text-left px-4 py-3 w-[64px]">이미지</th>
               <th className="text-left px-3 py-3">브랜드</th>
@@ -183,7 +183,7 @@ export default function AdminListingsPage() {
                 </tr>
               ))
             ) : pageItems.length === 0 ? (
-              <tr><td colSpan={11} className="px-4 py-10 text-center text-aring-ink-500 text-[13px]">검색 결과가 없습니다</td></tr>
+              <tr><td colSpan={11} className="px-4 py-10 text-center text-aring-ink-500 text-[13px] lg:text-[15px]">검색 결과가 없습니다</td></tr>
             ) : (
               pageItems.map((it) => (
                 <tr key={it.id} className="border-b border-aring-ink-100 hover:bg-aring-ink-50">
@@ -202,13 +202,13 @@ export default function AdminListingsPage() {
                   <td className="px-3 py-2 truncate">{it.shape ?? '-'}</td>
                   <td className="px-3 py-2">{fmtPrice(it.price)}</td>
                   <td className="px-3 py-2 truncate">{it.user_id ? (profileMap.get(it.user_id) ?? '익명') : '익명'}</td>
-                  <td className="px-3 py-2 text-[12px] text-aring-ink-500">{fmtDate(it.created_at)}</td>
+                  <td className="px-3 py-2 text-[12px] lg:text-[13px] text-aring-ink-500">{fmtDate(it.created_at)}</td>
                   <td className="px-3 py-2 text-right">{it.view_count}</td>
                   <td className="px-3 py-2">
                     <select
                       value={it.status}
                       onChange={(e) => changeStatus(it.id, e.target.value as 'open' | 'matched' | 'closed')}
-                      className="text-[12px] border border-aring-ink-200 rounded-lg px-2 py-1 outline-none focus:border-aring-green"
+                      className="text-[12px] lg:text-[13px] border border-aring-ink-200 rounded-lg px-2 py-1 outline-none focus:border-aring-green"
                     >
                       <option value="open">판매중</option>
                       <option value="matched">매칭완료</option>
@@ -218,7 +218,7 @@ export default function AdminListingsPage() {
                   <td className="px-3 py-2">
                     <button
                       onClick={() => setDeleteId(it.id)}
-                      className="text-[12px] bg-red-500 text-white font-semibold rounded-lg px-3 py-1 hover:opacity-90"
+                      className="text-[12px] lg:text-[13px] bg-red-500 text-white font-semibold rounded-lg px-3 py-1 hover:opacity-90"
                     >
                       삭제
                     </button>
@@ -236,7 +236,7 @@ export default function AdminListingsPage() {
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="border border-aring-ink-200 text-aring-ink-700 text-[13px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50"
+            className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50"
           >
             이전
           </button>
@@ -247,7 +247,7 @@ export default function AdminListingsPage() {
                 key={n}
                 onClick={() => setPage(n)}
                 className={[
-                  'rounded-lg px-3 py-1.5 text-[13px]',
+                  'rounded-lg px-3 py-1.5 text-[13px] lg:text-[15px]',
                   n === page
                     ? 'bg-aring-green text-white font-semibold'
                     : 'border border-aring-ink-200 text-aring-ink-700 hover:bg-aring-ink-50',
@@ -260,7 +260,7 @@ export default function AdminListingsPage() {
           <button
             disabled={page === pageCount}
             onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-            className="border border-aring-ink-200 text-aring-ink-700 text-[13px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50"
+            className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50"
           >
             다음
           </button>
@@ -272,10 +272,10 @@ export default function AdminListingsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-[360px] w-full">
             <p className="text-[15px] font-bold text-aring-ink-900 mb-2">게시물 삭제</p>
-            <p className="text-[13px] text-aring-ink-500 mb-4">정말 삭제하시겠어요? 이 작업은 되돌릴 수 없어요.</p>
+            <p className="text-[13px] lg:text-[15px] text-aring-ink-500 mb-4">정말 삭제하시겠어요? 이 작업은 되돌릴 수 없어요.</p>
             <div className="flex gap-2 justify-end">
-              <button onClick={() => setDeleteId(null)} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] rounded-lg px-4 py-2">취소</button>
-              <button onClick={() => deleteItem(deleteId)} className="bg-red-500 text-white text-[13px] font-semibold rounded-lg px-4 py-2 hover:opacity-90">삭제</button>
+              <button onClick={() => setDeleteId(null)} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-4 py-2">취소</button>
+              <button onClick={() => deleteItem(deleteId)} className="bg-red-500 text-white text-[13px] lg:text-[15px] font-semibold rounded-lg px-4 py-2 hover:opacity-90">삭제</button>
             </div>
           </div>
         </div>

@@ -218,7 +218,7 @@ export default function RegisterPage() {
           <Link href="/" aria-label="닫기" className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
             <IconClose />
           </Link>
-          <div className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">한 짝 등록</div>
+          <div className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
 
@@ -280,12 +280,12 @@ function StepIndicator({ current }: { current: Step }) {
       {labels.map((l, i) => (
         <div key={l.key} className="flex-1 flex items-center gap-2">
           <span className={[
-            'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold transition shrink-0',
+            'w-6 h-6 rounded-full flex items-center justify-center text-[12px] lg:text-[13px] font-bold transition shrink-0',
             i < idx ? 'bg-aring-ink-900 text-white' : i === idx ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-500',
           ].join(' ')}>
             {i < idx ? <IconCheck className="w-3 h-3" /> : i + 1}
           </span>
-          <span className={['text-[13px] font-bold whitespace-nowrap', i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500'].join(' ')}>
+          <span className={['text-[13px] lg:text-[15px] font-bold whitespace-nowrap', i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500'].join(' ')}>
             {l.label}
           </span>
           {i < labels.length - 1 && (
@@ -330,8 +330,8 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
                 <IconCamera className="w-6 h-6 text-aring-ink-900" />
               </div>
               <div className="text-center">
-                <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">사진 올리기</p>
-                <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
+                <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">사진 올리기</p>
+                <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
               </div>
             </div>
             <p className="text-[10.5px] text-aring-ink-700 mt-1">탭해서 갤러리 / 카메라 선택</p>
@@ -384,7 +384,7 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
           <img src={photo} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="text-center mb-5">
-          <p className="text-[12px] font-bold tracking-[0.15em] text-aring-accent uppercase">AI ANALYZING</p>
+          <p className="text-[12px] lg:text-[13px] font-bold tracking-[0.15em] text-aring-accent uppercase">AI ANALYZING</p>
           <p className="mt-1 text-[16px] font-bold text-aring-ink-900">짝의 단서를 찾는 중</p>
         </div>
         <div className="space-y-3">
@@ -396,11 +396,11 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
                   {state === 'active' && <span className="aring-pulse absolute inset-0 rounded-full bg-aring-accent opacity-70" />}
                   {state === 'done' && <IconCheck className="w-3.5 h-3.5" />}
                   {state === 'active' && <span className="relative w-2 h-2 rounded-full bg-aring-accent" />}
-                  {state === 'pending' && <span className="text-[12px] font-bold text-aring-ink-500">{i + 1}</span>}
+                  {state === 'pending' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-500">{i + 1}</span>}
                 </span>
-                <p className={['flex-1 text-[13px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
-                {state === 'done' && <span className="text-[12px] font-bold text-aring-green">완료</span>}
-                {state === 'active' && <span className="text-[12px] font-bold text-aring-accent">분석중</span>}
+                <p className={['flex-1 text-[13px] lg:text-[15px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
+                {state === 'done' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-green">완료</span>}
+                {state === 'active' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-accent">분석중</span>}
               </div>
             );
           })}
@@ -454,7 +454,7 @@ function ReviewStep({
           <img src={photo} alt="" className="w-full h-full object-cover" />
           <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 glass rounded-pill px-2.5 py-1 shadow-card">
             <span className="w-1.5 h-1.5 rounded-full bg-aring-accent" />
-            <span className="text-[12px] font-bold text-aring-ink-900">AI 분석 완료</span>
+            <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900">AI 분석 완료</span>
           </span>
         </div>
       </div>
@@ -462,7 +462,7 @@ function ReviewStep({
       {/* AI 분석 결과 확인/수정 섹션 */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-[13px] font-bold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
+          <span className="text-[13px] lg:text-[15px] font-bold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
         </div>
         <p className="text-[12px] lg:text-[13px] text-aring-ink-500 mb-3 leading-[1.55]">
           AI가 먼저 분석한 결과예요. 실제 정보와 다르면 직접 수정해 주세요.<br />
@@ -493,7 +493,7 @@ function ReviewStep({
           const active = shapeKey === opt.value;
           return (
             <button key={opt.value} onClick={() => setShapeKey(active ? null : opt.value)}
-              className="inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] font-bold transition active:scale-95"
+              className="inline-flex items-center px-3.5 py-1.5 rounded-pill text-[12px] lg:text-[13px] font-bold transition active:scale-95"
               style={{ backgroundColor: active ? ACTIVE_BG : '#FFFFFF', border: `1px solid ${active ? ACTIVE_BORDER : INACTIVE_BORDER}`, color: active ? ACTIVE_TEXT : '#555555' }}>
               {opt.label}
             </button>
@@ -530,17 +530,17 @@ function ReviewStep({
           placeholder="이 귀걸이에 담긴 이야기를 자유롭게 적어주세요."
           maxLength={1000}
           rows={4}
-          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
+          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
         />
       </div>
       <div className="flex justify-end mb-2">
-        <span className={['text-[13px] font-semibold tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
+        <span className={['text-[13px] lg:text-[15px] font-semibold tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
           {story.length} / 1000
         </span>
       </div>
 
       <div className="mb-5 rounded-tile bg-aring-ink-100/60 px-4 py-3 space-y-1.5">
-        <p className="text-[13px] text-aring-ink-500 leading-[1.6]">
+        <p className="text-[13px] lg:text-[15px] text-aring-ink-500 leading-[1.6]">
           따뜻한 마음을 담아 작성해 주세요. 욕설, 비하 표현, 타인의 개인정보가 포함된 내용은 작성할 수 없습니다.
         </p>
         <p className="text-[10.5px] text-aring-ink-400 leading-[1.6]">
@@ -576,8 +576,8 @@ function Input({ value, onChange, placeholder, suffix, maxLength }: {
   return (
     <div className="relative mb-4">
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength}
-        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
-      {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] font-bold text-aring-ink-500">{suffix}</span>}
+        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
+      {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] lg:text-[13px] font-bold text-aring-ink-500">{suffix}</span>}
     </div>
   );
 }
