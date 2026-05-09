@@ -154,7 +154,10 @@ export default function SignupEmailPage() {
   const [showPw, setShowPw] = useState(false);
   const [showPwC, setShowPwC] = useState(false);
   const [pwConfirmTouched, setPwConfirmTouched] = useState(false);
-  const [terms, setTerms] = useState({ age: false, service: false, privacy: false, marketing: false });
+  // 약관 동의 — 필수 2개 + 선택 1개
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [agreeMarketing, setAgreeMarketing] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
   // 인증 메일 발송 안내 화면 상태
@@ -162,9 +165,14 @@ export default function SignupEmailPage() {
   const [submittedEmail, setSubmittedEmail] = useState('');
   const [resendState, setResendState] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
 
-  const allRequired = terms.age && terms.service && terms.privacy;
-  const allChecked = allRequired && terms.marketing;
-  const toggleAll = () => { const n = !allChecked; setTerms({ age: n, service: n, privacy: n, marketing: n }); };
+  const allRequired = agreeTerms && agreePrivacy;
+  const allAgreed = agreeTerms && agreePrivacy && agreeMarketing;
+  const handleAllAgree = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setAgreeTerms(checked);
+    setAgreePrivacy(checked);
+    setAgreeMarketing(checked);
+  };
 
   const pwOk = isValidPassword(password);
   const pwMatch = password === passwordConfirm;
@@ -196,7 +204,7 @@ export default function SignupEmailPage() {
     setLoading(true); setSubmitError('');
     const cleanEmail = email.toLowerCase().trim();
     const redirect = typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined;
-    const { error } = await signUpWithEmail(cleanEmail, password, nickname.trim(), redirect);
+    const { error } = await signUpWithEmail(cleanEmail, password, nickname.trim(), redirect, agreeMarketing);
     setLoading(false);
     if (error) {
       setSubmitError(error === 'User already registered' ? '이미 가입된 이메일이에요.' : '회원가입에 실패했어요. 잠시 후 다시 시도해주세요.');
@@ -304,26 +312,71 @@ export default function SignupEmailPage() {
                 <NicknameHint state={nickDup} nickname={nickname} />
               </div>
 
-              {/* 약관 */}
-              <p className="mb-2 text-[13px] font-bold text-aring-ink-700">약관동의</p>
-              <div className="mb-6 rounded-2xl border border-aring-ink-100 overflow-hidden">
-                <button onClick={toggleAll} className="w-full flex items-center gap-3 px-4 py-3.5 bg-aring-ink-50 border-b border-aring-ink-100">
-                  <IconCheck checked={allChecked} />
-                  <span className="text-[13px] font-bold text-aring-ink-900">전체 동의</span>
-                </button>
-                {([
-                  { key: 'age', label: '(필수) 만 14세 이상입니다', link: null },
-                  { key: 'service', label: '(필수) 서비스 이용약관 동의', link: '/terms/service' },
-                  { key: 'privacy', label: '(필수) 개인정보 수집 및 이용 동의', link: '/terms/privacy' },
-                  { key: 'marketing', label: '(선택) 마케팅 정보 수신 동의', link: '/terms/marketing' },
-                ] as { key: string; label: string; link: string | null }[]).map(({ key, label, link }) => (
-                  <button key={key} onClick={() => setTerms(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))}
-                    className="w-full flex items-center gap-3 px-4 py-3 border-b border-aring-ink-100 last:border-b-0 bg-white">
-                    <IconCheck checked={terms[key as keyof typeof terms]} />
-                    <span className="flex-1 text-left text-[13px] text-aring-ink-700">{label}</span>
-                    {link && <Link href={link} onClick={(e) => e.stopPropagation()} className="text-[13px] lg:text-[14px] text-aring-ink-400 underline shrink-0">보기</Link>}
-                  </button>
-                ))}
+              {/* 약관 동의 섹션 */}
+              <div className="mb-6 space-y-3 pt-4 border-t border-gray-200">
+
+                {/* 전체 동의 */}
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={allAgreed}
+                    onChange={handleAllAgree}
+                    className="w-5 h-5 rounded border-gray-300 accent-[#6B7C45]"
+                  />
+                  <span className="font-semibold text-[#1A1A1A] text-sm">전체 동의</span>
+                </label>
+
+                <div className="pl-1 space-y-2 border-t border-gray-100 pt-2">
+
+                  {/* 필수: 서비스 이용약관 */}
+                  <label className="flex items-center justify-between gap-2 cursor-pointer">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={agreeTerms}
+                        onChange={(e) => setAgreeTerms(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300 accent-[#6B7C45]"
+                      />
+                      <span className="text-sm text-gray-700">
+                        <span className="text-[#6B7C45] font-semibold">[필수]</span> 서비스 이용약관 동의
+                      </span>
+                    </div>
+                    <Link href="/terms" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 underline shrink-0">보기</Link>
+                  </label>
+
+                  {/* 필수: 개인정보처리방침 */}
+                  <label className="flex items-center justify-between gap-2 cursor-pointer">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={agreePrivacy}
+                        onChange={(e) => setAgreePrivacy(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300 accent-[#6B7C45]"
+                      />
+                      <span className="text-sm text-gray-700">
+                        <span className="text-[#6B7C45] font-semibold">[필수]</span> 개인정보처리방침 동의
+                      </span>
+                    </div>
+                    <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 underline shrink-0">보기</Link>
+                  </label>
+
+                  {/* 선택: 마케팅 수신 동의 */}
+                  <label className="flex items-center justify-between gap-2 cursor-pointer">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={agreeMarketing}
+                        onChange={(e) => setAgreeMarketing(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300 accent-[#6B7C45]"
+                      />
+                      <span className="text-sm text-gray-700">
+                        <span className="text-gray-400 font-semibold">[선택]</span> 마케팅 정보 수신 동의
+                      </span>
+                    </div>
+                    <Link href="/marketing" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 underline shrink-0">보기</Link>
+                  </label>
+
+                </div>
               </div>
 
               {!allRequired && (

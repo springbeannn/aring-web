@@ -27,6 +27,7 @@ export async function signUpWithEmail(
   password: string,
   nickname: string,
   emailRedirectTo?: string,
+  marketingAgreed: boolean = false,
 ): Promise<{ error: string | null }> {
   if (!supabase) return { error: '서비스 연결에 실패했습니다.' };
 
@@ -59,6 +60,8 @@ export async function signUpWithEmail(
     email,
     nickname,
     provider: 'email',
+    marketing_agreed: marketingAgreed,
+    marketing_agreed_at: marketingAgreed ? new Date().toISOString() : null,
   });
   if (profileError) return { error: '프로필 저장에 실패했습니다.' };
 
