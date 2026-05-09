@@ -37,6 +37,17 @@ const config: Config = {
             300: '#B5B5C0',
             100: '#F3F3F5',
           },
+          // ─── Toss-style 게시판 (cases) 전용 평면 키 ───
+          black:           '#1A1A1A',
+          olive:           '#6B7C45',
+          'olive-light':   '#8FA05A',
+          cream:           '#F5F2EC',
+          'pastel-green':  '#D6E4C7',
+          'pastel-yellow': '#F0EDCA',
+          'pastel-pink':   '#F2D9D0',
+          'pastel-blue':   '#D0DFF2',
+          gray:            '#8A8A8A',
+          'gray-light':    '#E8E5DE',
         },
       },
       fontFamily: {
