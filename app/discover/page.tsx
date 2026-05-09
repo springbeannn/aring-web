@@ -122,7 +122,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-0.5 w-[44px] shrink-0 active:scale-95 transition"
+      className="flex flex-col items-center gap-0.5 w-[44px] shrink-0 active:scale-95 transition text-[11px]"
     >
       <span
         className="relative w-8 h-8 rounded-full"
@@ -149,7 +149,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[12px] lg:text-[13px] font-bold" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[11px] lg:text-[11px] font-medium" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
