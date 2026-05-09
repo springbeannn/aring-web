@@ -227,7 +227,7 @@ export default function SignupEmailPage() {
     setTimeout(() => setResendState('idle'), 30000);
   }
 
-  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
+  const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
 
   return (
     <main className="min-h-screen flex justify-center bg-white">

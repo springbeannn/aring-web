@@ -187,7 +187,7 @@ export default function LoginPage() {
                   placeholder="이메일"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                   style={{ background: 'linear-gradient(to right, rgba(235,218,210,0.5), rgba(225,205,212,0.5))' }}
                 />
                 <div className="relative">
@@ -197,7 +197,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleEmailLogin()}
-                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                     style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }}
                   />
                   <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-aring-ink-400 hover:text-aring-ink-700 transition">

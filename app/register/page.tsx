@@ -530,7 +530,7 @@ function ReviewStep({
           placeholder="이 귀걸이에 담긴 이야기를 자유롭게 적어주세요."
           maxLength={1000}
           rows={4}
-          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
+          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
         />
       </div>
       <div className="flex justify-end mb-2">
@@ -576,7 +576,7 @@ function Input({ value, onChange, placeholder, suffix, maxLength }: {
   return (
     <div className="relative mb-4">
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength}
-        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
+        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
       {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] lg:text-[13px] font-bold text-aring-ink-500">{suffix}</span>}
     </div>
   );

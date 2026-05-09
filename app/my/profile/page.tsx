@@ -169,7 +169,7 @@ export default function ProfilePage() {
                         onChange={(e) => { setNewNick(e.target.value); setNickMsg(''); }}
                         maxLength={12}
                         placeholder="새 대화명 입력 (2~12자)"
-                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
+                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
                         autoFocus
                       />
                       {nickMsg && (

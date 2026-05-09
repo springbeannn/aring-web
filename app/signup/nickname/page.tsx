@@ -48,7 +48,7 @@ export default function NicknamePage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
+              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
               style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }}
               autoFocus
             />
