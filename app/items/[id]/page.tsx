@@ -490,14 +490,14 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
     <section className="mt-7">
       <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
         <div>
-          <h2 className="text-[17px] lg:text-[18px] font-bold tracking-tight text-aring-ink-900">
+          <h2 className="text-[15px] lg:text-[17px] font-bold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
-          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
+          <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500">
             AI가 형태·소재·디테일을 분석해 추천
           </p>
         </div>
-        <span className="text-[13px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500">
+        <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-500">
           {items.length}개
         </span>
       </div>
@@ -535,14 +535,17 @@ function SimilarCard({ item }: { item: ItemSummary }) {
         )}
       </div>
       <div className="px-2.5 py-2">
+        {/* 브랜드 */}
         <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
           {item.brand}
         </p>
-        <p className="mt-px text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
+        {/* 제품 타이틀 */}
+        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {item.name}
         </p>
+        {/* 가격 */}
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900">
+          <p className="mt-1 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}

@@ -211,11 +211,11 @@ function SectionHeader({ title, sub, more, onMore }: {
   return (
     <div className="flex items-end justify-between px-5 lg:px-8 mb-3">
       <div>
-        <h2 className="text-[16px] lg:text-[28px] lg:leading-[1.3] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
-        {sub && <p className="mt-0.5 text-[13px] lg:text-[15px] lg:leading-[1.6] text-aring-ink-500">{sub}</p>}
+        <h2 className="text-[15px] lg:text-[17px] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
+        {sub && <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500">{sub}</p>}
       </div>
       {more && onMore && (
-        <button onClick={onMore} className="text-[13px] lg:text-[15px] lg:leading-[1.6] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+        <button onClick={onMore} className="text-[12px] lg:text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
           {more}
         </button>
       )}
@@ -282,11 +282,12 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
         <ThumbImage src={m.leftImage} fallback={m.leftEmoji} tone={m.leftTone} alt={`${m.brand} ${m.name}`} className="w-full h-full" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 truncate">{priceLabel}</p>
-        <div className="mt-1.5 flex flex-col gap-1 text-[12px] lg:text-[13px] text-aring-ink-500">
+        {/* 가격 */}
+        <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900 truncate">{priceLabel}</p>
+        {/* 위치/메타 */}
+        <div className="mt-1.5 flex flex-col gap-1 text-[11px] lg:text-[12px] font-normal text-aring-ink-500">
           {m.region && <span className="inline-flex items-center gap-1 truncate"><span aria-hidden>📍</span><span className="truncate">{m.region}</span></span>}
           <span className="inline-flex items-center gap-1"><span aria-hidden>👁</span><span>조회 {viewLabel}</span></span>
-
         </div>
       </div>
     </Link>
