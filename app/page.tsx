@@ -404,14 +404,24 @@ function BrandSection({ brandCounts, isLoading }: {
 function SuccessSection() {
   return (
     <section className="pt-2 pb-5">
-      <SectionHeader title="매칭 성공 사례" sub="실제 짝을 찾은 이야기" />
-      <div className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-7">
+      <SectionHeader
+        title="매칭 성공 사례"
+        sub="실제 짝을 찾은 이야기"
+        more="더보기"
+        onMore={() => { window.location.href = '/cases'; }}
+      />
+      <Link
+        href="/cases"
+        aria-label="매칭 성공 사례 전체 보기"
+        onClick={log('success:tap')}
+        className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-7 block hover:opacity-95 active:scale-[0.99] transition"
+      >
         <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 w-[180px] h-[180px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle at center, #FBC8DC 0%, transparent 70%)' }} />
         <div aria-hidden className="pointer-events-none absolute -left-10 -bottom-12 w-[160px] h-[160px] rounded-full opacity-25" style={{ background: 'radial-gradient(circle at center, #C5DDF0 0%, transparent 70%)' }} />
         <span className="relative inline-flex items-center gap-1.5 rounded-pill border border-white/30 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white">
           <span className="w-1.5 h-1.5 rounded-full bg-aring-accent" />{successStory.badge}
         </span>
-        <p className="relative mt-3 text-[14px] leading-[1.55] font-semibold text-white">"{successStory.text}"</p>
+        <p className="relative mt-3 text-[14px] leading-[1.55] font-semibold text-white">&ldquo;{successStory.text}&rdquo;</p>
         <p className="relative mt-2 text-[13px] text-white/70">{successStory.user}</p>
         <div className="relative mt-4 grid grid-cols-3 gap-2">
           {successStory.metrics.map(m => (
@@ -421,7 +431,11 @@ function SuccessSection() {
             </div>
           ))}
         </div>
-      </div>
+        <div className="relative mt-4 flex items-center justify-end gap-1 text-[12px] font-bold text-white/90">
+          전체 사례 보기
+          <IconArrow className="w-3 h-3" />
+        </div>
+      </Link>
     </section>
   );
 }
