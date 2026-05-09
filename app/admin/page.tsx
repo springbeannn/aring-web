@@ -107,7 +107,7 @@ export default function AdminDashboardPage() {
       {/* 최근 게시물 */}
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[16px] font-extrabold text-aring-ink-900">최근 등록 게시물</h2>
+          <h2 className="text-[16px] font-bold text-aring-ink-900">최근 등록 게시물</h2>
           <Link href="/admin/listings" className="text-[13px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
         </div>
         {loading ? (
@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
       {/* 최근 회원 */}
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[16px] font-extrabold text-aring-ink-900">최근 가입 회원</h2>
+          <h2 className="text-[16px] font-bold text-aring-ink-900">최근 가입 회원</h2>
           <Link href="/admin/users" className="text-[13px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
         </div>
         {loading ? (
@@ -178,7 +178,7 @@ function KpiCard({ label, value, loading }: { label: string; value?: number; loa
       {loading ? (
         <div className="mt-2 h-8 w-20 bg-aring-ink-100 animate-pulse rounded" />
       ) : (
-        <p className="mt-2 text-[28px] font-extrabold text-aring-ink-900">{(value ?? 0).toLocaleString('ko-KR')}</p>
+        <p className="mt-2 text-[28px] font-bold text-aring-ink-900">{(value ?? 0).toLocaleString('ko-KR')}</p>
       )}
     </div>
   );

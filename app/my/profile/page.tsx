@@ -125,7 +125,7 @@ export default function ProfilePage() {
 
             {/* 헤더 */}
             <div className="px-5 pt-3 pb-3 lg:pt-6 lg:pb-6">
-              <h1 className="text-[22px] lg:text-[28px] font-extrabold tracking-tight text-aring-ink-900">내 정보</h1>
+              <h1 className="text-[22px] lg:text-[28px] font-bold tracking-tight text-aring-ink-900">내 정보</h1>
               <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
             </div>
 
@@ -135,11 +135,11 @@ export default function ProfilePage() {
               {/* 아바타 + 닉네임 */}
               <div className="rounded-2xl border border-aring-green-line bg-white p-5 lg:p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[24px] lg:text-[30px] font-extrabold text-aring-ink-900">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[24px] lg:text-[30px] font-bold text-aring-ink-900">
                     {initial}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[18px] lg:text-[22px] font-extrabold text-aring-ink-900 truncate">{profile.nickname}</p>
+                    <p className="text-[18px] lg:text-[22px] font-bold text-aring-ink-900 truncate">{profile.nickname}</p>
                     <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[12px] font-bold text-aring-ink-500">
                       {providerLabel[profile.provider] ?? profile.provider} 계정
                     </span>
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
+                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
                 >
                   {loggingOut ? '로그아웃 중...' : '로그아웃'}
                 </button>

@@ -52,7 +52,7 @@ function LoginLeftPanel() {
             만들어가고 있습니다.
           </p>
         </div>
-        <p className="text-[12px] text-purple-300 font-medium break-keep">
+        <p className="text-[12px] text-purple-300 font-semibold break-keep">
           한 짝만 남은 귀걸이가 있다면{' '}
           <span className="text-white font-bold">버리지 말고 aring에 등록해보세요</span>
         </p>
@@ -123,7 +123,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex justify-center bg-white">
       {toast && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[13px] font-medium px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[13px] font-semibold px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
           {toast}
         </div>
       )}
@@ -138,7 +138,7 @@ export default function LoginPage() {
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
               <div className="mb-7 text-center lg:text-left">
-                <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">로그인</h1>
+                <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">로그인</h1>
                 <p className="mt-1.5 text-[13px] text-aring-ink-500 leading-snug">aring에 다시 오셨군요 :)</p>
               </div>
 
@@ -177,7 +177,7 @@ export default function LoginPage() {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px bg-aring-ink-100" />
-                <span className="text-[13px] lg:text-[14px] text-aring-ink-400 font-medium">또는</span>
+                <span className="text-[13px] lg:text-[14px] text-aring-ink-400 font-semibold">또는</span>
                 <div className="flex-1 h-px bg-aring-ink-100" />
               </div>
 
@@ -211,7 +211,7 @@ export default function LoginPage() {
               <button
                 onClick={handleEmailLogin}
                 disabled={!isValid || loading}
-                className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+                className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
               >
                 {loading ? '로그인 중...' : '로그인'}
               </button>

@@ -110,7 +110,7 @@ function SignupLeftPanel() {
             만들어가고 있습니다.
           </p>
         </div>
-        <p className="text-[12px] text-purple-300 font-medium break-keep">
+        <p className="text-[12px] text-purple-300 font-semibold break-keep">
           한 짝만 남은 귀걸이가 있다면{' '}
           <span className="text-white font-bold">버리지 말고 aring에 등록해보세요</span>
         </p>
@@ -214,7 +214,7 @@ export default function SignupEmailPage() {
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
               <div className="mb-7 text-center lg:text-left">
-                <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">회원가입</h1>
+                <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">회원가입</h1>
               </div>
 
               {/* 이메일 */}
@@ -305,7 +305,7 @@ export default function SignupEmailPage() {
               {submitError && <p className="mb-3 text-[13px] text-rose-400 text-center">{submitError}</p>}
 
               <button onClick={handleSubmit} disabled={!canSubmit || loading}
-                className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
+                className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${canSubmit && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}>
                 {loading ? '가입 중...' : '가입하기'}
               </button>
 

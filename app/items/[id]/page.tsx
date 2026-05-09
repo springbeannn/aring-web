@@ -327,11 +327,11 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
       <p className="text-[13px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
-      <h1 className="mt-1 text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
+      <h1 className="mt-1 text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
       <div className="mt-1.5 flex items-center justify-between">
-        <p className="text-[22px] lg:text-[26px] font-extrabold text-aring-ink-900">
+        <p className="text-[22px] lg:text-[26px] font-bold text-aring-ink-900">
           {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
         </p>
         <div className="flex items-center gap-3">
@@ -370,7 +370,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
       <div className="rounded-card border border-aring-green-line bg-white p-4 lg:p-5">
         <div className="flex items-center gap-1.5 mb-3">
           <IconSparkle className="w-3.5 h-3.5 text-aring-green" />
-          <p className="text-[13px] font-extrabold tracking-wider text-aring-green">
+          <p className="text-[13px] font-bold tracking-wider text-aring-green">
             AI 분석
           </p>
         </div>
@@ -399,7 +399,7 @@ function AIAnalysisCard({ ai }: { ai: ItemDetail['ai'] }) {
 function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">{label}</p>
+      <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">{label}</p>
       <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-tight">
         {value}
       </p>
@@ -426,7 +426,7 @@ function ColorChip({ value }: { value: string }) {
   const info = COLOR_MAP[value];
   return (
     <div>
-      <p className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">컬러</p>
+      <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">컬러</p>
       {info ? (
         <div className="mt-0.5 flex items-center gap-1.5">
           <span
@@ -450,7 +450,7 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
   const ago = relativeTime(createdAt);
   return (
     <section className="px-5 lg:px-8 mt-6">
-      <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 mb-2">
+      <h2 className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
       <p className="text-[13px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
@@ -490,7 +490,7 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
     <section className="mt-7">
       <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
         <div>
-          <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+          <h2 className="text-[17px] lg:text-[18px] font-bold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
           <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
@@ -529,7 +529,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {typeof item.similarity === 'number' && (
-          <span className="absolute top-2 left-2 rounded-pill bg-aring-ink-900 px-2 py-0.5 text-[10px] font-extrabold text-white">
+          <span className="absolute top-2 left-2 rounded-pill bg-aring-ink-900 px-2 py-0.5 text-[10px] font-bold text-white">
             {item.similarity}%
           </span>
         )}
@@ -542,7 +542,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
           {item.name}
         </p>
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[13px] lg:text-[14px] font-extrabold text-aring-ink-900">
+          <p className="mt-1 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}
@@ -557,14 +557,14 @@ function SimilarCard({ item }: { item: ItemSummary }) {
 function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
   return (
     <section className="px-5 lg:px-8 mt-7">
-      <h2 className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900 mb-2">
+      <h2 className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900 mb-2">
         등록자
       </h2>
       <button
         onClick={log('detail:seller')}
         className="w-full flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 text-left active:scale-[0.99] transition"
       >
-        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">
+        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] lg:text-[15px] font-bold text-aring-ink-900">
           {seller.nickname.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
@@ -610,7 +610,7 @@ function NotFoundScreen() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="text-center">
-        <p className="text-[17px] font-extrabold text-aring-ink-900">
+        <p className="text-[17px] font-bold text-aring-ink-900">
           상품을 찾을 수 없습니다
         </p>
         <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">
@@ -618,7 +618,7 @@ function NotFoundScreen() {
         </p>
         <Link
           href="/"
-          className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+          className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold"
         >
           홈으로
         </Link>

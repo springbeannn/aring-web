@@ -196,7 +196,7 @@ export default function MyMatchPage() {
           <div className='pb-28 lg:pb-10'>
             <TopNav />
             <div className='px-5 lg:px-8 pt-3 pb-2'>
-              <h1 className='text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
+              <h1 className='text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
               <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 0건</p>
             </div>
             <div className='mx-4 lg:mx-8 mt-4 rounded-2xl bg-white shadow-card border border-aring-ink-100 flex flex-col items-center justify-center py-16 px-6 text-center'>
@@ -222,7 +222,7 @@ export default function MyMatchPage() {
         <div className='pb-28 lg:pb-10'>
           <TopNav />
           <div className='px-5 lg:px-8 pt-3 pb-2'>
-            <h1 className='text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
+            <h1 className='text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
             <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
           </div>
 
@@ -258,7 +258,7 @@ export default function MyMatchPage() {
                   </div>
 
                   <div className='p-4 flex-1 flex flex-col'>
-                    <p className='text-[15px] font-extrabold text-aring-ink-900 truncate'>
+                    <p className='text-[15px] font-bold text-aring-ink-900 truncate'>
                       {item.brand ?? '브랜드 미상'}
                     </p>
 

@@ -188,7 +188,7 @@ export function CommentSection({
     <section className="mt-7">
       {/* 헤더 */}
       <div className="px-5 lg:px-8 mb-3">
-        <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+        <h2 className="text-[17px] lg:text-[18px] font-bold tracking-tight text-aring-ink-900">
           문의 댓글
         </h2>
         <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
@@ -225,7 +225,7 @@ export function CommentSection({
           <button
             onClick={submit}
             disabled={!nickname.trim() || !message.trim() || submitting}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold disabled:opacity-40 active:scale-95 transition"
+            className="inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold disabled:opacity-40 active:scale-95 transition"
           >
             {submitting ? '등록 중…' : replyTo ? '답글 등록' : '문의 등록'}
           </button>
@@ -332,7 +332,7 @@ function CommentItem({
             {comment.user_name}
           </p>
           {isSeller && (
-            <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold tracking-wider">
+            <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-bold tracking-wider">
               {isReply ? '판매자 답글' : '판매자'}
             </span>
           )}
@@ -363,7 +363,7 @@ function CommentItem({
               <button
                 onClick={() => onSaveEdit(comment.id)}
                 disabled={!editingMessage.trim()}
-                className="text-[11px] font-extrabold text-white bg-aring-ink-900 px-3 py-1 rounded-pill disabled:opacity-40"
+                className="text-[11px] font-bold text-white bg-aring-ink-900 px-3 py-1 rounded-pill disabled:opacity-40"
               >
                 저장
               </button>

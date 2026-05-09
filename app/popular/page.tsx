@@ -55,7 +55,7 @@ function PopularCard({ row, rank }: { row: Listing; rank: number }) {
           />
         )}
         {/* 랭크 뱃지 */}
-        <span className="absolute top-2 left-2 inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold">
+        <span className="absolute top-2 left-2 inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-bold">
           {rank}
         </span>
         {/* 조회수 */}
@@ -139,7 +139,7 @@ export default function PopularPage() {
               <IconArrowLeft />
             </Link>
             <div className="flex-1 min-w-0">
-              <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
+              <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
                 오늘의 매칭 후보
               </h1>
               <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
@@ -164,7 +164,7 @@ export default function PopularPage() {
               <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold"
               >
                 다시 시도
               </button>
@@ -175,7 +175,7 @@ export default function PopularPage() {
               <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">첫 등록자가 되어 보세요</p>
               <Link
                 href="/register"
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold"
               >
                 한 짝 등록하기
               </Link>

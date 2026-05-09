@@ -271,7 +271,7 @@ export default function AdminListingsPage() {
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-[360px] w-full">
-            <p className="text-[15px] font-extrabold text-aring-ink-900 mb-2">게시물 삭제</p>
+            <p className="text-[15px] font-bold text-aring-ink-900 mb-2">게시물 삭제</p>
             <p className="text-[13px] text-aring-ink-500 mb-4">정말 삭제하시겠어요? 이 작업은 되돌릴 수 없어요.</p>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setDeleteId(null)} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] rounded-lg px-4 py-2">취소</button>

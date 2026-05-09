@@ -177,7 +177,7 @@ export default function AdminUsersPage() {
                       <button onClick={() => setDetailUserId(u.user_id)} className="font-bold text-aring-ink-900 hover:underline">
                         {u.nickname}
                       </button>
-                      {u.role === 'admin' && <span className="ml-2 text-[10px] font-extrabold text-aring-green bg-aring-green/10 px-1.5 py-0.5 rounded">관리자</span>}
+                      {u.role === 'admin' && <span className="ml-2 text-[10px] font-bold text-aring-green bg-aring-green/10 px-1.5 py-0.5 rounded">관리자</span>}
                     </td>
                     <td className="px-3 py-3 truncate max-w-[220px] text-aring-ink-600">{u.email}</td>
                     <td className="px-3 py-3 text-[13px] text-aring-ink-500">{fmtDate(u.created_at)}</td>
@@ -250,14 +250,14 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
       <aside className="fixed top-0 right-0 z-50 h-screen w-[480px] bg-white shadow-xl overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-aring-ink-100">
           <div>
-            <p className="text-[18px] font-extrabold text-aring-ink-900">{user.nickname}</p>
+            <p className="text-[18px] font-bold text-aring-ink-900">{user.nickname}</p>
             <p className="text-[13px] text-aring-ink-500">{user.email}</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-aring-ink-100 hover:bg-aring-ink-200 flex items-center justify-center" aria-label="닫기">✕</button>
         </div>
 
         <section className="p-6 border-b border-aring-ink-100">
-          <h3 className="text-[14px] font-extrabold text-aring-ink-900 mb-3">등록한 게시물 {listings.length}건</h3>
+          <h3 className="text-[14px] font-bold text-aring-ink-900 mb-3">등록한 게시물 {listings.length}건</h3>
           {loading ? (
             <div className="h-12 bg-aring-ink-100 animate-pulse rounded" />
           ) : listings.length === 0 ? (
@@ -281,7 +281,7 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
         </section>
 
         <section className="p-6">
-          <h3 className="text-[14px] font-extrabold text-aring-ink-900 mb-3">작성한 댓글 {comments.length}건</h3>
+          <h3 className="text-[14px] font-bold text-aring-ink-900 mb-3">작성한 댓글 {comments.length}건</h3>
           {loading ? (
             <div className="h-12 bg-aring-ink-100 animate-pulse rounded" />
           ) : comments.length === 0 ? (

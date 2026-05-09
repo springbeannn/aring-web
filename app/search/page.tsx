@@ -184,7 +184,7 @@ function SearchPageInner() {
               <IconArrowLeft />
             </button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">검색결과</h1>
+              <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">검색결과</h1>
               {query && (
                 <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
                   &apos;{query}&apos; 검색 결과{!loading && total > 0 && <> · 총 <span className="font-semibold">{total}</span>개</>}
@@ -206,13 +206,13 @@ function SearchPageInner() {
           ) : error ? (
             <div className="px-5 py-16 text-center">
               <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
-              <button onClick={() => handleSearch(query)} className="mt-4 px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold">다시 시도</button>
+              <button onClick={() => handleSearch(query)} className="mt-4 px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold">다시 시도</button>
             </div>
           ) : rows.length === 0 ? (
             <div className="px-5 py-16 text-center">
               <p className="text-[14px] font-bold text-aring-ink-900">아직 맞는 규걸이를 찾지 못했어요</p>
               <p className="mt-2 text-[13px] lg:text-[14px] text-aring-ink-500">다른 브랜드명이나 컬러, 모양으로 다시 검색해 보세요</p>
-              <Link href="/register" className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold">규걸이 등록하기</Link>
+              <Link href="/register" className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold">규걸이 등록하기</Link>
             </div>
           ) : (
             <>

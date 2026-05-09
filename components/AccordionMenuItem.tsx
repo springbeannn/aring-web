@@ -46,7 +46,7 @@ export default function AccordionMenuItem({ id, label, items, isActive, onToggle
                                 {items.map((item) => (
                                               <button
                                                                 key={item.id}
-                                                                className="w-full flex items-center gap-2 pl-11 pr-6 py-[13px] text-[13px] lg:text-[14px] font-medium text-aring-ink-500 hover:text-aring-ink-700 hover:bg-[rgb(243,243,245)] active:bg-[rgb(238,238,242)] transition-colors text-left"
+                                                                className="w-full flex items-center gap-2 pl-11 pr-6 py-[13px] text-[13px] lg:text-[14px] font-semibold text-aring-ink-500 hover:text-aring-ink-700 hover:bg-[rgb(243,243,245)] active:bg-[rgb(238,238,242)] transition-colors text-left"
                                                               >
                                                             <span className="w-1 h-1 rounded-full bg-aring-accent flex-shrink-0" />
                                                   {item.label}

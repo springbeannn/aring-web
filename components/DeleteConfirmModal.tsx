@@ -9,7 +9,7 @@ export function DeleteConfirmModal({ onCancel, onConfirm, isDeleting = false }: 
         className="relative z-10 w-[calc(100%-48px)] max-w-[320px] rounded-[24px] bg-white shadow-card p-6"
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="text-[17px] font-extrabold text-aring-ink-900 text-center">정말 삭제하시겠어요?</h2>
+        <h2 className="text-[17px] font-bold text-aring-ink-900 text-center">정말 삭제하시겠어요?</h2>
         <p className="mt-2 text-[13px] lg:text-[14px] text-aring-ink-500 text-center leading-relaxed">
           삭제한 상품은 다시 복구할 수 없어요.
         </p>
@@ -19,7 +19,7 @@ export function DeleteConfirmModal({ onCancel, onConfirm, isDeleting = false }: 
             취소
           </button>
           <button onClick={onConfirm} disabled={isDeleting}
-            className="flex-1 py-3 rounded-pill bg-red-400 text-white text-[13px] font-extrabold hover:bg-red-500 transition active:scale-95 disabled:opacity-50">
+            className="flex-1 py-3 rounded-pill bg-red-400 text-white text-[13px] font-bold hover:bg-red-500 transition active:scale-95 disabled:opacity-50">
             {isDeleting ? "삭제 중…" : "삭제하기"}
           </button>
         </div>

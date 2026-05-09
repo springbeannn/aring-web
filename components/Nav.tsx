@@ -86,7 +86,7 @@ export function TopNav() {
         <div className="flex items-center gap-8">
           <Link className="flex items-baseline gap-1" href="/">
             <span className="text-[26px] lg:text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+            <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
           </Link>
           <nav className="hidden lg:flex items-center gap-1">
             {desktopMenu.map((m) => (
@@ -101,7 +101,7 @@ export function TopNav() {
             <Link
               href="/register"
               aria-label="한 짝 등록"
-              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] font-extrabold text-white shadow-cta active:scale-95 transition"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] font-bold text-white shadow-cta active:scale-95 transition"
             >
               <IconPlus className="w-4 h-4" strokeWidth={2.4} />
               한 짝 등록

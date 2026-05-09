@@ -414,11 +414,11 @@ function ProfileHeader({
   return (
     <section className="px-5 lg:px-8 pt-3 pb-2">
       <div className="flex items-center gap-3">
-        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[22px] lg:text-[22px] font-extrabold text-aring-ink-900">
+        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[22px] lg:text-[22px] font-bold text-aring-ink-900">
           {(nickname || '?').charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[17px] lg:text-[18px] font-extrabold text-aring-ink-900 truncate">
+          <p className="text-[17px] lg:text-[18px] font-bold text-aring-ink-900 truncate">
             {nickname || '아링 친구'}
           </p>
           <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500 truncate">
@@ -447,10 +447,10 @@ function ProfileHeader({
 function Stat({ label, value, mounted }: { label: string; value: number; mounted: boolean }) {
   return (
     <div className="rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center">
-      <p className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900" suppressHydrationWarning>
+      <p className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900" suppressHydrationWarning>
         {mounted ? value : 0}
       </p>
-      <p className="mt-0.5 text-[12px] lg:text-[13px] font-medium text-aring-ink-500">
+      <p className="mt-0.5 text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">
         {label}
       </p>
     </div>
@@ -483,7 +483,7 @@ function QuickMenu({
               {m.label}
             </p>
             {m.count > 0 && (
-              <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold">
+              <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-pill bg-aring-ink-900 text-white text-[10px] font-bold">
                 {m.count > 99 ? '99+' : m.count}
               </span>
             )}
@@ -641,7 +641,7 @@ function StatusStepper({
                   )}
                 </div>
                 <span className={[
-                  'text-[9px] lg:text-[12px] font-extrabold tracking-wide whitespace-nowrap',
+                  'text-[9px] lg:text-[12px] font-bold tracking-wide whitespace-nowrap',
                   isCurrent ? 'text-aring-ink-900' : isPast ? 'text-aring-ink-300' : 'text-aring-ink-300 group-hover:text-aring-ink-500',
                 ].join(' ')}>
                   {STEP_LABEL[step]}
@@ -758,7 +758,7 @@ function LikedCard({ listing }: { listing: Listing }) {
         </p>
         <Link
           href={`/items/${listing.id}#comments`}
-          className="mt-2 inline-flex w-full items-center justify-center h-8 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold active:scale-[0.98] transition"
+          className="mt-2 inline-flex w-full items-center justify-center h-8 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-[0.98] transition"
         >
           댓글 남기기
         </Link>
@@ -852,7 +852,7 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
         <div className="flex items-center gap-1.5 flex-wrap">
           <span
             className={[
-              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider',
+              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-bold tracking-wider',
               s.kind === 'on_my_product'
                 ? 'bg-aring-ink-900 text-white'
                 : 'bg-aring-ink-100 text-aring-ink-700',
@@ -862,7 +862,7 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
           </span>
           <span
             className={[
-              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-extrabold tracking-wider',
+              'inline-flex items-center px-1.5 py-0.5 rounded-pill text-[10px] font-bold tracking-wider',
               tag.cls,
             ].join(' ')}
           >
@@ -903,11 +903,11 @@ function SectionHead({
     <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
       <div>
         <div className="flex items-center gap-2">
-          <h2 className="text-[17px] lg:text-[18px] font-extrabold tracking-tight text-aring-ink-900">
+          <h2 className="text-[17px] lg:text-[18px] font-bold tracking-tight text-aring-ink-900">
             {title}
           </h2>
           {typeof count === 'number' && count > 0 && (
-            <span className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-extrabold">
+            <span className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-pill bg-aring-ink-900 text-white text-[10px] font-bold">
               {count > 99 ? '99+' : count}
             </span>
           )}
@@ -933,11 +933,11 @@ function EmptyBlock({
 }) {
   return (
     <div className="rounded-card bg-aring-ink-100 px-5 py-8 text-center">
-      <p className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">{title}</p>
+      <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">{title}</p>
       <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
-        className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-extrabold active:scale-95 transition"
+        className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-95 transition"
       >
         {ctaLabel}
       </Link>

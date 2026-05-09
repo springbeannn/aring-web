@@ -43,7 +43,7 @@ function TagChips({ tags }: { tags: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {tags.map((t, i) => (
-        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[12px] font-medium">
+        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[12px] font-semibold">
           {t}
         </span>
       ))}
@@ -118,7 +118,7 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
 
         {/* 하단 메타: 작성자 · 시간 · 조회 · 좋아요 — 전체 너비 */}
         <div className="mt-2 px-4 flex items-center gap-2 text-[12px] lg:text-[13px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
-          <span className="font-medium text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
+          <span className="font-semibold text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
           <span>·</span>
           <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
           <span>·</span>
@@ -176,7 +176,7 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
         </div>
 
         {/* 작성자 */}
-        <div className="w-20 flex-shrink-0 text-[12px] text-aring-ink-600 font-medium truncate">
+        <div className="w-20 flex-shrink-0 text-[12px] text-aring-ink-600 font-semibold truncate">
           {c.user_name || '익명'}
         </div>
 
@@ -244,7 +244,7 @@ export default function CommentsPage() {
 
           {/* 헤더 */}
           <div className="px-5 lg:px-8 pt-3 pb-2">
-            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">댓글</h1>
+            <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">댓글</h1>
             <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">한 짝을 찾는 이야기들이 시간순으로 모였어요</p>
             {!loading && (
               <p className="mt-1 text-[13px] font-bold text-aring-ink-700">전체 댓글 {total}개</p>

@@ -34,7 +34,7 @@ function SignupLeftPanel() {
             만들어가고 있습니다.
           </p>
         </div>
-        <p className="text-[12px] text-purple-300 font-medium break-keep">
+        <p className="text-[12px] text-purple-300 font-semibold break-keep">
           한 짝만 남은 귀걸이가 있다면{' '}
           <span className="text-white font-bold">버리지 말고 aring에 등록해보세요</span>
         </p>
@@ -91,7 +91,7 @@ export default function SignupPage() {
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
 
               <div className="text-center mb-2 lg:text-left lg:mb-7">
-                <h1 className="text-[22px] font-extrabold text-aring-ink-900">에이링 시작하기</h1>
+                <h1 className="text-[22px] font-bold text-aring-ink-900">에이링 시작하기</h1>
                 <p className="text-[13px] lg:text-[14px] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
               </div>
 
@@ -118,7 +118,7 @@ export default function SignupPage() {
 
                 <button
                   onClick={() => router.push('/signup/email')}
-                  className="w-full py-3.5 rounded-2xl bg-aring-ink-900 text-white font-extrabold text-[14px] active:scale-95 transition"
+                  className="w-full py-3.5 rounded-2xl bg-aring-ink-900 text-white font-bold text-[14px] active:scale-95 transition"
                 >
                   이메일로 가입하기
                 </button>

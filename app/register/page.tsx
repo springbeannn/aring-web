@@ -218,7 +218,7 @@ export default function RegisterPage() {
           <Link href="/" aria-label="닫기" className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
             <IconClose />
           </Link>
-          <div className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">한 짝 등록</div>
+          <div className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
 
@@ -280,7 +280,7 @@ function StepIndicator({ current }: { current: Step }) {
       {labels.map((l, i) => (
         <div key={l.key} className="flex-1 flex items-center gap-2">
           <span className={[
-            'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-extrabold transition shrink-0',
+            'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold transition shrink-0',
             i < idx ? 'bg-aring-ink-900 text-white' : i === idx ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-500',
           ].join(' ')}>
             {i < idx ? <IconCheck className="w-3 h-3" /> : i + 1}
@@ -308,8 +308,8 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
 }) {
   return (
     <div className="px-5 pb-28">
-      <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
-      <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight leading-[1.3] mb-2">
+      <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
+      <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight leading-[1.3] mb-2">
         <span className="grad-text-green">사진을 올려주세요</span>
       </h1>
       <p className="text-[12.5px] text-aring-ink-500 mb-5 leading-[1.55]">
@@ -330,7 +330,7 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
                 <IconCamera className="w-6 h-6 text-aring-ink-900" />
               </div>
               <div className="text-center">
-                <p className="text-[14px] lg:text-[15px] font-extrabold text-aring-ink-900">사진 올리기</p>
+                <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900">사진 올리기</p>
                 <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
               </div>
             </div>
@@ -384,8 +384,8 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
           <img src={photo} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="text-center mb-5">
-          <p className="text-[12px] font-extrabold tracking-[0.15em] text-aring-accent uppercase">AI ANALYZING</p>
-          <p className="mt-1 text-[16px] font-extrabold text-aring-ink-900">짝의 단서를 찾는 중</p>
+          <p className="text-[12px] font-bold tracking-[0.15em] text-aring-accent uppercase">AI ANALYZING</p>
+          <p className="mt-1 text-[16px] font-bold text-aring-ink-900">짝의 단서를 찾는 중</p>
         </div>
         <div className="space-y-3">
           {ANALYSIS_STEPS.map((s, i) => {
@@ -399,8 +399,8 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
                   {state === 'pending' && <span className="text-[12px] font-bold text-aring-ink-500">{i + 1}</span>}
                 </span>
                 <p className={['flex-1 text-[13px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
-                {state === 'done' && <span className="text-[12px] font-extrabold text-aring-green">완료</span>}
-                {state === 'active' && <span className="text-[12px] font-extrabold text-aring-accent">분석중</span>}
+                {state === 'done' && <span className="text-[12px] font-bold text-aring-green">완료</span>}
+                {state === 'active' && <span className="text-[12px] font-bold text-aring-accent">분석중</span>}
               </div>
             );
           })}
@@ -462,7 +462,7 @@ function ReviewStep({
       {/* AI 분석 결과 확인/수정 섹션 */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-[13px] font-extrabold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
+          <span className="text-[13px] font-bold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
         </div>
         <p className="text-[12px] lg:text-[13px] text-aring-ink-500 mb-3 leading-[1.55]">
           AI가 먼저 분석한 결과예요. 실제 정보와 다르면 직접 수정해 주세요.<br />
@@ -482,12 +482,12 @@ function ReviewStep({
       {/* 구분선 */}
       <div className="border-t border-aring-ink-100 mb-5" />
 
-      <h2 className="text-[16px] font-extrabold text-aring-ink-900 mb-3">정보 추가</h2>
+      <h2 className="text-[16px] font-bold text-aring-ink-900 mb-3">정보 추가</h2>
 
       <FieldLabel>브랜드</FieldLabel>
       <Input value={brand} onChange={setBrand} placeholder="예: TIFFANY & CO. / SWAROVSKI / NUMBERING" maxLength={40} />
 
-      <FieldLabel>모양 <span className="text-aring-ink-500 font-medium">(선택 시 AI 분석값 대체)</span></FieldLabel>
+      <FieldLabel>모양 <span className="text-aring-ink-500 font-semibold">(선택 시 AI 분석값 대체)</span></FieldLabel>
       <div className="flex gap-2 flex-wrap mb-5">
         {SHAPE_OPTIONS.map((opt) => {
           const active = shapeKey === opt.value;
@@ -501,7 +501,7 @@ function ReviewStep({
         })}
       </div>
 
-      <FieldLabel>소재 <span className="text-aring-ink-500 font-medium">(선택 시 AI 분석값 대체)</span></FieldLabel>
+      <FieldLabel>소재 <span className="text-aring-ink-500 font-semibold">(선택 시 AI 분석값 대체)</span></FieldLabel>
       <div className="no-scrollbar flex gap-3 overflow-x-auto -mx-5 px-5 pb-1 mb-5">
         {MATERIAL_OPTIONS.map((opt) => {
           const active = materialKey === opt.value;
@@ -519,10 +519,10 @@ function ReviewStep({
         })}
       </div>
 
-      <FieldLabel>가격 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
+      <FieldLabel>가격 <span className="text-aring-ink-500 font-semibold">(선택)</span></FieldLabel>
       <Input value={price} onChange={setPrice} placeholder="예: 50,000" suffix="원" />
 
-      <FieldLabel>등록자 한마디 <span className="text-aring-ink-500 font-medium">(선택)</span></FieldLabel>
+      <FieldLabel>등록자 한마디 <span className="text-aring-ink-500 font-semibold">(선택)</span></FieldLabel>
       <div className="relative mb-1">
         <textarea
           value={story}
@@ -534,7 +534,7 @@ function ReviewStep({
         />
       </div>
       <div className="flex justify-end mb-2">
-        <span className={['text-[13px] font-medium tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
+        <span className={['text-[13px] font-semibold tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
           {story.length} / 1000
         </span>
       </div>
@@ -595,7 +595,7 @@ function StickyCTA({ onClick, disabled, children }: {
     <div className="absolute left-0 right-0 bottom-0 z-30">
       <div className="mx-auto max-w-[440px] glass-strong border-t border-white/60 px-5 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
         <button onClick={onClick} disabled={disabled}
-          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[14px] font-extrabold text-white shadow-cta active:scale-[0.99] transition">
+          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[14px] font-bold text-white shadow-cta active:scale-[0.99] transition">
           {children}
         </button>
       </div>

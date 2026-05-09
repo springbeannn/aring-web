@@ -36,7 +36,7 @@ export default function NicknamePage() {
         <div className="px-5 pt-16 pb-24 lg:max-w-[480px] lg:mx-auto">
 
           <div className="mb-10 text-center">
-            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
+            <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
             <p className="mt-2 text-[13px] lg:text-[14px] text-aring-ink-500 leading-snug">aring에서 사용할 이름이에요<br />나중에 변경할 수 있어요</p>
           </div>
 
@@ -59,7 +59,7 @@ export default function NicknamePage() {
           <button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className={`w-full py-4 rounded-2xl font-extrabold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+            className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
           >
             {loading ? '저장 중...' : '시작하기'}
           </button>

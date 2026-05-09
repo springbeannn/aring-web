@@ -415,7 +415,7 @@ function DiscoverPageInner() {
           <TopNav />
 
           <div className="px-5 pt-3 pb-3">
-            <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">탐색</h1>
+            <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">탐색</h1>
             <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
@@ -497,7 +497,7 @@ function DiscoverPageInner() {
 
           <div className="sticky top-0 z-20 glass-strong border-y border-aring-green-line">
             <div className="flex items-center justify-between px-5 py-3">
-              <p className="text-[13px] font-extrabold text-aring-ink-900">
+              <p className="text-[13px] font-bold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
                   <span className="ml-2 text-[13px] lg:text-[14px] font-semibold text-aring-ink-500">
@@ -527,7 +527,7 @@ function DiscoverPageInner() {
                 {activeCount > 0 && (
                   <button
                     onClick={resetAll}
-                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] font-extrabold"
+                    className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill text-[13px] font-bold"
                     style={{ background: 'linear-gradient(135deg, rgba(251,200,220,0.2) 0%, rgba(197,221,240,0.2) 50%, rgba(200,230,201,0.2) 100%)', outline: '1.5px solid rgba(197,221,240,0.85)', color: '#1e1b2e' }}
                   >
                     필터 초기화

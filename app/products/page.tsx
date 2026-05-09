@@ -165,7 +165,7 @@ function ProductsContent() {
           <IconArrowLeft />
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-[22px] lg:text-[26px] font-extrabold tracking-tight text-aring-ink-900">
+          <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
             {pageTitle}
           </h1>
           <p className="mt-0.5 text-[13px] lg:text-[14px] text-aring-ink-500">
@@ -189,7 +189,7 @@ function ProductsContent() {
           <p className="text-[13px] font-bold text-aring-ink-900">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold"
+            className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold"
           >
             다시 시도
           </button>
@@ -212,7 +212,7 @@ function ProductsContent() {
               <button
                 onClick={loadMore}
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center h-12 rounded-pill bg-aring-ink-100 text-aring-ink-900 text-[13px] font-extrabold active:scale-[0.99] transition disabled:opacity-60"
+                className="w-full inline-flex items-center justify-center h-12 rounded-pill bg-aring-ink-100 text-aring-ink-900 text-[13px] font-bold active:scale-[0.99] transition disabled:opacity-60"
               >
                 {loading ? '불러오는 중…' : '더보기'}
               </button>

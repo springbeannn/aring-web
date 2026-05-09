@@ -48,7 +48,7 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
         className="relative z-10 w-[calc(100%-48px)] max-w-[360px] rounded-[24px] bg-white shadow-card p-6"
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="text-[17px] font-extrabold text-aring-ink-900 text-center">상품을 신고하시겠어요?</h2>
+        <h2 className="text-[17px] font-bold text-aring-ink-900 text-center">상품을 신고하시겠어요?</h2>
         <p className="mt-1.5 text-[13px] text-aring-ink-500 text-center leading-relaxed">
           신고 사유를 남겨주시면 운영자가 확인할게요.
         </p>
@@ -78,7 +78,7 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
             취소
           </button>
           <button onClick={submit} disabled={!valid || sub}
-            className="flex-1 py-3 rounded-pill bg-aring-ink-900 text-white text-[13px] font-extrabold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
+            className="flex-1 py-3 rounded-pill bg-aring-ink-900 text-white text-[13px] font-bold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
             {sub ? "접수 중…" : "신고하기"}
           </button>
         </div>

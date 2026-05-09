@@ -138,7 +138,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgb(229,229,229)] flex-shrink-0">
           <div className="flex items-baseline gap-1">
             <span className="text-[22px] lg:text-[26px] font-black tracking-tight text-aring-green leading-none">aring</span>
-            <sup className="text-[12px] lg:text-[13px] font-medium text-aring-ink-500">한 짝의 짝</sup>
+            <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
           </div>
           <button
             onClick={onClose}
@@ -172,7 +172,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
                       ? 'bg-white font-bold text-aring-ink-900 border-l-aring-green'
                       : item.cta
                         ? 'bg-[#F5F5F5] font-bold text-aring-green border-l-transparent hover:bg-aring-ink-100/40'
-                        : 'bg-[#F5F5F5] font-medium text-[#555555] border-l-transparent hover:bg-aring-ink-100/40',
+                        : 'bg-[#F5F5F5] font-semibold text-[#555555] border-l-transparent hover:bg-aring-ink-100/40',
                   ].join(' ')}
                 >
                   {item.label}
@@ -193,7 +193,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
                     <Link
                       href={child.href}
                       onClick={onClose}
-                      className="flex items-center justify-between h-[52px] px-4 text-[14px] font-medium text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[#EEEEEE]"
+                      className="flex items-center justify-between h-[52px] px-4 text-[14px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[#EEEEEE]"
                     >
                       <span>{child.label}</span>
                       <svg

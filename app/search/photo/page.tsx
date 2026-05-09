@@ -113,7 +113,7 @@ export default function SearchPhotoPage() {
                   <div className='flex-1 min-w-0'>
                     <p className='text-sm font-semibold text-gray-900 line-clamp-1'>{item.title ?? '귀걸이'}</p>
                     {item.brand && <p className='text-xs text-gray-400 mt-0.5'>{item.brand}</p>}
-                    <span className={'inline-block mt-1.5 px-2 py-0.5 rounded-full text-xs font-medium ' + statusColor(item.status)}>
+                    <span className={'inline-block mt-1.5 px-2 py-0.5 rounded-full text-xs font-semibold ' + statusColor(item.status)}>
                       {statusLabel(item.status)}
                     </span>
                   </div>
