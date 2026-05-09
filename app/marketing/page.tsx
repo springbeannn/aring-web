@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { TopNav } from '@/components/Nav';
 
 export const metadata: Metadata = {
   title: 'aring 마케팅 정보 수신 동의',
@@ -25,7 +26,8 @@ function Bullets({ items }: { items: string[] }) {
 
 export default function MarketingPage() {
   return (
-    <main className="min-h-screen bg-aring-cream">
+    <main className="min-h-screen bg-white">
+      <TopNav />
       <div className="max-w-2xl mx-auto px-6 py-10">
         <Link href="/" className="inline-block text-sm text-gray-500 hover:text-aring-olive transition mb-6">
           ← 돌아가기
