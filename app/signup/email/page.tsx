@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { TopNav } from '@/components/Nav';
-import { signUpWithEmail } from '@/lib/auth';
+import { signUpWithEmail, resendConfirmationEmail } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 
 const IconCheck = ({ checked }: { checked: boolean }) => (
@@ -157,6 +157,10 @@ export default function SignupEmailPage() {
   const [terms, setTerms] = useState({ age: false, service: false, privacy: false, marketing: false });
   const [submitError, setSubmitError] = useState('');
   const [loading, setLoading] = useState(false);
+  // 인증 메일 발송 안내 화면 상태
+  const [sent, setSent] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState('');
+  const [resendState, setResendState] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
 
   const allRequired = terms.age && terms.service && terms.privacy;
   const allChecked = allRequired && terms.marketing;
@@ -190,13 +194,29 @@ export default function SignupEmailPage() {
   async function handleSubmit() {
     if (!canSubmit || loading) return;
     setLoading(true); setSubmitError('');
-    const { error } = await signUpWithEmail(email.toLowerCase().trim(), password, nickname.trim());
+    const cleanEmail = email.toLowerCase().trim();
+    const redirect = typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined;
+    const { error } = await signUpWithEmail(cleanEmail, password, nickname.trim(), redirect);
     setLoading(false);
     if (error) {
       setSubmitError(error === 'User already registered' ? '이미 가입된 이메일이에요.' : '회원가입에 실패했어요. 잠시 후 다시 시도해주세요.');
       return;
     }
-    router.push('/login');
+    setSubmittedEmail(cleanEmail);
+    setSent(true);
+  }
+
+  async function handleResend() {
+    if (resendState === 'loading' || resendState === 'sent') return;
+    setResendState('loading');
+    const redirect = typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined;
+    const { error } = await resendConfirmationEmail(submittedEmail, redirect);
+    if (error) {
+      setResendState('error');
+      return;
+    }
+    setResendState('sent');
+    setTimeout(() => setResendState('idle'), 30000);
   }
 
   const inputBase = "w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition";
@@ -213,6 +233,13 @@ export default function SignupEmailPage() {
             <SignupMobileBanner />
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
+              {sent ? (
+                <EmailSentScreen
+                  email={submittedEmail}
+                  onResend={handleResend}
+                  resendState={resendState}
+                />
+              ) : (<>
               <div className="mb-7 text-center lg:text-left">
                 <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">회원가입</h1>
               </div>
@@ -313,10 +340,73 @@ export default function SignupEmailPage() {
                 이미 계정이 있으신가요?{' '}
                 <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인</Link>
               </p>
+              </>)}
             </div>
           </div>
         </div>
       </div>
     </main>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 인증 메일 발송 안내 화면
+// ─────────────────────────────────────────────────
+function EmailSentScreen({
+  email,
+  onResend,
+  resendState,
+}: {
+  email: string;
+  onResend: () => void;
+  resendState: 'idle' | 'loading' | 'sent' | 'error';
+}) {
+  return (
+    <div className="text-center">
+      <div className="mb-6">
+        <div className="inline-flex items-baseline gap-1">
+          <span className="text-[28px] font-black tracking-tight text-aring-green leading-none">aring</span>
+          <sup className="text-[12px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
+        </div>
+      </div>
+
+      <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-aring-green/10 flex items-center justify-center">
+        <svg className="w-10 h-10 text-aring-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+      </div>
+
+      <h1 className="text-[22px] font-bold tracking-tight text-aring-ink-900 mb-3">
+        인증 메일을 보냈어요
+      </h1>
+      <p className="text-[14px] text-aring-ink-500 leading-relaxed mb-1">
+        <span className="font-semibold text-aring-ink-900">{email}</span> 주소로
+      </p>
+      <p className="text-[14px] text-aring-ink-500 leading-relaxed mb-6">
+        인증 링크를 보냈습니다. 메일함을 확인해 주세요.
+      </p>
+
+      <div className="rounded-2xl bg-aring-ink-50 px-4 py-3 mb-6">
+        <p className="text-[13px] text-aring-ink-500 leading-relaxed">
+          메일을 받지 못하셨나요?
+        </p>
+        <button
+          onClick={onResend}
+          disabled={resendState === 'loading' || resendState === 'sent'}
+          className="mt-1 text-[13px] font-bold text-aring-green hover:underline disabled:opacity-60 disabled:no-underline"
+        >
+          {resendState === 'loading' ? '재발송 중…' :
+           resendState === 'sent'    ? '✓ 재발송 완료' :
+           resendState === 'error'   ? '재발송 실패 — 다시 시도' :
+                                       '재발송하기'}
+        </button>
+      </div>
+
+      <p className="text-[13px] text-aring-ink-500">
+        이미 인증을 완료했나요?{' '}
+        <Link href="/login" className="font-bold text-aring-ink-900 underline">로그인하기</Link>
+      </p>
+    </div>
   );
 }

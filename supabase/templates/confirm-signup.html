@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>aring — 이메일 인증</title>
+</head>
+<body style="margin:0; padding:0; background-color:#F5F5F5; font-family:'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+  <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#F5F5F5; padding:32px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- 카드 -->
+        <table role="presentation" width="480" border="0" cellpadding="0" cellspacing="0" style="max-width:480px; width:100%; background-color:#FFFFFF; border-radius:16px; overflow:hidden;">
+
+          <!-- 상단 로고 -->
+          <tr>
+            <td style="padding:32px 32px 16px;" align="left">
+              <span style="font-size:28px; font-weight:900; color:#2A4A3C; letter-spacing:-0.5px; line-height:1;">aring</span>
+              <span style="font-size:12px; font-weight:600; color:#555555; margin-left:6px;">한 짝의 짝</span>
+            </td>
+          </tr>
+
+          <!-- 구분선 -->
+          <tr>
+            <td style="padding:0 32px;">
+              <hr style="border:none; border-top:1px solid #EEEEEE; margin:0;" />
+            </td>
+          </tr>
+
+          <!-- 본문 -->
+          <tr>
+            <td style="padding:32px;" align="left">
+              <h1 style="font-size:20px; font-weight:700; color:#1E1B2E; margin:0 0 12px; line-height:1.4;">
+                이메일 인증을 완료해주세요
+              </h1>
+              <p style="font-size:14px; color:#555555; line-height:1.7; margin:0 0 24px;">
+                aring 가입을 환영합니다.<br />
+                아래 버튼을 눌러 이메일 인증을 완료해 주세요.
+              </p>
+
+              <!-- CTA 버튼 -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="padding:8px 0 24px;">
+                    <a href="{{ .ConfirmationURL }}"
+                       style="display:inline-block; background-color:#1E1B2E; color:#FFFFFF; font-size:14px; font-weight:700; padding:14px 36px; border-radius:8px; text-decoration:none; line-height:1;">
+                      이메일 인증하기
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="font-size:12px; color:#555555; line-height:1.6; margin:0;">
+                버튼이 작동하지 않으면 아래 링크를 복사해 주세요.
+              </p>
+              <p style="font-size:12px; color:#2A4A3C; word-break:break-all; margin:8px 0 0; line-height:1.5;">
+                {{ .ConfirmationURL }}
+              </p>
+            </td>
+          </tr>
+
+          <!-- 하단 -->
+          <tr>
+            <td style="padding:24px 32px 32px; border-top:1px solid #EEEEEE;" align="center">
+              <p style="font-size:11px; color:#999999; margin:0; line-height:1.6;">
+                본 메일은 발신 전용입니다.<br />
+                © aring. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

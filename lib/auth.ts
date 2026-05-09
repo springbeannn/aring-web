@@ -25,7 +25,8 @@ export function parseAuthError(message: string): string {
 export async function signUpWithEmail(
   email: string,
   password: string,
-  nickname: string
+  nickname: string,
+  emailRedirectTo?: string,
 ): Promise<{ error: string | null }> {
   if (!supabase) return { error: '서비스 연결에 실패했습니다.' };
 
@@ -43,12 +44,16 @@ export async function signUpWithEmail(
     return { error: '이미 가입된 이메일입니다. 로그인해주세요.' };
   }
 
-  // Supabase Auth 가입
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  // Supabase Auth 가입 — emailRedirectTo로 인증 후 콜백 URL 전달
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: emailRedirectTo ? { emailRedirectTo } : undefined,
+  });
   if (error) return { error: parseAuthError(error.message) };
   if (!data.user) return { error: '가입 처리 중 오류가 발생했습니다.' };
 
-  // profiles 저장
+  // profiles 저장 (인증 전에도 닉네임 선점)
   const { error: profileError } = await supabase.from('profiles').insert({
     user_id: data.user.id,
     email,
@@ -57,6 +62,24 @@ export async function signUpWithEmail(
   });
   if (profileError) return { error: '프로필 저장에 실패했습니다.' };
 
+  return { error: null };
+}
+
+// ────────────────────────────────────────────────
+// 인증 메일 재발송
+// ────────────────────────────────────────────────
+export async function resendConfirmationEmail(
+  email: string,
+  emailRedirectTo?: string,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: '서비스 연결에 실패했습니다.' };
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: emailRedirectTo ? { emailRedirectTo } : undefined,
+  });
+  if (error) return { error: parseAuthError(error.message) };
   return { error: null };
 }
 

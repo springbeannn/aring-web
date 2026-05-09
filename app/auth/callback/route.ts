@@ -50,6 +50,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/signup?error=no_email`);
   }
 
+  // 이메일 가입 인증 콜백 → /signup/complete (OAuth 흐름과 분리)
+  const provider = user.app_metadata?.provider ?? 'unknown';
+  if (provider === 'email') {
+    return NextResponse.redirect(`${origin}/signup/complete`);
+  }
+
   // 기존 프로필 확인
   const { data: existing } = await supabase
     .from('profiles')
@@ -79,8 +85,7 @@ export async function GET(request: NextRequest) {
     return response;
   }
 
-  // 신규 사용자 프로필 생성
-  const provider = user.app_metadata?.provider ?? 'unknown';
+  // 신규 사용자 프로필 생성 (provider는 위에서 이미 선언됨)
   await supabase.from('profiles').insert({
     user_id: user.id,
     email,
