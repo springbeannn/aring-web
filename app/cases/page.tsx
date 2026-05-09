@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { ListItem, type CaseListItemData } from '@/components/cases/ListItem';
+import { TopNav } from '@/components/Nav';
 
 // ─────────────────────────────────────────────────
 // SEO Metadata
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     'aring을 통해 실제로 연결된 브랜드들의 협업·매칭 성공 사례 모음. 패션, 뷰티, F&B, 라이프스타일 등 다양한 카테고리의 사례를 소개합니다.',
   openGraph: {
     title: 'aring 매칭 성공 사례',
-    description: '실제로 연결된 브랜드들의 이야기',
+    description: 'aring을 통해 연결된 브랜드들의 이야기',
     type: 'website',
   },
 };
@@ -37,12 +38,13 @@ export default async function CasesPage({
     ? (searchParams.category ?? '전체')
     : '전체') as CategoryKey;
 
-  // ─── 데이터 fetch ───────────────────────────────────────
+  // ─── 데이터 fetch + admin role 체크 (병렬) ──────────────
   let cases: CaseListItemData[] = [];
   let fetchError = false;
+  let isAdmin = false;
 
   if (supabase) {
-    let query = supabase
+    let casesQuery = supabase
       .from('success_cases')
       .select('id, slug, title, summary, category, tags, published_at, is_featured')
       .eq('published', true)
@@ -50,14 +52,28 @@ export default async function CasesPage({
       .order('published_at', { ascending: false });
 
     if (selectedCategory !== '전체') {
-      query = query.eq('category', selectedCategory);
+      casesQuery = casesQuery.eq('category', selectedCategory);
     }
 
-    const { data, error } = await query;
-    if (error) {
+    const [casesRes, userRes] = await Promise.all([
+      casesQuery,
+      supabase.auth.getUser(),
+    ]);
+
+    if (casesRes.error) {
       fetchError = true;
     } else {
-      cases = (data ?? []) as CaseListItemData[];
+      cases = (casesRes.data ?? []) as CaseListItemData[];
+    }
+
+    const user = userRes.data.user;
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      isAdmin = profile?.role === 'admin';
     }
   }
 
@@ -79,68 +95,125 @@ export default async function CasesPage({
   };
 
   return (
-    <main className="min-h-screen bg-aring-cream">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <main className="min-h-screen bg-white">
+        <TopNav />
 
-      <div className="max-w-2xl mx-auto px-5 pt-12 pb-20">
-        {/* Header */}
-        <header className="mb-10">
-          <p className="text-[12px] font-bold tracking-[0.2em] text-aring-olive mb-3">
-            ARING
-          </p>
-          <h1 className="text-[32px] sm:text-[40px] font-bold text-aring-black leading-tight mb-2">
-            매칭 성공 사례
-          </h1>
-          <p className="text-[14px] text-aring-gray">
-            실제로 연결된 브랜드들의 이야기
-          </p>
-        </header>
-
-        {/* 카테고리 탭 */}
-        <nav aria-label="카테고리" className="flex flex-wrap gap-2 mb-6">
-          {CATEGORIES.map((cat) => {
-            const active = cat === selectedCategory;
-            const href =
-              cat === '전체' ? '/cases' : `/cases?category=${encodeURIComponent(cat)}`;
-            return (
-              <Link
-                key={cat}
-                href={href}
-                className={[
-                  'inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold transition',
-                  active
-                    ? 'bg-aring-black text-white'
-                    : 'bg-white text-aring-black border border-aring-gray-light hover:border-aring-olive',
-                ].join(' ')}
-              >
-                {cat}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* 리스트 */}
-        <section className="bg-white rounded-2xl overflow-hidden border border-aring-gray-light">
-          {fetchError ? (
-            <div className="px-5 py-16 text-center">
-              <p className="text-[14px] text-aring-gray">사례를 불러오지 못했어요.</p>
-            </div>
-          ) : cases.length === 0 ? (
-            <div className="px-5 py-16 text-center">
-              <p className="text-[14px] text-aring-gray">
-                {selectedCategory === '전체'
-                  ? '아직 등록된 사례가 없어요.'
-                  : `'${selectedCategory}' 카테고리의 사례가 없어요.`}
+        <div className="max-w-2xl mx-auto px-4 lg:px-6 pt-8 pb-16">
+          {/* 헤더 섹션 */}
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold tracking-widest text-[#6B7C45] uppercase mb-1">
+                SUCCESS CASES
+              </p>
+              <h1 className="text-3xl lg:text-4xl font-bold text-[#1A1A1A] leading-tight">
+                매칭 성공 사례
+              </h1>
+              <p className="text-sm text-gray-400 mt-1">
+                aring을 통해 연결된 브랜드들의 이야기
               </p>
             </div>
+            {isAdmin && (
+              <Link
+                href="/cases/new"
+                className="shrink-0 bg-[#6B7C45] text-white rounded-full px-4 py-2 text-sm font-semibold hover:bg-[#5a6a38] transition-colors"
+              >
+                + 사례 등록
+              </Link>
+            )}
+          </div>
+
+          {/* 카테고리 필터 탭 */}
+          <nav
+            aria-label="카테고리"
+            className="flex gap-2 overflow-x-auto no-scrollbar pb-4"
+          >
+            {CATEGORIES.map((tab) => {
+              const active = tab === selectedCategory;
+              const href = tab === '전체' ? '/cases' : `/cases?category=${encodeURIComponent(tab)}`;
+              return (
+                <Link
+                  key={tab}
+                  href={href}
+                  className={[
+                    'shrink-0 px-4 py-1.5 rounded-full text-sm border transition-colors',
+                    active
+                      ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] font-semibold'
+                      : 'border-gray-200 text-gray-500 hover:border-[#6B7C45] hover:text-[#6B7C45]',
+                  ].join(' ')}
+                >
+                  {tab}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* 리스트 / 빈 상태 / 에러 */}
+          {fetchError ? (
+            <ErrorState />
+          ) : cases.length === 0 ? (
+            <EmptyState isAdmin={isAdmin} category={selectedCategory} />
           ) : (
-            cases.map((item) => <ListItem key={item.id} item={item} />)
+            <div className="border-t border-gray-100">
+              {cases.map((item) => (
+                <ListItem key={item.id} item={item} />
+              ))}
+            </div>
           )}
-        </section>
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// Empty / Error 상태
+// ─────────────────────────────────────────────────
+function EmptyState({
+  isAdmin,
+  category,
+}: {
+  isAdmin: boolean;
+  category: CategoryKey;
+}) {
+  const isAll = category === '전체';
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <span className="text-4xl mb-4" aria-hidden>💍</span>
+      <p className="text-gray-500 font-semibold mb-1">
+        {isAll ? '아직 등록된 성공 사례가 없어요.' : `'${category}' 카테고리의 사례가 없어요.`}
+      </p>
+      <p className="text-sm text-gray-400 mb-6">
+        첫 번째 매칭 이야기를 등록해보세요.
+      </p>
+      {isAdmin && (
+        <Link
+          href="/cases/new"
+          className="bg-[#6B7C45] text-white rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-[#5a6a38] transition-colors"
+        >
+          + 사례 등록
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function ErrorState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <span className="text-4xl mb-4" aria-hidden>⚠️</span>
+      <p className="text-gray-500 font-semibold mb-1">사례를 불러오지 못했어요.</p>
+      <p className="text-sm text-gray-400 mb-6">잠시 후 다시 시도해주세요.</p>
+      <Link
+        href="/cases"
+        className="border border-gray-200 text-gray-700 rounded-full px-6 py-2.5 text-sm font-semibold hover:border-[#6B7C45] hover:text-[#6B7C45] transition-colors"
+      >
+        새로고침
+      </Link>
+    </div>
   );
 }
