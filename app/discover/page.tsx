@@ -91,7 +91,7 @@ function CategoryRow({ title, id, highlighted, children }: { title: string; id?:
     <div
       id={id}
       className={[
-        'px-5 py-3 border-b border-aring-ink-100 transition-colors',
+        'px-5 lg:px-8 py-3 border-b border-aring-ink-100 transition-colors',
         highlighted ? 'bg-aring-green/5 ring-2 ring-aring-green/30 ring-inset' : '',
       ].join(' ')}
     >
@@ -414,13 +414,13 @@ function DiscoverPageInner() {
         <div className="pb-28 lg:pb-10">
           <TopNav />
 
-          <div className="px-5 pt-3 pb-3">
+          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
             <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">탐색</h1>
             <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">속성으로 한 짝을 좁혀보세요</p>
           </div>
 
           {activeCount > 0 && (
-            <div className="px-5 pb-3 flex items-center gap-2 flex-wrap">
+            <div className="px-5 lg:px-8 pb-3 flex items-center gap-2 flex-wrap">
               {selectedChips.map((c) => (
                 <SelectedChip key={c.id} label={c.label} onRemove={c.onRemove} />
               ))}
@@ -496,7 +496,7 @@ function DiscoverPageInner() {
           </div>
 
           <div className="sticky top-0 z-20 glass-strong border-y border-aring-green-line">
-            <div className="flex items-center justify-between px-5 py-3">
+            <div className="flex items-center justify-between px-5 lg:px-8 py-3">
               <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
                 {loading ? '불러오는 중…' : `${filtered.length}개 결과`}
                 {activeCount > 0 && (
@@ -513,7 +513,7 @@ function DiscoverPageInner() {
             </div>
           </div>
 
-          <div className="px-5 pt-4">
+          <div className="px-5 lg:px-8 pt-4">
             {loading ? (
               <div className="grid grid-cols-2 gap-3">
                 {[1, 2, 3, 4].map((i) => (
