@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { WelcomeModal } from '@/components/auth/WelcomeModal';
 
 export default function NicknamePage() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [welcomeOpen, setWelcomeOpen] = useState(false);
+  const [savedNickname, setSavedNickname] = useState('');
 
   const isValid = nickname.trim().length >= 2 && nickname.trim().length <= 12;
 
@@ -20,14 +23,16 @@ export default function NicknamePage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push('/signup'); return; }
 
+    const trimmed = nickname.trim();
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({ nickname: nickname.trim() })
+      .update({ nickname: trimmed })
       .eq('user_id', user.id);
 
     setLoading(false);
     if (updateError) { setError('닉네임 저장에 실패했습니다. 다시 시도해주세요.'); return; }
-    router.push('/');
+    setSavedNickname(trimmed);
+    setWelcomeOpen(true);
   };
 
   return (
@@ -66,6 +71,12 @@ export default function NicknamePage() {
 
         </div>
       </div>
+
+      <WelcomeModal
+        isOpen={welcomeOpen}
+        nickname={savedNickname}
+        onClose={() => setWelcomeOpen(false)}
+      />
     </main>
   );
 }
