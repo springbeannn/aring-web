@@ -7,3 +7,11 @@ out
 *.log
 .vercel
 next-env.d.ts
+
+# Claude Code / 로컬 작업물
+.claude/
+tmp/
+*.bak
+*.bak2
+*.bak3
+*.bak_fix
