@@ -247,12 +247,6 @@ function CandidateTimeline({ slots }: { slots: (CandidateItem | null)[] }) {
 }
 
 function MyItemSummary({ item }: { item: Listing }) {
-  const tags = [
-    item.shape    && `형태: ${item.shape}`,
-    item.color    && `컬러: ${item.color}`,
-    item.material && `소재: ${item.material}`,
-    item.brand && item.brand !== '브랜드 미상' && item.brand,
-  ].filter(Boolean) as string[];
   return (
     <div className="mx-5 lg:mx-8 rounded-2xl bg-white shadow-card border border-aring-ink-100 overflow-hidden">
       <div className="flex">
@@ -269,11 +263,6 @@ function MyItemSummary({ item }: { item: Listing }) {
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
           <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
           {item.brand && <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
-          <div className="flex flex-wrap gap-1.5 mt-0.5">
-            {tags.slice(0, 4).map(t => (
-              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[15px] lg:text-[15px] leading-[1.5] font-semibold whitespace-nowrap">{t}</span>
-            ))}
-          </div>
         </div>
       </div>
       {item.story && (
@@ -443,8 +432,8 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
 
             {/* Result summary — 딱 맞는 짝(>=60) 발견 시 */}
             {state.status === 'ok' && hasSimilar && (
-              <div className="mb-5 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-4 py-3.5">
-                <p className="text-[16px] font-bold text-aring-green">딱 맞는 짝을 찾았어요!</p>
+              <div className="mb-5 rounded-2xl bg-aring-green/10 border border-aring-green/20 px-4 py-3.5">
+                <p className="text-[16px] font-bold text-aring-green">딱 맞는 짝을 찾을 때까지 조금 더 기다려 볼까요?</p>
                 <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">
                   {`유사한 후보 ${state.similar.length}개${hasReference ? ` · 참고 후보 ${state.reference.length}개` : ''}를 찾았어요`}
                 </p>

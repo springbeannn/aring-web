@@ -267,7 +267,7 @@ export default function MyMatchPage() {
                       hasSimilar ? 'text-aring-green' : 'text-aring-ink-700',
                     ].join(' ')}>
                       {hasSimilar
-                        ? '딱 맞는 짝을 찾았어요!'
+                        ? '딱 맞는 짝을 찾을 때까지 조금 더 기다려 볼까요?'
                         : '아직 딱 맞는 짝을 찾지 못했어요. 함께 기다려 볼까요?'}
                     </p>
 

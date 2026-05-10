@@ -221,7 +221,7 @@ export default function ProfilePage() {
               </Link>
 
               {/* 로그아웃 버튼 — PC에서 폭 제한 */}
-              <div className="lg:flex lg:justify-start">
+              <div className="lg:flex lg:justify-end">
                 <button
                   onClick={handleLogout}
                   disabled={loggingOut}

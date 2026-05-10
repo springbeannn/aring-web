@@ -87,7 +87,6 @@ interface Comment {
 function MobileRow({ c, no }: { c: Comment; no: number }) {
   const listing = c.listing;
   const brand = listing?.brand ?? '브랜드 미상';
-  const tags = [listing?.material, listing?.shape].filter(Boolean) as string[];
   const imgUrl = listing?.photo_url;
 
   return (
@@ -106,24 +105,24 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
 
           {/* 내용 */}
           <div className="flex-1 min-w-0">
-            {/* 상단: 번호 + 상태 */}
+            {/* 상단 한 줄: No · 브랜드 · 상태 (우측) */}
             <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-400">No.{no}</span>
-              <StatusBadge status={listing?.status} />
+              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-400 flex-shrink-0">No.{no}</span>
+              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900 truncate">{brand}</span>
+              <span className="ml-auto flex-shrink-0">
+                <StatusBadge status={listing?.status} />
+              </span>
             </div>
 
-            {/* 브랜드 */}
-            <p className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900 truncate">{brand}</p>
-
-            {/* 태그 */}
-            {tags.length > 0 && (
-              <div className="mt-0.5">
-                <TagChips tags={tags} />
-              </div>
-            )}
-
-            {/* 댓글 내용 */}
-            <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-800 line-clamp-2 leading-relaxed">
+            {/* 댓글 내용 — 모바일/PC 모두 2줄 클램프 */}
+            <p
+              className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-800 leading-relaxed overflow-hidden"
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
               {c.message}
             </p>
           </div>
