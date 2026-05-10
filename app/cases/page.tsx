@@ -113,15 +113,16 @@ export default async function CasesPage() {
             </div>
           </div>
 
-          {/* 하단 sticky CTA — register 페이지 StickyCTA 패턴 (admin only) */}
+          {/* 하단 sticky CTA — BottomNav 위에 띄움 (admin only) */}
           {isAdmin && (
-            <div className="fixed left-0 right-0 bottom-0 z-40 pointer-events-none">
-              <div className="mx-auto w-full max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-white/60 px-5 lg:px-8 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+88px)] lg:pb-4 pointer-events-auto">
+            <div className="fixed left-0 right-0 bottom-[80px] lg:bottom-0 z-30 pointer-events-none">
+              <div className="mx-auto w-full max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-white/60 px-5 lg:px-8 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] lg:pb-4 pointer-events-auto">
                 <Link
                   href="/cases/new"
-                  className="block w-full rounded-pill bg-aring-ink-900 py-3.5 text-center text-[16px] font-bold text-white shadow-cta active:scale-[0.99] transition"
+                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-pill bg-aring-ink-900 py-3.5 text-[16px] font-bold text-white shadow-cta active:scale-[0.99] transition"
                 >
-                  + 사례 등록
+                  등록하기
+                  <span aria-hidden>→</span>
                 </Link>
               </div>
             </div>
