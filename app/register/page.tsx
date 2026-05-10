@@ -18,6 +18,7 @@ import {
   type MaterialKey,
 } from '@/lib/categories';
 import { normalizeBrand, resolveBrand } from '@/lib/brandNormalizer';
+import { removeBackground } from '@/lib/removeBg';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
@@ -93,13 +94,36 @@ export default function RegisterPage() {
   const [story, setStory] = useState('');
   const [region, setRegion] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [bgRemoving, setBgRemoving] = useState(false);
 
-  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setPhoto({ url: reader.result as string, file });
-    reader.readAsDataURL(file);
+
+    // 1) 즉시 원본 미리보기 노출 (배경 제거 끝날 때까지 대기 안 함)
+    const initial = await new Promise<string>((resolve) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.readAsDataURL(file);
+    });
+    setPhoto({ url: initial, file });
+
+    // 2) 백그라운드로 배경 제거 시도 — 성공 시 미리보기 교체, 실패 시 원본 유지
+    setBgRemoving(true);
+    try {
+      const bgRemovedFile = await removeBackground(file);
+      if (bgRemovedFile) {
+        const bgUrl = await new Promise<string>((resolve) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result as string);
+          r.readAsDataURL(bgRemovedFile);
+        });
+        setPhoto({ url: bgUrl, file: bgRemovedFile });
+      }
+      // 실패해도 원본이 이미 set 돼있으니 fallback 동작
+    } finally {
+      setBgRemoving(false);
+    }
   };
 
   const startAnalysis = async () => {
@@ -225,7 +249,7 @@ export default function RegisterPage() {
         <StepIndicator current={step} />
 
         {step === 'upload' && (
-          <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} />
+          <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} bgRemoving={bgRemoving} />
         )}
 
         {step === 'review' && analysis && photo && (
@@ -301,10 +325,11 @@ function StepIndicator({ current }: { current: Step }) {
 // Step 1 — Upload
 // ─────────────────────────────────────────────────────────────
 
-function UploadStep({ photo, onPhoto, onAnalyze }: {
+function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
   photo: string | null;
   onPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAnalyze: () => void;
+  bgRemoving?: boolean;
 }) {
   return (
     <div className="px-5 pb-28">
@@ -341,6 +366,16 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
       ) : (
         <div className="relative aspect-[4/5] rounded-card overflow-hidden bg-aring-ink-100">
           <img src={photo} alt="업로드한 한 짝" className="w-full h-full object-cover" />
+
+          {/* 배경 제거 중 오버레이 */}
+          {bgRemoving && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
+              <div className="w-10 h-10 mb-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+              <p className="text-[13px] lg:text-[15px] font-bold text-white">배경 제거 중…</p>
+              <p className="mt-0.5 text-[11px] text-white/70">잠시만 기다려 주세요</p>
+            </div>
+          )}
+
           <label className="absolute top-3 right-3 cursor-pointer">
             <span className="glass rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-900 shadow-card inline-flex items-center gap-1.5">
               <IconCamera className="w-3.5 h-3.5" /> 다시 선택
@@ -359,8 +394,8 @@ function UploadStep({ photo, onPhoto, onAnalyze }: {
         ))}
       </div>
 
-      <StickyCTA onClick={onAnalyze} disabled={!photo}>
-        {photo ? 'AI 분석 시작하기' : '사진을 먼저 올려주세요'}
+      <StickyCTA onClick={onAnalyze} disabled={!photo || !!bgRemoving}>
+        {!photo ? '사진을 먼저 올려주세요' : bgRemoving ? '배경 제거 중…' : 'AI 분석 시작하기'}
       </StickyCTA>
     </div>
   );
