@@ -44,6 +44,17 @@ const IconSparkle = ({ className = 'w-3 h-3' }: IconProps) => (
     <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.5 5.5l2.8 2.8M15.7 15.7l2.8 2.8M5.5 18.5l2.8-2.8M15.7 8.3l2.8-2.8" />
   </svg>
 );
+const IconEye = ({ className = 'w-3.5 h-3.5' }: IconProps) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+const IconHeart = ({ className = 'w-3.5 h-3.5', filled = false }: IconProps & { filled?: boolean }) => (
+  <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
 
 // ─────────────────────────────────────────────────────────────
 // 유명 브랜드 고정 10개
@@ -274,7 +285,10 @@ function TodayMatchSection() {
 
 function TodayMatchCard({ m }: { m: MatchCard }) {
   const priceLabel = typeof m.price === 'number' && m.price > 0 ? formatKRW(m.price) : '가격 협의';
-  const viewLabel = typeof m.viewCount === 'number' ? `${m.viewCount}회` : '0회';
+  const viewCount = typeof m.viewCount === 'number' ? m.viewCount : 0;
+  const likeCount = typeof (m as MatchCard & { likes?: number }).likes === 'number'
+    ? (m as MatchCard & { likes?: number }).likes!
+    : 0;
   return (
     <Link href={`/items/${m.id}`} onClick={log('today:tap', m.id)}
       className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition">
@@ -284,10 +298,23 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
       <div className="flex-1 min-w-0">
         {/* 가격 */}
         <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900 truncate">{priceLabel}</p>
-        {/* 위치/메타 */}
-        <div className="mt-1.5 flex flex-col gap-1 text-[11px] lg:text-[12px] font-normal text-aring-ink-500">
-          {m.region && <span className="inline-flex items-center gap-1 truncate"><span aria-hidden>📍</span><span className="truncate">{m.region}</span></span>}
-          <span className="inline-flex items-center gap-1"><span aria-hidden>👁</span><span>조회 {viewLabel}</span></span>
+        {/* 위치 */}
+        {m.region && (
+          <p className="mt-1.5 inline-flex items-center gap-1 text-[11px] lg:text-[12px] font-normal text-aring-ink-500 truncate max-w-full">
+            <span aria-hidden>📍</span>
+            <span className="truncate">{m.region}</span>
+          </p>
+        )}
+        {/* 조회수 · 좋아요 — 가로 배치 */}
+        <div className="mt-1 flex flex-row gap-2 items-center text-[11px] lg:text-[12px] font-normal text-aring-ink-400">
+          <span className="inline-flex items-center gap-1">
+            <IconEye className="w-3.5 h-3.5" />
+            <span>조회수 {viewCount}</span>
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <IconHeart className="w-3.5 h-3.5" />
+            <span>{likeCount}</span>
+          </span>
         </div>
       </div>
     </Link>
@@ -404,7 +431,7 @@ function BrandSection({ brandCounts, isLoading }: {
 // ─────────────────────────────────────────────────────────────
 function SuccessSection() {
   return (
-    <section className="pt-2 pb-5">
+    <section className="pt-2 pb-4">
       <SectionHeader
         title="매칭 성공 사례"
         sub="실제 짝을 찾은 이야기"
@@ -415,7 +442,7 @@ function SuccessSection() {
         href="/cases"
         aria-label="매칭 성공 사례 전체 보기"
         onClick={log('success:tap')}
-        className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green p-5 lg:p-7 block hover:opacity-95 active:scale-[0.99] transition"
+        className="mx-5 lg:mx-8 relative overflow-hidden rounded-card bg-aring-grad-green px-5 py-4 lg:px-7 lg:py-[22px] block hover:opacity-95 active:scale-[0.99] transition"
       >
         <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 w-[180px] h-[180px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle at center, #FBC8DC 0%, transparent 70%)' }} />
         <div aria-hidden className="pointer-events-none absolute -left-10 -bottom-12 w-[160px] h-[160px] rounded-full opacity-25" style={{ background: 'radial-gradient(circle at center, #C5DDF0 0%, transparent 70%)' }} />
@@ -447,7 +474,7 @@ function SuccessSection() {
 function FindByPhotoCTA() {
   const router = useRouter();
   return (
-    <section className="px-5 lg:px-8 pt-2 pb-5 lg:pb-10">
+    <section className="px-5 lg:px-8 pt-1.5 pb-4 lg:pb-8">
       <button onClick={() => { log('cta:find-by-photo'); router.push('/my/match'); }} className="w-full flex items-center gap-3 rounded-card bg-white border border-aring-green-line px-4 py-4 shadow-card active:scale-[0.99] transition text-left">
         <div className="relative w-12 h-12 shrink-0 rounded-tile bg-aring-grad-pastel flex items-center justify-center">
           <IconCamera className="w-5 h-5 text-aring-ink-900" strokeWidth={2.2} />

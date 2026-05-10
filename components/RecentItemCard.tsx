@@ -10,7 +10,7 @@ const IconHeart = ({ className = 'w-3.5 h-3.5', filled = false }: { className?: 
     </svg>
 );
 
-const IconEye = ({ className = 'w-3 h-3' }: { className?: string }) => (
+const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
         <circle cx="12" cy="12" r="3" />
@@ -69,8 +69,8 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
                     <div className="flex items-center gap-2">
                         {/* 조회수 — 메타 */}
                         {typeof it.viewCount === 'number' && it.viewCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-[11px] lg:text-[12px] font-normal text-aring-ink-500">
-                                <IconEye />
+                            <span className="inline-flex items-center gap-1 text-[11px] lg:text-[12px] font-normal text-aring-ink-400">
+                                <IconEye className="w-3.5 h-3.5" />
                                 {it.viewCount}
                             </span>
                         )}
@@ -78,9 +78,9 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
                         <button
                             onClick={handleLike}
                             aria-label="찜하기"
-                            className={['inline-flex items-center gap-1 text-[12px] lg:text-[13px] font-normal transition', liked ? 'text-aring-accent' : 'text-aring-ink-500'].join(' ')}
+                            className={['inline-flex items-center gap-1 text-[12px] lg:text-[13px] font-normal transition', liked ? 'text-aring-accent' : 'text-aring-ink-400'].join(' ')}
                         >
-                            <IconHeart className="w-3 h-3" filled={liked} />
+                            <IconHeart className="w-3.5 h-3.5" filled={liked} />
                             {it.likes + (liked ? 1 : 0)}
                         </button>
                     </div>

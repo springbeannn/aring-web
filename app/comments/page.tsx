@@ -5,6 +5,19 @@ import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
+/* ── 아이콘 ─────────────────────────────────── */
+const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+const IconHeart = ({ className = 'w-3.5 h-3.5', filled = false }: { className?: string; filled?: boolean }) => (
+  <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
+
 /* ── 유틸 ───────────────────────────────────── */
 function relativeTime(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -116,15 +129,20 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
           </div>
         </div>
 
-        {/* 하단 메타: 작성자 · 시간 · 조회 · 좋아요 — 전체 너비 */}
+        {/* 하단 메타: 작성자 · 시간 · 조회수 · 좋아요 — 전체 너비 */}
         <div className="mt-2 px-4 flex items-center gap-2 text-[12px] lg:text-[13px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
           <span className="font-semibold text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
           <span>·</span>
           <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
           <span>·</span>
-          <span className="flex-shrink-0">조회 {c.listing?.view_count ?? 0}</span>
-          <span>·</span>
-          <span className="flex-shrink-0">♡ 0</span>
+          <span className="flex-shrink-0 inline-flex items-center gap-1">
+            <IconEye className="w-3.5 h-3.5" />
+            {c.listing?.view_count ?? 0}
+          </span>
+          <span className="flex-shrink-0 inline-flex items-center gap-1">
+            <IconHeart className="w-3.5 h-3.5" />
+            0
+          </span>
         </div>
       </div>
     </Link>
@@ -185,11 +203,21 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
           {relativeTime(c.created_at)}
         </div>
 
-        {/* 조회 */}
-        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">{c.listing?.view_count ?? 0}</div>
+        {/* 조회수 */}
+        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
+          <span className="inline-flex items-center gap-1 justify-end">
+            <IconEye className="w-3.5 h-3.5" />
+            {c.listing?.view_count ?? 0}
+          </span>
+        </div>
 
         {/* 좋아요 */}
-        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">♡ 0</div>
+        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
+          <span className="inline-flex items-center gap-1 justify-end">
+            <IconHeart className="w-3.5 h-3.5" />
+            0
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -286,7 +314,7 @@ export default function CommentsPage() {
                 <div className="flex-1 min-w-0">댓글 내용</div>
                 <div className="w-20 flex-shrink-0">작성자</div>
                 <div className="w-16 flex-shrink-0 text-right">시간</div>
-                <div className="w-10 flex-shrink-0 text-right">조회</div>
+                <div className="w-10 flex-shrink-0 text-right">조회수</div>
                 <div className="w-10 flex-shrink-0 text-right">좋아요</div>
               </div>
               {/* 바디 */}
