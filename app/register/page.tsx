@@ -345,10 +345,12 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
       {!photo ? (
         <label className="relative block aspect-[4/5] rounded-card bg-aring-grad-pastel overflow-hidden cursor-pointer active:scale-[0.99] transition">
           <div aria-hidden className="absolute inset-0 pointer-events-none">
-            <div className="aring-blob-a absolute -top-10 -left-10 w-[180px] h-[180px] rounded-full opacity-65" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
-            <div className="aring-blob-b absolute bottom-0 -right-12 w-[200px] h-[200px] rounded-full opacity-55" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
-            <div className="aring-blob-c absolute top-1/2 left-1/3 w-[160px] h-[160px] rounded-full opacity-50" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
+            <div className="aring-blob-a absolute -top-10 -left-10 w-[180px] h-[180px] rounded-full opacity-[0.39]" style={{ background: 'radial-gradient(circle, #FBC8DC 0%, transparent 70%)', filter: 'blur(40px)' }} />
+            <div className="aring-blob-b absolute bottom-0 -right-12 w-[200px] h-[200px] rounded-full opacity-[0.33]" style={{ background: 'radial-gradient(circle, #C5DDF0 0%, transparent 70%)', filter: 'blur(48px)' }} />
+            <div className="aring-blob-c absolute top-1/2 left-1/3 w-[160px] h-[160px] rounded-full opacity-[0.30]" style={{ background: 'radial-gradient(circle, #FFEFB5 0%, transparent 70%)', filter: 'blur(44px)' }} />
           </div>
+          {/* 흰색 overlay 40% — 베이스 그라데이션을 40% 투명하게 보이게 함 */}
+          <div aria-hidden className="absolute inset-0 bg-white/40 pointer-events-none" />
           <div className="relative h-full flex flex-col items-center justify-center gap-3">
             <div className="glass rounded-2xl px-7 py-7 flex flex-col items-center gap-3 shadow-card">
               <div className="w-14 h-14 rounded-full bg-white/80 flex items-center justify-center">
