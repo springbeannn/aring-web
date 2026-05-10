@@ -57,6 +57,8 @@ const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
 export default function BrandPage() {
   const params = useParams();
   const brandName = decodeURIComponent(params.brand as string);
+  // '기타'는 brand 컬럼 값이 아니라 brand_dict에 매칭 안 되는 가상 카테고리
+  const isEtcBrand = brandName.trim() === '기타';
 
   const [items, setItems] = useState<RecentItem[]>([]);
   const [page, setPage] = useState(0);
@@ -68,12 +70,14 @@ export default function BrandPage() {
 
   // 브랜드 필터 적용
   const filtered = useMemo(() => {
+    // '기타' 케이스는 fetch 시점에 이미 필터됐으므로 그대로 통과
+    if (isEtcBrand) return sortFiltered;
     return sortFiltered.filter(item =>
       (item.brand ?? '').toLowerCase() === brandName.toLowerCase()
     );
-  }, [sortFiltered, brandName]);
+  }, [sortFiltered, brandName, isEtcBrand]);
 
-  // 첫 페이지 fetch — 브랜드로 직접 쿼리
+  // 첫 페이지 fetch — 일반 브랜드는 직접 쿼리, '기타'는 dict 매칭 후 클라이언트 필터
   useEffect(() => {
     let cancelled = false;
 
@@ -89,6 +93,60 @@ export default function BrandPage() {
         return;
       }
 
+      // ── 분기 1: '기타' 케이스 ──
+      // brand_dict에 매칭 안 되는 row만 추림 (홈 BrandSection과 동일 로직)
+      if (isEtcBrand) {
+        const { data, error: fetchErr } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('status', 'open')
+          .order('created_at', { ascending: false })
+          .limit(200);
+
+        if (cancelled) return;
+        if (fetchErr) {
+          console.error('[aring] brand fetch error (etc)', fetchErr);
+          setError('상품을 불러오지 못했습니다');
+          setLoading(false);
+          return;
+        }
+
+        try {
+          const { getBrands } = await import('@/lib/brandNormalizer');
+          const brandDict = await getBrands();
+          const etcRows = (data ?? []).filter((row: Listing) => {
+            const brandInput = (row.brand ?? '').trim();
+            if (!brandInput || brandInput === '브랜드 미상') return false;
+            const bkey = (row as Listing & { brand_key?: string }).brand_key;
+            let dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
+            if (!dictEntry) {
+              const q = brandInput.toLowerCase().replace(/\s+/g, '');
+              dictEntry = brandDict.find(b => {
+                const targets = [
+                  b.brand_key,
+                  b.display_name.toLowerCase(),
+                  (b.name_ko ?? '').toLowerCase(),
+                  (b.name_en ?? '').toLowerCase(),
+                  ...b.aliases.map(a => a.toLowerCase()),
+                ].map(t => t.replace(/\s+/g, ''));
+                return targets.includes(q);
+              }) ?? null;
+            }
+            return !dictEntry; // dict에 없으면 '기타'
+          });
+          if (cancelled) return;
+          const fresh = etcRows.map((r, i) => listingToRecent(r as Listing, i));
+          setItems(fresh);
+          setHasMore(false); // '기타'는 한 번에 200건 fetch, 페이지네이션 미사용
+        } catch (e) {
+          console.error('[aring] brand dict load error', e);
+          setError('브랜드 사전을 불러오지 못했습니다');
+        }
+        setLoading(false);
+        return;
+      }
+
+      // ── 분기 2: 일반 브랜드 (정확 매칭) ──
       const { data, error } = await supabase
         .from('listings')
         .select('*')
@@ -122,7 +180,7 @@ export default function BrandPage() {
 
     loadFirst();
     return () => { cancelled = true; };
-  }, [brandName]);
+  }, [brandName, isEtcBrand]);
 
   async function loadMore() {
     if (!supabase || loading || !hasMore) return;
