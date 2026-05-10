@@ -137,7 +137,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
         {/* 헤더 */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgb(229,229,229)] flex-shrink-0">
           <div className="flex items-baseline gap-1">
-            <span className="text-[22px] lg:text-[26px] font-black tracking-tight text-aring-green leading-none">aring</span>
+            <span className="text-[24px] lg:text-[26px] font-black tracking-tight text-aring-green leading-none">aring</span>
             <sup className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">한 짝의 짝</sup>
           </div>
           <button
@@ -167,7 +167,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
                   type="button"
                   onClick={() => handleLeftClick(item)}
                   className={[
-                    'w-full text-left flex items-center min-h-[52px] py-4 px-4 text-[14px] border-l-2 transition',
+                    'w-full text-left flex items-center min-h-[52px] py-4 px-4 text-[16px] border-l-2 transition',
                     isActive
                       ? 'bg-white font-bold text-aring-ink-900 border-l-aring-green'
                       : item.cta
@@ -193,7 +193,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
                     <Link
                       href={child.href}
                       onClick={onClose}
-                      className="flex items-center justify-between h-[52px] px-4 text-[14px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[#EEEEEE]"
+                      className="flex items-center justify-between h-[52px] px-4 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[#EEEEEE]"
                     >
                       <span>{child.label}</span>
                       <svg
@@ -215,7 +215,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
               </ul>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[200px] px-6 text-center">
-                <p className="text-[13px] lg:text-[15px] text-aring-ink-400 leading-relaxed">
+                <p className="text-[15px] lg:text-[15px] text-aring-ink-400 leading-relaxed">
                   선택한 메뉴는<br />바로 이동해요
                 </p>
                 <Link
@@ -238,7 +238,7 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
           <Link
             href="/register"
             onClick={onClose}
-            className="w-full flex items-center justify-center gap-1.5 py-[14px] bg-aring-ink-900 text-white rounded-full text-[14px] font-semibold tracking-tight hover:opacity-90 transition"
+            className="w-full flex items-center justify-center gap-1.5 py-[14px] bg-aring-ink-900 text-white rounded-full text-[16px] font-semibold tracking-tight hover:opacity-90 transition"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 5v14M5 12h14" />

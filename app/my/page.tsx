@@ -414,14 +414,14 @@ function ProfileHeader({
   return (
     <section className="px-5 lg:px-8 pt-3 pb-2">
       <div className="flex items-center gap-3">
-        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[22px] lg:text-[22px] font-bold text-aring-ink-900">
+        <div className="w-14 h-14 lg:w-16 lg:h-16 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[24px] lg:text-[24px] font-bold text-aring-ink-900">
           {(nickname || '?').charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[17px] lg:text-[18px] font-bold text-aring-ink-900 truncate">
+          <p className="text-[20px] lg:text-[20px] font-bold text-aring-ink-900 truncate">
             {nickname || '아링 친구'}
           </p>
-          <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500 truncate">
+          <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500 truncate">
             {bio}
           </p>
         </div>
@@ -429,7 +429,7 @@ function ProfileHeader({
 
       {/* 랜덤 상태 메시지 */}
       <div className="mt-4 rounded-card bg-aring-grad-pastel px-4 py-3">
-        <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
+        <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">
           {message}
         </p>
       </div>
@@ -447,7 +447,7 @@ function ProfileHeader({
 function Stat({ label, value, mounted }: { label: string; value: number; mounted: boolean }) {
   return (
     <div className="rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center">
-      <p className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900" suppressHydrationWarning>
+      <p className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900" suppressHydrationWarning>
         {mounted ? value : 0}
       </p>
       <p className="mt-0.5 text-[12px] lg:text-[13px] font-semibold text-aring-ink-500">
@@ -479,7 +479,7 @@ function QuickMenu({
             href={m.anchor}
             className="relative rounded-tile border border-aring-green-line bg-white px-3 py-3 text-center active:scale-[0.99] transition"
           >
-            <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
+            <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">
               {m.label}
             </p>
             {m.count > 0 && (
@@ -568,7 +568,7 @@ function MyListingCard({
             {listing.brand ?? '브랜드 미상'}
           </p>
           {/* 제품 타이틀 */}
-          <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+          <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
           {/* 메타(날짜) */}
@@ -664,13 +664,13 @@ function StatusStepper({
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
           <div className="w-full max-w-[300px] rounded-[20px] bg-white p-6 shadow-xl">
-            <p className="text-[14px] font-bold text-aring-ink-900 text-center leading-snug">
+            <p className="text-[16px] font-bold text-aring-ink-900 text-center leading-snug">
               {STEP_LABEL[confirm]} 상태로<br />변경하시겠습니까?
             </p>
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => setConfirm(null)}
-                className="flex-1 rounded-pill border border-aring-green-line py-2.5 text-[13px] lg:text-[15px] font-bold text-aring-ink-600 hover:bg-aring-ink-100 transition"
+                className="flex-1 rounded-pill border border-aring-green-line py-2.5 text-[15px] lg:text-[15px] font-bold text-aring-ink-600 hover:bg-aring-ink-100 transition"
               >
                 취소
               </button>
@@ -679,7 +679,7 @@ function StatusStepper({
                   onStatusChange(listing, confirm);
                   setConfirm(null);
                 }}
-                className="flex-1 rounded-pill bg-aring-ink-900 py-2.5 text-[13px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
+                className="flex-1 rounded-pill bg-aring-ink-900 py-2.5 text-[15px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
               >
                 변경하기
               </button>
@@ -758,7 +758,7 @@ function LikedCard({ listing }: { listing: Listing }) {
           {listing.brand ?? '브랜드 미상'}
         </p>
         {/* 제품 타이틀 */}
-        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+        <p className="mt-px text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link
@@ -879,7 +879,7 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
           {s.brand}
         </p>
         {/* 제품 타이틀 */}
-        <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+        <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {s.productName}
         </p>
         {/* 댓글 미리보기 — 본문성 텍스트 (서브) */}
@@ -912,7 +912,7 @@ function SectionHead({
     <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
       <div>
         <div className="flex items-center gap-2">
-          <h2 className="text-[17px] lg:text-[18px] font-bold tracking-tight text-aring-ink-900">
+          <h2 className="text-[20px] lg:text-[20px] font-bold tracking-tight text-aring-ink-900">
             {title}
           </h2>
           {typeof count === 'number' && count > 0 && (
@@ -922,7 +922,7 @@ function SectionHead({
           )}
         </div>
         {sub && (
-          <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
+          <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
         )}
       </div>
     </div>
@@ -942,8 +942,8 @@ function EmptyBlock({
 }) {
   return (
     <div className="rounded-card bg-aring-ink-100 px-5 py-8 text-center">
-      <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">{title}</p>
-      <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
+      <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">{title}</p>
+      <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
         className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-95 transition"

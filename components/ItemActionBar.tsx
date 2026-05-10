@@ -146,7 +146,7 @@ export function ItemActionBar({ onBack, isOwner, itemId, itemTitle }: {
                 {isOwner && (
                   <button
                     onClick={() => { setMenuOpen(false); router.push(`/items/${itemId}/edit`); }}
-                    className="w-full text-left px-4 py-3 text-[13px] lg:text-[15px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition flex items-center gap-2"
+                    className="w-full text-left px-4 py-3 text-[15px] lg:text-[15px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition flex items-center gap-2"
                   >
                     ✏️ 수정하기
                   </button>
@@ -154,7 +154,7 @@ export function ItemActionBar({ onBack, isOwner, itemId, itemTitle }: {
                 {isOwner && (
                   <button
                     onClick={() => { setMenuOpen(false); setShowDelete(true); }}
-                    className="w-full text-left px-4 py-3 text-[13px] lg:text-[15px] font-semibold text-red-400 hover:bg-red-50 transition flex items-center gap-2 border-t border-aring-ink-100"
+                    className="w-full text-left px-4 py-3 text-[15px] lg:text-[15px] font-semibold text-red-400 hover:bg-red-50 transition flex items-center gap-2 border-t border-aring-ink-100"
                   >
                     🗑️ 삭제하기
                   </button>
@@ -162,7 +162,7 @@ export function ItemActionBar({ onBack, isOwner, itemId, itemTitle }: {
                 <button
                   onClick={() => { setMenuOpen(false); setShowReport(true); }}
                   className={[
-                    "w-full text-left px-4 py-3 text-[13px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition flex items-center gap-2",
+                    "w-full text-left px-4 py-3 text-[15px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition flex items-center gap-2",
                     isOwner ? "border-t border-aring-ink-100" : "",
                   ].join(" ")}
                 >

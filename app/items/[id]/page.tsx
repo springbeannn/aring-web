@@ -208,13 +208,13 @@ function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => voi
                 <>
                   <button
                     onClick={() => { setMenuOpen(false); router.push(`/items/${itemId}/edit`); }}
-                    className="w-full text-left px-4 py-3 text-[13px] lg:text-[15px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition"
+                    className="w-full text-left px-4 py-3 text-[15px] lg:text-[15px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100 transition"
                   >
                     ✏️ 수정하기
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="w-full text-left px-4 py-3 text-[13px] lg:text-[15px] font-semibold text-red-400 hover:bg-red-50 transition border-t border-aring-ink-100"
+                    className="w-full text-left px-4 py-3 text-[15px] lg:text-[15px] font-semibold text-red-400 hover:bg-red-50 transition border-t border-aring-ink-100"
                   >
                     🗑️ 삭제하기
                   </button>
@@ -223,7 +223,7 @@ function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => voi
               {!isOwner && (
                 <button
                   onClick={() => setMenuOpen(false)}
-                  className="w-full text-left px-4 py-3 text-[13px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition"
+                  className="w-full text-left px-4 py-3 text-[15px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 hover:bg-aring-ink-100 transition"
                 >
                   🚨 신고하기
                 </button>
@@ -326,12 +326,12 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
 
   return (
     <section className="px-5 lg:px-8 pt-5 lg:pt-7">
-      <p className="text-[13px] lg:text-[15px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
-      <h1 className="mt-1 text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
+      <p className="text-[15px] lg:text-[15px] font-bold tracking-wider text-aring-ink-500">{item.brand}</p>
+      <h1 className="mt-1 text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
         {item.name}
       </h1>
       <div className="mt-1.5 flex items-center justify-between">
-        <p className="text-[22px] lg:text-[26px] font-bold text-aring-ink-900">
+        <p className="text-[24px] lg:text-[26px] font-bold text-aring-ink-900">
           {item.price > 0 ? formatKRW(item.price) : '가격 협의'}
         </p>
         <div className="flex items-center gap-3">
@@ -340,7 +340,7 @@ function HeaderInfo({ item }: { item: ItemDetail }) {
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span className="text-[13px] lg:text-[15px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
+              <span className="text-[15px] lg:text-[15px] font-semibold">{((item as ItemDetail & {viewCount?: number}).viewCount) ?? 0}</span>
             </div>
             <button
           onClick={toggle}
@@ -400,7 +400,7 @@ function KV({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-[11px] lg:text-[12px] font-semibold text-aring-ink-400">{label}</p>
-      <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">
+      <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold text-aring-ink-900">
         {value}
       </p>
     </div>
@@ -433,10 +433,10 @@ function ColorChip({ value }: { value: string }) {
             className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
             style={info.hex.startsWith('linear') ? { background: info.hex } : { backgroundColor: info.hex }}
           />
-          <p className="text-[13px] lg:text-[14px] font-bold text-aring-ink-900">{info.label}</p>
+          <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">{info.label}</p>
         </div>
       ) : (
-        <p className="mt-0.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">—</p>
+        <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold text-aring-ink-900">—</p>
       )}
     </div>
   );
@@ -450,11 +450,11 @@ function StorySection({ story, createdAt }: { story?: string; createdAt: string 
   const ago = relativeTime(createdAt);
   return (
     <section className="px-5 lg:px-8 mt-6">
-      <h2 className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 mb-2">
+      <h2 className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
-      <p className="text-[13px] lg:text-[15px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
-      <p className="mt-2 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{ago}</p>
+      <p className="text-[15px] lg:text-[15px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
+      <p className="mt-2 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{ago}</p>
     </section>
   );
 }
@@ -490,7 +490,7 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
     <section className="mt-7">
       <div className="px-5 lg:px-8 mb-3 flex items-end justify-between">
         <div>
-          <h2 className="text-[15px] lg:text-[17px] font-bold tracking-tight text-aring-ink-900">
+          <h2 className="text-[16px] lg:text-[17px] font-bold tracking-tight text-aring-ink-900">
             비슷한 귀걸이
           </h2>
           <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500">
@@ -540,12 +540,12 @@ function SimilarCard({ item }: { item: ItemSummary }) {
           {item.brand}
         </p>
         {/* 제품 타이틀 */}
-        <p className="mt-px text-[13px] lg:text-[14px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+        <p className="mt-px text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {item.name}
         </p>
         {/* 가격 */}
         {typeof item.price === 'number' && item.price > 0 && (
-          <p className="mt-1 text-[13px] lg:text-[14px] font-bold text-aring-ink-900">
+          <p className="mt-1 text-[15px] lg:text-[15px] font-bold text-aring-ink-900">
             {formatKRW(item.price)}
           </p>
         )}
@@ -560,21 +560,21 @@ function SimilarCard({ item }: { item: ItemSummary }) {
 function SellerCard({ seller }: { seller: ItemDetail['seller'] }) {
   return (
     <section className="px-5 lg:px-8 mt-7">
-      <h2 className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 mb-2">
+      <h2 className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 mb-2">
         등록자
       </h2>
       <button
         onClick={log('detail:seller')}
         className="w-full flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 text-left active:scale-[0.99] transition"
       >
-        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">
+        <div className="w-11 h-11 shrink-0 rounded-full bg-aring-grad-pastel flex items-center justify-center text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">
           {seller.nickname.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
+          <p className="text-[15px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
             {seller.nickname}
           </p>
-          <div className="mt-0.5 flex items-center gap-2 text-[13px] lg:text-[15px] text-aring-ink-500">
+          <div className="mt-0.5 flex items-center gap-2 text-[15px] lg:text-[15px] text-aring-ink-500">
             <span className="inline-flex items-center gap-0.5 text-aring-ink-700 font-semibold">
               <IconStar className="w-3 h-3 text-aring-accent" />
               {seller.rating.toFixed(1)}
@@ -603,7 +603,7 @@ function LoadingScreen() {
     <main className="min-h-screen flex items-center justify-center bg-white">
       <div className="text-center">
         <div className="w-10 h-10 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-        <p className="mt-3 text-[13px] lg:text-[15px] text-aring-ink-500">불러오는 중…</p>
+        <p className="mt-3 text-[15px] lg:text-[15px] text-aring-ink-500">불러오는 중…</p>
       </div>
     </main>
   );
@@ -613,15 +613,15 @@ function NotFoundScreen() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="text-center">
-        <p className="text-[17px] font-bold text-aring-ink-900">
+        <p className="text-[20px] font-bold text-aring-ink-900">
           상품을 찾을 수 없습니다
         </p>
-        <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
+        <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
           등록이 종료되었거나 잘못된 링크일 수 있어요.
         </p>
         <Link
           href="/"
-          className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold"
+          className="mt-5 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-bold"
         >
           홈으로
         </Link>

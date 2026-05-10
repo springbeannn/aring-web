@@ -35,10 +35,10 @@ function LoginLeftPanel() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
       <div className="relative z-20 mt-auto px-9 pb-12">
-        <p className="text-[22px] font-bold leading-snug text-white mb-3 break-keep">
+        <p className="text-[24px] font-bold leading-snug text-white mb-3 break-keep">
           aring에 다시 오셨군요 :)
         </p>
-        <p className="text-[13px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
+        <p className="text-[15px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
           서랍 속에 한 짝만 남겨둔 경험이 있다면{' '}
           <span className="text-purple-300 font-semibold">aring에서 다시 만나보세요</span>
         </p>
@@ -73,7 +73,7 @@ function LoginMobileBanner() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 px-5 pb-5">
-        <p className="text-[15px] font-bold text-white leading-snug mb-1 break-keep">
+        <p className="text-[16px] font-bold text-white leading-snug mb-1 break-keep">
           aring에 다시 오셨군요 :)
         </p>
         <p className="text-[12px] lg:text-[13px] text-white/70 leading-relaxed break-keep">
@@ -123,7 +123,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex justify-center bg-white">
       {toast && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-semibold px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-semibold px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
           {toast}
         </div>
       )}
@@ -138,14 +138,14 @@ export default function LoginPage() {
 
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
               <div className="mb-7 text-center lg:text-left">
-                <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">로그인</h1>
-                <p className="mt-1.5 text-[13px] lg:text-[15px] text-aring-ink-500 leading-snug">aring에 다시 오셨군요 :)</p>
+                <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">로그인</h1>
+                <p className="mt-1.5 text-[15px] lg:text-[15px] text-aring-ink-500 leading-snug">aring에 다시 오셨군요 :)</p>
               </div>
 
               <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
                 {/* 카카오 로그인 — 임시 숨김 (서비스 준비 중). 다시 노출하려면 className에서 hidden 제거 */}
                 <button onClick={handleKakao}
-                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-[#191919] transition active:scale-95 whitespace-nowrap"
+                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[16px] text-[#191919] transition active:scale-95 whitespace-nowrap"
                   style={{ background: '#FEE500' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 3C6.477 3 2 6.82 2 11.5c0 2.98 1.86 5.607 4.68 7.186L5.5 22l4.174-2.304C10.42 19.893 11.2 20 12 20c5.523 0 10-3.82 10-8.5S17.523 3 12 3z" fill="#191919"/>
@@ -155,7 +155,7 @@ export default function LoginPage() {
 
                 {/* 네이버 로그인 — 임시 숨김 (서비스 준비 중). 다시 노출하려면 className에서 hidden 제거 */}
                 <button onClick={handleNaver}
-                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] text-white transition active:scale-95 whitespace-nowrap"
+                  className="hidden w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[16px] text-white transition active:scale-95 whitespace-nowrap"
                   style={{ background: '#03C75A' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                     <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                 </button>
 
                 <button onClick={() => handleOAuth('google')}
-                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[14px] lg:text-[18px] lg:font-bold text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
+                  className="w-[69%] sm:w-full flex items-center justify-center gap-2.5 py-2.5 rounded-2xl font-bold text-[16px] lg:text-[18px] lg:font-bold text-aring-ink-900 border border-aring-ink-200 bg-white transition active:scale-95 whitespace-nowrap">
                   <svg width="18" height="18" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -177,7 +177,7 @@ export default function LoginPage() {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px bg-aring-ink-100" />
-                <span className="text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400 font-semibold">또는</span>
+                <span className="text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-400 font-semibold">또는</span>
                 <div className="flex-1 h-px bg-aring-ink-100" />
               </div>
 
@@ -187,7 +187,7 @@ export default function LoginPage() {
                   placeholder="이메일"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-aring-ink-200 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                   style={{ background: 'linear-gradient(to right, rgba(235,218,210,0.5), rgba(225,205,212,0.5))' }}
                 />
                 <div className="relative">
@@ -197,7 +197,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleEmailLogin()}
-                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
+                    className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                     style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }}
                   />
                   <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-aring-ink-400 hover:text-aring-ink-700 transition">
@@ -206,17 +206,17 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {error && <p className="mb-3 text-[13px] lg:text-[15px] text-red-500 text-center">{error}</p>}
+              {error && <p className="mb-3 text-[15px] lg:text-[15px] text-red-500 text-center">{error}</p>}
 
               <button
                 onClick={handleEmailLogin}
                 disabled={!isValid || loading}
-                className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+                className={`w-full py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
               >
                 {loading ? '로그인 중...' : '로그인'}
               </button>
 
-              <p className="mt-4 text-center text-[13px] lg:text-[15px] text-aring-ink-500">
+              <p className="mt-4 text-center text-[15px] lg:text-[15px] text-aring-ink-500">
                 아직 계정이 없으신가요?{' '}
                 <Link href="/signup" className="font-bold text-aring-ink-900 underline">회원가입</Link>
               </p>

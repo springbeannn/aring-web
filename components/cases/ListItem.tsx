@@ -39,7 +39,7 @@ function DefaultItem({ item }: Props) {
           <h2 className="text-[20px] sm:text-[22px] font-bold text-aring-black leading-snug mb-1.5 group-hover:text-aring-olive transition-colors">
             {item.title}
           </h2>
-          <p className="text-[14px] text-aring-gray leading-relaxed line-clamp-2">
+          <p className="text-[16px] text-aring-gray leading-relaxed line-clamp-2">
             {item.summary}
           </p>
           {item.tags?.length > 0 && (
@@ -87,10 +87,10 @@ function FeaturedItem({ item }: Props) {
       </div>
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <h2 className="text-[22px] sm:text-[26px] font-bold text-white leading-snug mb-2">
+          <h2 className="text-[24px] sm:text-[26px] font-bold text-white leading-snug mb-2">
             {item.title}
           </h2>
-          <p className="text-[14px] text-white/70 leading-relaxed line-clamp-2">
+          <p className="text-[16px] text-white/70 leading-relaxed line-clamp-2">
             {item.summary}
           </p>
           {item.tags?.length > 0 && (

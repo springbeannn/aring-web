@@ -165,7 +165,7 @@ export default async function CaseDetailPage({
       <div className="max-w-2xl mx-auto px-5 pt-10 pb-20">
         <Link
           href="/cases"
-          className="inline-flex items-center text-[13px] lg:text-[15px] font-semibold text-aring-olive mb-6 hover:underline"
+          className="inline-flex items-center text-[15px] lg:text-[15px] font-semibold text-aring-olive mb-6 hover:underline"
         >
           ← 목록으로
         </Link>
@@ -179,7 +179,7 @@ export default async function CaseDetailPage({
           <h1 className="text-[28px] sm:text-[34px] font-bold text-aring-black leading-tight mb-3">
             {c.title}
           </h1>
-          <p className="text-[15px] text-aring-gray leading-relaxed mb-4">{c.summary}</p>
+          <p className="text-[16px] text-aring-gray leading-relaxed mb-4">{c.summary}</p>
 
           {/* 메타 + 태그 */}
           <div className="flex items-center gap-3 flex-wrap text-[12px] lg:text-[13px] text-aring-gray mb-8 pb-6 border-b border-aring-gray-light">
@@ -216,7 +216,7 @@ export default async function CaseDetailPage({
         {/* 다른 성공 사례 */}
         {others.length > 0 && (
           <section className="mt-16 pt-10 border-t border-aring-gray-light">
-            <h2 className="text-[18px] font-bold text-aring-black mb-4">
+            <h2 className="text-[20px] font-bold text-aring-black mb-4">
               다른 성공 사례 보기
             </h2>
             <div className="bg-white rounded-2xl border border-aring-gray-light overflow-hidden">
@@ -231,7 +231,7 @@ export default async function CaseDetailPage({
                       {o.category}
                     </p>
                   )}
-                  <p className="text-[15px] font-bold text-aring-black leading-snug group-hover:text-aring-olive transition-colors">
+                  <p className="text-[16px] font-bold text-aring-black leading-snug group-hover:text-aring-olive transition-colors">
                     {o.title}
                   </p>
                 </Link>

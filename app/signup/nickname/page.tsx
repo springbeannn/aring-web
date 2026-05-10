@@ -36,8 +36,8 @@ export default function NicknamePage() {
         <div className="px-5 pt-16 pb-24 lg:max-w-[480px] lg:mx-auto">
 
           <div className="mb-10 text-center">
-            <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
-            <p className="mt-2 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500 leading-snug">aring에서 사용할 이름이에요<br />나중에 변경할 수 있어요</p>
+            <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">닉네임을 정해주세요</h1>
+            <p className="mt-2 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500 leading-snug">aring에서 사용할 이름이에요<br />나중에 변경할 수 있어요</p>
           </div>
 
           <div className="mb-4">
@@ -48,18 +48,18 @@ export default function NicknamePage() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
+              className="w-full px-4 py-3.5 rounded-2xl border border-aring-ink-200 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition text-center font-bold input-aurora"
               style={{ background: 'linear-gradient(to right, rgba(235,228,200,0.5), rgba(232,218,205,0.5))' }}
               autoFocus
             />
-            <p className="mt-2 text-right text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">{nickname.length}/12</p>
-            {error && <p className="mt-1 text-[13px] lg:text-[15px] text-red-500 text-center">{error}</p>}
+            <p className="mt-2 text-right text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-400">{nickname.length}/12</p>
+            {error && <p className="mt-1 text-[15px] lg:text-[15px] text-red-500 text-center">{error}</p>}
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={!isValid || loading}
-            className={`w-full py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
+            className={`w-full py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 ${isValid && !loading ? 'bg-aring-ink-900 text-white shadow-cta' : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'}`}
           >
             {loading ? '저장 중...' : '시작하기'}
           </button>

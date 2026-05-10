@@ -91,7 +91,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {err && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] lg:text-[15px] px-4 py-3 rounded-lg">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[15px] lg:text-[15px] px-4 py-3 rounded-lg">
           {err}
         </div>
       )}
@@ -108,12 +108,12 @@ export default function AdminDashboardPage() {
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[16px] font-bold text-aring-ink-900">최근 등록 게시물</h2>
-          <Link href="/admin/listings" className="text-[13px] lg:text-[15px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
+          <Link href="/admin/listings" className="text-[15px] lg:text-[15px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
         </div>
         {loading ? (
           <SkeletonRows count={5} />
         ) : recentListings.length === 0 ? (
-          <p className="text-[13px] lg:text-[15px] text-aring-ink-500">데이터 없음</p>
+          <p className="text-[15px] lg:text-[15px] text-aring-ink-500">데이터 없음</p>
         ) : (
           <ul className="divide-y divide-aring-ink-100">
             {recentListings.map((it) => (
@@ -124,8 +124,8 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-400 truncate">{it.brand ?? '브랜드 미상'}</p>
-                  <p className="text-[14px] font-bold text-aring-ink-900 truncate">{it.detail ?? it.shape ?? '한 짝'}</p>
+                  <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-400 truncate">{it.brand ?? '브랜드 미상'}</p>
+                  <p className="text-[16px] font-bold text-aring-ink-900 truncate">{it.detail ?? it.shape ?? '한 짝'}</p>
                 </div>
                 <span className="text-[12px] lg:text-[13px] text-aring-ink-500 shrink-0">{fmtDate(it.created_at)}</span>
                 <span className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-700 shrink-0">{statusLabel(it.status)}</span>
@@ -147,18 +147,18 @@ export default function AdminDashboardPage() {
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[16px] font-bold text-aring-ink-900">최근 가입 회원</h2>
-          <Link href="/admin/users" className="text-[13px] lg:text-[15px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
+          <Link href="/admin/users" className="text-[15px] lg:text-[15px] font-semibold text-aring-green hover:underline">전체 보기 →</Link>
         </div>
         {loading ? (
           <SkeletonRows count={5} />
         ) : recentUsers.length === 0 ? (
-          <p className="text-[13px] lg:text-[15px] text-aring-ink-500">데이터 없음</p>
+          <p className="text-[15px] lg:text-[15px] text-aring-ink-500">데이터 없음</p>
         ) : (
           <ul className="divide-y divide-aring-ink-100">
             {recentUsers.map((u) => (
               <li key={u.user_id} className="flex items-center justify-between py-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-bold text-aring-ink-900 truncate">{u.nickname}</p>
+                  <p className="text-[16px] font-bold text-aring-ink-900 truncate">{u.nickname}</p>
                   <p className="text-[12px] lg:text-[13px] text-aring-ink-500 truncate">{u.email}</p>
                 </div>
                 <span className="text-[12px] lg:text-[13px] text-aring-ink-500 shrink-0">{fmtDate(u.created_at)}</span>
@@ -174,7 +174,7 @@ export default function AdminDashboardPage() {
 function KpiCard({ label, value, loading }: { label: string; value?: number; loading: boolean }) {
   return (
     <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
-      <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-500">{label}</p>
+      <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-500">{label}</p>
       {loading ? (
         <div className="mt-2 h-8 w-20 bg-aring-ink-100 animate-pulse rounded" />
       ) : (

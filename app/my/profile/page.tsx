@@ -125,8 +125,8 @@ export default function ProfilePage() {
 
             {/* 헤더 */}
             <div className="px-5 pt-3 pb-3 lg:pt-6 lg:pb-6">
-              <h1 className="text-[22px] lg:text-[28px] font-bold tracking-tight text-aring-ink-900">내 정보</h1>
-              <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
+              <h1 className="text-[24px] lg:text-[28px] font-bold tracking-tight text-aring-ink-900">내 정보</h1>
+              <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
             </div>
 
             {/* 카드 영역 */}
@@ -139,7 +139,7 @@ export default function ProfilePage() {
                     {initial}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[18px] lg:text-[22px] font-bold text-aring-ink-900 truncate">{profile.nickname}</p>
+                    <p className="text-[20px] lg:text-[22px] font-bold text-aring-ink-900 truncate">{profile.nickname}</p>
                     <span className="inline-flex items-center mt-1 px-2 py-0.5 rounded-full bg-aring-ink-100 text-[12px] lg:text-[13px] font-bold text-aring-ink-500">
                       {providerLabel[profile.provider] ?? profile.provider} 계정
                     </span>
@@ -151,11 +151,11 @@ export default function ProfilePage() {
               <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden">
                 <div className="px-5 py-4 lg:px-6 lg:py-5">
                   <div className="flex items-center justify-between mb-1">
-                    <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase">대화명</p>
+                    <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase">대화명</p>
                     {!editingNick && (
                       <button
                         onClick={() => { setEditingNick(true); setNickMsg(''); setNewNick(profile.nickname); }}
-                        className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900 underline underline-offset-2"
+                        className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900 underline underline-offset-2"
                       >
                         변경
                       </button>
@@ -169,30 +169,30 @@ export default function ProfilePage() {
                         onChange={(e) => { setNewNick(e.target.value); setNickMsg(''); }}
                         maxLength={12}
                         placeholder="새 대화명 입력 (2~12자)"
-                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
+                        className="w-full px-4 py-2.5 rounded-xl border border-aring-ink-200 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 outline-none focus:border-aring-ink-500 transition"
                         autoFocus
                       />
                       {nickMsg && (
-                        <p className={`text-[13px] lg:text-[15px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
+                        <p className={`text-[15px] lg:text-[15px] ${nickMsg.includes('사용 가능') ? 'text-emerald-500' : 'text-amber-500'}`}>{nickMsg}</p>
                       )}
                       <div className="flex gap-2 lg:max-w-[320px]">
                         <button
                           onClick={handleNickSave}
                           disabled={nickSaving}
-                          className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] lg:text-[15px] transition active:scale-95 ${nickSaving ? 'bg-aring-ink-100 text-aring-ink-400' : 'bg-aring-ink-900 text-white'}`}
+                          className={`flex-1 py-2.5 rounded-xl font-bold text-[15px] lg:text-[15px] transition active:scale-95 ${nickSaving ? 'bg-aring-ink-100 text-aring-ink-400' : 'bg-aring-ink-900 text-white'}`}
                         >
                           {nickSaving ? '저장 중...' : '저장'}
                         </button>
                         <button
                           onClick={() => { setEditingNick(false); setNickMsg(''); }}
-                          className="flex-1 py-2.5 rounded-xl font-bold text-[13px] lg:text-[15px] border border-aring-ink-200 text-aring-ink-700 transition active:scale-95"
+                          className="flex-1 py-2.5 rounded-xl font-bold text-[15px] lg:text-[15px] border border-aring-ink-200 text-aring-ink-700 transition active:scale-95"
                         >
                           취소
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[14px] font-semibold text-aring-ink-900">{profile.nickname}</p>
+                    <p className="text-[16px] font-semibold text-aring-ink-900">{profile.nickname}</p>
                   )}
                 </div>
               </div>
@@ -200,13 +200,13 @@ export default function ProfilePage() {
               {/* 계정 정보 */}
               <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden">
                 <div className="px-5 py-3.5 lg:px-6 lg:py-4 border-b border-aring-ink-100">
-                  <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">이메일</p>
-                  <p className="text-[14px] font-semibold text-aring-ink-900 break-all">{profile.email}</p>
+                  <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">이메일</p>
+                  <p className="text-[16px] font-semibold text-aring-ink-900 break-all">{profile.email}</p>
                 </div>
                 {profile.created_at && (
                   <div className="px-5 py-3.5 lg:px-6 lg:py-4">
-                    <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">가입일</p>
-                    <p className="text-[14px] font-semibold text-aring-ink-900">{relativeDate(profile.created_at)}</p>
+                    <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">가입일</p>
+                    <p className="text-[16px] font-semibold text-aring-ink-900">{relativeDate(profile.created_at)}</p>
                   </div>
                 )}
               </div>
@@ -216,8 +216,8 @@ export default function ProfilePage() {
                 href="/my"
                 className="flex items-center justify-between rounded-2xl border border-aring-green-line bg-white px-5 py-4 lg:px-6 active:scale-[0.99] transition"
               >
-                <span className="text-[14px] font-bold text-aring-ink-900">내 활동 보기</span>
-                <span className="text-aring-ink-400 text-[17px]">›</span>
+                <span className="text-[16px] font-bold text-aring-ink-900">내 활동 보기</span>
+                <span className="text-aring-ink-400 text-[20px]">›</span>
               </Link>
 
               {/* 로그아웃 버튼 — PC에서 폭 제한 */}
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[14px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
+                  className={`w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 ${loggingOut ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed' : 'bg-aring-ink-900 text-white shadow-cta'}`}
                 >
                   {loggingOut ? '로그아웃 중...' : '로그아웃'}
                 </button>

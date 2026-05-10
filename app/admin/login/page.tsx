@@ -85,38 +85,38 @@ function AdminLoginInner() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
-          <h1 className="text-[18px] font-bold text-aring-ink-900 mb-1">관리자 로그인</h1>
-          <p className="text-[13px] lg:text-[15px] text-aring-ink-500 mb-5">관리자 권한이 있는 계정으로만 접속할 수 있어요</p>
+          <h1 className="text-[20px] font-bold text-aring-ink-900 mb-1">관리자 로그인</h1>
+          <p className="text-[15px] lg:text-[15px] text-aring-ink-500 mb-5">관리자 권한이 있는 계정으로만 접속할 수 있어요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <label className="block">
-              <span className="text-[13px] lg:text-[15px] font-semibold text-aring-ink-700">이메일</span>
+              <span className="text-[15px] lg:text-[15px] font-semibold text-aring-ink-700">이메일</span>
               <input
                 type="email"
                 required
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1.5 w-full border border-aring-ink-200 rounded-xl px-4 py-2.5 text-[14px] outline-none focus:border-aring-green transition"
+                className="mt-1.5 w-full border border-aring-ink-200 rounded-xl px-4 py-2.5 text-[16px] outline-none focus:border-aring-green transition"
                 placeholder="admin@example.com"
               />
             </label>
 
             <label className="block">
-              <span className="text-[13px] lg:text-[15px] font-semibold text-aring-ink-700">비밀번호</span>
+              <span className="text-[15px] lg:text-[15px] font-semibold text-aring-ink-700">비밀번호</span>
               <input
                 type="password"
                 required
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1.5 w-full border border-aring-ink-200 rounded-xl px-4 py-2.5 text-[14px] outline-none focus:border-aring-green transition"
+                className="mt-1.5 w-full border border-aring-ink-200 rounded-xl px-4 py-2.5 text-[16px] outline-none focus:border-aring-green transition"
                 placeholder="••••••••"
               />
             </label>
 
             {error && (
-              <p className="text-[13px] lg:text-[15px] text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+              <p className="text-[15px] lg:text-[15px] text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
                 {error}
               </p>
             )}
@@ -124,7 +124,7 @@ function AdminLoginInner() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full bg-aring-green text-white text-[14px] font-semibold rounded-lg py-3 hover:opacity-90 disabled:opacity-50 transition"
+              className="mt-2 w-full bg-aring-green text-white text-[16px] font-semibold rounded-lg py-3 hover:opacity-90 disabled:opacity-50 transition"
             >
               {loading ? '확인 중...' : '로그인'}
             </button>

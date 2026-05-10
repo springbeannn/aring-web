@@ -43,10 +43,10 @@ export default function SignupCompletePage() {
           </svg>
         </div>
 
-        <h1 className="text-[22px] font-bold text-aring-ink-900 mb-2">
+        <h1 className="text-[24px] font-bold text-aring-ink-900 mb-2">
           인증이 완료되었습니다!
         </h1>
-        <p className="text-[14px] text-aring-ink-500 mb-8 leading-relaxed">
+        <p className="text-[16px] text-aring-ink-500 mb-8 leading-relaxed">
           aring에 오신 걸 환영해요.<br />
           {secs > 0
             ? `${secs}초 후 자동으로 로그인 페이지로 이동합니다.`
@@ -55,7 +55,7 @@ export default function SignupCompletePage() {
 
         <Link
           href="/login"
-          className="inline-flex items-center justify-center w-full bg-aring-ink-900 text-white py-4 rounded-2xl font-bold text-[14px] hover:opacity-90 transition active:scale-95"
+          className="inline-flex items-center justify-center w-full bg-aring-ink-900 text-white py-4 rounded-2xl font-bold text-[16px] hover:opacity-90 transition active:scale-95"
         >
           지금 로그인하기
         </Link>

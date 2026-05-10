@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* 로고 */}
         <div className="h-16 flex items-center px-6 border-b border-aring-ink-100">
           <div className="flex items-baseline gap-1">
-            <span className="text-[22px] font-black tracking-tight text-aring-green leading-none">aring</span>
+            <span className="text-[24px] font-black tracking-tight text-aring-green leading-none">aring</span>
             <sup className="text-[11px] font-semibold text-aring-ink-500">관리자</sup>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 className={[
-                  'flex items-center gap-3 px-6 py-3 text-[14px] transition border-l-2',
+                  'flex items-center gap-3 px-6 py-3 text-[16px] transition border-l-2',
                   active
                     ? 'bg-aring-green/10 text-aring-green font-bold border-l-aring-green'
                     : 'text-aring-ink-700 font-semibold border-l-transparent hover:bg-aring-ink-50',
@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-4 border-t border-aring-ink-100">
           <button
             onClick={handleLogout}
-            className="w-full text-[13px] lg:text-[15px] font-semibold text-aring-ink-600 hover:text-aring-ink-900 border border-aring-ink-200 rounded-lg py-2 transition"
+            className="w-full text-[15px] lg:text-[15px] font-semibold text-aring-ink-600 hover:text-aring-ink-900 border border-aring-ink-200 rounded-lg py-2 transition"
           >
             로그아웃
           </button>
@@ -89,8 +89,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 상단 헤더 */}
         <header className="h-16 bg-white border-b border-aring-ink-100 flex items-center justify-between px-8 shrink-0">
-          <h1 className="text-[18px] font-bold text-aring-ink-900">{pageTitle(pathname)}</h1>
-          <div className="flex items-center gap-2 text-[13px] lg:text-[15px] text-aring-ink-500">
+          <h1 className="text-[20px] font-bold text-aring-ink-900">{pageTitle(pathname)}</h1>
+          <div className="flex items-center gap-2 text-[15px] lg:text-[15px] text-aring-ink-500">
             <span>👤</span>
             <span className="font-semibold text-aring-ink-800">{email || '관리자'}</span>
           </div>

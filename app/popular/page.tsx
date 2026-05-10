@@ -68,11 +68,11 @@ function PopularCard({ row, rank }: { row: Listing; rank: number }) {
         <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
           {row.brand ?? '브랜드 미상'}
         </p>
-        <p className="mt-px text-[13px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
+        <p className="mt-px text-[15px] lg:text-[15px] leading-[1.5] font-bold text-aring-ink-900 truncate">
           {row.detail ?? row.shape ?? '한 짝'}
         </p>
         <div className="mt-1.5 flex items-center justify-between">
-          <span className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">
+          <span className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">
             {row.price ? `₩${row.price.toLocaleString('ko-KR')}` : '가격 협의'}
           </span>
         </div>
@@ -139,10 +139,10 @@ export default function PopularPage() {
               <IconArrowLeft />
             </Link>
             <div className="flex-1 min-w-0">
-              <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
+              <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
                 오늘의 매칭 후보
               </h1>
-              <p className="mt-0.5 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
+              <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
                 조회수 순으로 모았어요
                 {rows.length > 0 && (
                   <>
@@ -157,25 +157,25 @@ export default function PopularPage() {
           {loading ? (
             <div className="px-5 lg:px-8 py-16 text-center">
               <div className="w-8 h-8 mx-auto rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
-              <p className="mt-3 text-[13px] lg:text-[15px] text-aring-ink-500">불러오는 중…</p>
+              <p className="mt-3 text-[15px] lg:text-[15px] text-aring-ink-500">불러오는 중…</p>
             </div>
           ) : error ? (
             <div className="px-5 lg:px-8 py-16 text-center">
-              <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">{error}</p>
+              <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-bold"
               >
                 다시 시도
               </button>
             </div>
           ) : rows.length === 0 ? (
             <div className="px-5 lg:px-8 py-16 text-center">
-              <p className="text-[13px] lg:text-[15px] font-bold text-aring-ink-900">아직 등록된 한 짝이 없어요</p>
-              <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">첫 등록자가 되어 보세요</p>
+              <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">아직 등록된 한 짝이 없어요</p>
+              <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">첫 등록자가 되어 보세요</p>
               <Link
                 href="/register"
-                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[13px] lg:text-[15px] font-bold"
+                className="mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-pill bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-bold"
               >
                 한 짝 등록하기
               </Link>

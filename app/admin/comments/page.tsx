@@ -102,28 +102,28 @@ export default function AdminCommentsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="댓글 내용 검색"
-          className="flex-1 min-w-[240px] border border-aring-ink-200 rounded-xl px-4 py-2 text-[14px] outline-none focus:border-aring-green transition"
+          className="flex-1 min-w-[240px] border border-aring-ink-200 rounded-xl px-4 py-2 text-[16px] outline-none focus:border-aring-green transition"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as ListingStatus)}
-          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[13px] lg:text-[15px] outline-none focus:border-aring-green"
+          className="border border-aring-ink-200 rounded-xl px-3 py-2 text-[15px] lg:text-[15px] outline-none focus:border-aring-green"
         >
           <option value="all">전체</option>
           <option value="open">문의중</option>
           <option value="matched">답변완료</option>
           <option value="closed">거래완료</option>
         </select>
-        <span className="text-[13px] lg:text-[15px] text-aring-ink-500">총 {filtered.length}건</span>
+        <span className="text-[15px] lg:text-[15px] text-aring-ink-500">총 {filtered.length}건</span>
       </div>
 
       {err && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[13px] lg:text-[15px] px-4 py-3 rounded-lg">{err}</div>
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[15px] lg:text-[15px] px-4 py-3 rounded-lg">{err}</div>
       )}
 
       <div className="bg-white rounded-2xl shadow-card border border-aring-ink-100 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-aring-ink-50 text-[13px] lg:text-[15px] font-bold text-aring-ink-500">
+          <thead className="bg-aring-ink-50 text-[15px] lg:text-[15px] font-bold text-aring-ink-500">
             <tr>
               <th className="text-right px-3 py-3 w-[60px]">No.</th>
               <th className="text-left px-3 py-3">대상 게시물</th>
@@ -135,7 +135,7 @@ export default function AdminCommentsPage() {
               <th className="text-left px-3 py-3 w-[80px]">액션</th>
             </tr>
           </thead>
-          <tbody className="text-[14px] text-aring-ink-800">
+          <tbody className="text-[16px] text-aring-ink-800">
             {loading ? (
               Array.from({ length: 8 }).map((_, i) => (
                 <tr key={i} className="border-b border-aring-ink-100">
@@ -145,22 +145,22 @@ export default function AdminCommentsPage() {
                 </tr>
               ))
             ) : pageItems.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-10 text-center text-aring-ink-500 text-[13px] lg:text-[15px]">검색 결과가 없습니다</td></tr>
+              <tr><td colSpan={8} className="px-4 py-10 text-center text-aring-ink-500 text-[15px] lg:text-[15px]">검색 결과가 없습니다</td></tr>
             ) : (
               pageItems.map((c, i) => {
                 const idx = (page - 1) * PAGE_SIZE + i + 1;
                 const listing = listingMap.get(c.product_id);
                 return (
                   <tr key={c.id} className="border-b border-aring-ink-100 hover:bg-aring-ink-50">
-                    <td className="px-3 py-3 text-right text-[13px] lg:text-[15px] text-aring-ink-500">{idx}</td>
+                    <td className="px-3 py-3 text-right text-[15px] lg:text-[15px] text-aring-ink-500">{idx}</td>
                     <td className="px-3 py-3 truncate max-w-[200px]">
                       {listing ? (
                         <Link href={`/items/${listing.id}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
                           <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-400 block">{listing.brand ?? '브랜드 미상'}</span>
-                          <span className="text-[13px] lg:text-[15px] text-aring-ink-800">{listing.detail ?? listing.shape ?? '한 짝'}</span>
+                          <span className="text-[15px] lg:text-[15px] text-aring-ink-800">{listing.detail ?? listing.shape ?? '한 짝'}</span>
                         </Link>
                       ) : (
-                        <span className="text-[13px] lg:text-[15px] text-aring-ink-400">삭제된 게시물</span>
+                        <span className="text-[15px] lg:text-[15px] text-aring-ink-400">삭제된 게시물</span>
                       )}
                     </td>
                     <td className="px-3 py-3 truncate max-w-[100px] text-aring-ink-700">{c.user_name ?? '익명'}</td>
@@ -186,25 +186,25 @@ export default function AdminCommentsPage() {
 
       {pageCount > 1 && (
         <div className="flex items-center justify-center gap-1 pt-2">
-          <button disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50">이전</button>
+          <button disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="border border-aring-ink-200 text-aring-ink-700 text-[15px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50">이전</button>
           {Array.from({ length: pageCount }).slice(0, 10).map((_, i) => {
             const n = i + 1;
             return (
-              <button key={n} onClick={() => setPage(n)} className={['rounded-lg px-3 py-1.5 text-[13px] lg:text-[15px]', n === page ? 'bg-aring-green text-white font-semibold' : 'border border-aring-ink-200 text-aring-ink-700 hover:bg-aring-ink-50'].join(' ')}>{n}</button>
+              <button key={n} onClick={() => setPage(n)} className={['rounded-lg px-3 py-1.5 text-[15px] lg:text-[15px]', n === page ? 'bg-aring-green text-white font-semibold' : 'border border-aring-ink-200 text-aring-ink-700 hover:bg-aring-ink-50'].join(' ')}>{n}</button>
             );
           })}
-          <button disabled={page === pageCount} onClick={() => setPage((p) => Math.min(pageCount, p + 1))} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50">다음</button>
+          <button disabled={page === pageCount} onClick={() => setPage((p) => Math.min(pageCount, p + 1))} className="border border-aring-ink-200 text-aring-ink-700 text-[15px] lg:text-[15px] rounded-lg px-3 py-1.5 disabled:opacity-40 hover:bg-aring-ink-50">다음</button>
         </div>
       )}
 
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-[360px] w-full">
-            <p className="text-[15px] font-bold text-aring-ink-900 mb-2">댓글 삭제</p>
-            <p className="text-[13px] lg:text-[15px] text-aring-ink-500 mb-4">정말 삭제하시겠어요? 이 작업은 되돌릴 수 없어요.</p>
+            <p className="text-[16px] font-bold text-aring-ink-900 mb-2">댓글 삭제</p>
+            <p className="text-[15px] lg:text-[15px] text-aring-ink-500 mb-4">정말 삭제하시겠어요? 이 작업은 되돌릴 수 없어요.</p>
             <div className="flex gap-2 justify-end">
-              <button onClick={() => setDeleteId(null)} className="border border-aring-ink-200 text-aring-ink-700 text-[13px] lg:text-[15px] rounded-lg px-4 py-2">취소</button>
-              <button onClick={() => deleteComment(deleteId)} className="bg-red-500 text-white text-[13px] lg:text-[15px] font-semibold rounded-lg px-4 py-2 hover:opacity-90">삭제</button>
+              <button onClick={() => setDeleteId(null)} className="border border-aring-ink-200 text-aring-ink-700 text-[15px] lg:text-[15px] rounded-lg px-4 py-2">취소</button>
+              <button onClick={() => deleteComment(deleteId)} className="bg-red-500 text-white text-[15px] lg:text-[15px] font-semibold rounded-lg px-4 py-2 hover:opacity-90">삭제</button>
             </div>
           </div>
         </div>

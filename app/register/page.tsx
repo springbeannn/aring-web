@@ -242,7 +242,7 @@ export default function RegisterPage() {
           <Link href="/" aria-label="닫기" className="w-10 h-10 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
             <IconClose />
           </Link>
-          <div className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">한 짝 등록</div>
+          <div className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">한 짝 등록</div>
           <div className="w-10" />
         </header>
 
@@ -309,7 +309,7 @@ function StepIndicator({ current }: { current: Step }) {
           ].join(' ')}>
             {i < idx ? <IconCheck className="w-3 h-3" /> : i + 1}
           </span>
-          <span className={['text-[13px] lg:text-[15px] font-bold whitespace-nowrap', i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500'].join(' ')}>
+          <span className={['text-[15px] lg:text-[15px] font-bold whitespace-nowrap', i <= idx ? 'text-aring-ink-900' : 'text-aring-ink-500'].join(' ')}>
             {l.label}
           </span>
           {i < labels.length - 1 && (
@@ -333,8 +333,8 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
 }) {
   return (
     <div className="px-5 pb-28">
-      <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
-      <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight leading-[1.3] mb-2">
+      <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-[1.3]">남은 한 짝의</h1>
+      <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight leading-[1.3] mb-2">
         <span className="grad-text-green">사진을 올려주세요</span>
       </h1>
       <p className="text-[12.5px] text-aring-ink-500 mb-5 leading-[1.55]">
@@ -355,8 +355,8 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
                 <IconCamera className="w-6 h-6 text-aring-ink-900" />
               </div>
               <div className="text-center">
-                <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">사진 올리기</p>
-                <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
+                <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">사진 올리기</p>
+                <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">JPG · PNG · 최대 10MB</p>
               </div>
             </div>
             <p className="text-[10.5px] text-aring-ink-700 mt-1">탭해서 갤러리 / 카메라 선택</p>
@@ -371,7 +371,7 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
           {bgRemoving && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
               <div className="w-10 h-10 mb-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-              <p className="text-[13px] lg:text-[15px] font-bold text-white">배경 제거 중…</p>
+              <p className="text-[15px] lg:text-[15px] font-bold text-white">배경 제거 중…</p>
               <p className="mt-0.5 text-[11px] text-white/70">잠시만 기다려 주세요</p>
             </div>
           )}
@@ -388,7 +388,7 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
       <div className="mt-5 grid grid-cols-3 gap-2">
         {[{ e: '☀️', t: '밝은 배경' }, { e: '📐', t: '정면 촬영' }, { e: '🔍', t: '디테일 가깝게' }].map((tip) => (
           <div key={tip.t} className="rounded-tile bg-aring-ink-100/70 px-3 py-3 text-center">
-            <div className="text-[18px] mb-1">{tip.e}</div>
+            <div className="text-[20px] mb-1">{tip.e}</div>
             <p className="text-[10.5px] font-bold text-aring-ink-700">{tip.t}</p>
           </div>
         ))}
@@ -433,7 +433,7 @@ function AnalyzingOverlay({ progress, photo }: { progress: number; photo: string
                   {state === 'active' && <span className="relative w-2 h-2 rounded-full bg-aring-accent" />}
                   {state === 'pending' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-500">{i + 1}</span>}
                 </span>
-                <p className={['flex-1 text-[13px] lg:text-[15px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
+                <p className={['flex-1 text-[15px] lg:text-[15px] font-bold', state === 'pending' ? 'text-aring-ink-500' : 'text-aring-ink-900'].join(' ')}>{s.label}</p>
                 {state === 'done' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-green">완료</span>}
                 {state === 'active' && <span className="text-[12px] lg:text-[13px] font-bold text-aring-accent">분석중</span>}
               </div>
@@ -497,7 +497,7 @@ function ReviewStep({
       {/* AI 분석 결과 확인/수정 섹션 */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-[13px] lg:text-[15px] font-bold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
+          <span className="text-[15px] lg:text-[15px] font-bold tracking-[0.08em] text-aring-accent uppercase">AI 분석 결과 확인</span>
         </div>
         <p className="text-[12px] lg:text-[13px] text-aring-ink-500 mb-3 leading-[1.55]">
           AI가 먼저 분석한 결과예요. 실제 정보와 다르면 직접 수정해 주세요.<br />
@@ -565,17 +565,17 @@ function ReviewStep({
           placeholder="이 귀걸이에 담긴 이야기를 자유롭게 적어주세요."
           maxLength={1000}
           rows={4}
-          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
+          className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition resize-none"
         />
       </div>
       <div className="flex justify-end mb-2">
-        <span className={['text-[13px] lg:text-[15px] font-semibold tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
+        <span className={['text-[15px] lg:text-[15px] font-semibold tabular-nums', story.length >= 900 ? 'text-aring-accent font-bold' : 'text-aring-ink-400'].join(' ')}>
           {story.length} / 1000
         </span>
       </div>
 
       <div className="mb-5 rounded-tile bg-aring-ink-100/60 px-4 py-3 space-y-1.5">
-        <p className="text-[13px] lg:text-[15px] text-aring-ink-500 leading-[1.6]">
+        <p className="text-[15px] lg:text-[15px] text-aring-ink-500 leading-[1.6]">
           따뜻한 마음을 담아 작성해 주세요. 욕설, 비하 표현, 타인의 개인정보가 포함된 내용은 작성할 수 없습니다.
         </p>
         <p className="text-[10.5px] text-aring-ink-400 leading-[1.6]">
@@ -598,7 +598,7 @@ function ReviewStep({
 // ─────────────────────────────────────────────────────────────
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <label className="block text-[13px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
+  return <label className="block text-[15px] lg:text-[15px] font-bold text-aring-ink-700 mb-1.5">{children}</label>;
 }
 
 function Input({ value, onChange, placeholder, suffix, maxLength }: {
@@ -611,7 +611,7 @@ function Input({ value, onChange, placeholder, suffix, maxLength }: {
   return (
     <div className="relative mb-4">
       <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength}
-        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[14px] lg:text-[15px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
+        className="w-full rounded-tile border border-aring-green-line bg-white px-4 py-3 pr-10 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-300 focus:outline-none focus:border-aring-ink-900 transition" />
       {suffix && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] lg:text-[13px] font-bold text-aring-ink-500">{suffix}</span>}
     </div>
   );
@@ -630,7 +630,7 @@ function StickyCTA({ onClick, disabled, children }: {
     <div className="absolute left-0 right-0 bottom-0 z-30">
       <div className="mx-auto max-w-[440px] glass-strong border-t border-white/60 px-5 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
         <button onClick={onClick} disabled={disabled}
-          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[14px] font-bold text-white shadow-cta active:scale-[0.99] transition">
+          className="w-full rounded-pill bg-aring-ink-900 disabled:bg-aring-ink-300 disabled:cursor-not-allowed py-3.5 text-[16px] font-bold text-white shadow-cta active:scale-[0.99] transition">
           {children}
         </button>
       </div>

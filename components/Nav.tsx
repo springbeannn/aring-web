@@ -90,7 +90,7 @@ export function TopNav() {
           </Link>
           <nav className="hidden lg:flex items-center gap-1">
             {desktopMenu.map((m) => (
-              <Link key={m.key} href={m.href} className="px-3.5 py-2 rounded-pill text-[13px] lg:text-[15px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100 transition">
+              <Link key={m.key} href={m.href} className="px-3.5 py-2 rounded-pill text-[15px] lg:text-[15px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100 transition">
                 {m.label}
               </Link>
             ))}
@@ -101,7 +101,7 @@ export function TopNav() {
             <Link
               href="/register"
               aria-label="한 짝 등록"
-              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[13px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-pill bg-aring-ink-900 px-4 py-2.5 text-[15px] lg:text-[15px] font-bold text-white shadow-cta active:scale-95 transition"
             >
               <IconPlus className="w-4 h-4" strokeWidth={2.4} />
               한 짝 등록

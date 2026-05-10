@@ -68,7 +68,7 @@ function scoreColor(score: number) {
 
 function MatchBadge({ score }: { score: number }) {
   return (
-    <span className={'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] lg:text-[15px] font-semibold border ' + scoreColor(score)}>
+    <span className={'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[15px] lg:text-[15px] font-semibold border ' + scoreColor(score)}>
       <IconSparkle className="w-3 h-3" />
       aring Match {score}%
     </span>
@@ -81,7 +81,7 @@ function ReasonBox({ reasons }: { reasons: string[] }) {
       {reasons.map((r, i) => (
         <div key={i} className="flex items-start gap-2">
           <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0 bg-aring-ink-400" />
-          <p className="text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-600 leading-snug">{r}</p>
+          <p className="text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-600 leading-snug">{r}</p>
         </div>
       ))}
     </div>
@@ -112,7 +112,7 @@ function CandidateCard({ item }: { item: CandidateItem }) {
                       text-aring-ink-400 truncate uppercase">
           {item.brand}
         </p>
-        <p className="mt-0.5 text-[13px] lg:text-[15px] font-bold
+        <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold
                       text-aring-ink-900 truncate leading-snug">
           {item.name}
         </p>
@@ -180,7 +180,7 @@ function CandidateTimeline({ slots }: { slots: (CandidateItem | null)[] }) {
                       {score}%
                     </span>
                   ) : (
-                    <span className="text-[14px] font-bold text-aring-ink-300">
+                    <span className="text-[16px] font-bold text-aring-ink-300">
                       ?
                     </span>
                   )}
@@ -210,7 +210,7 @@ function CandidateTimeline({ slots }: { slots: (CandidateItem | null)[] }) {
                                   text-aring-ink-400 truncate uppercase">
                       {slot.brand}
                     </p>
-                    <p className="mt-0.5 text-[13px] lg:text-[15px] font-bold
+                    <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold
                                   text-aring-ink-900 truncate leading-snug">
                       {slot.name}
                     </p>
@@ -266,18 +266,18 @@ function MyItemSummary({ item }: { item: Listing }) {
           )}
         </div>
         <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center gap-1">
-          <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
+          <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 leading-snug line-clamp-2">{item.detail ?? item.shape ?? '한 짝'}</p>
           {item.brand && <p className="text-[12px] lg:text-[13px] font-semibold text-aring-ink-500 truncate">{item.brand}</p>}
           <div className="flex flex-wrap gap-1.5 mt-0.5">
             {tags.slice(0, 4).map(t => (
-              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[13px] lg:text-[15px] leading-[1.5] font-semibold whitespace-nowrap">{t}</span>
+              <span key={t} className="inline-flex items-center h-6 px-2.5 rounded-full bg-aring-ink-100 text-aring-ink-600 text-[15px] lg:text-[15px] leading-[1.5] font-semibold whitespace-nowrap">{t}</span>
             ))}
           </div>
         </div>
       </div>
       {item.story && (
         <div className="border-t border-aring-ink-100 bg-aring-ink-50 px-4 py-2.5">
-          <p className="text-[13px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
+          <p className="text-[15px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 italic line-clamp-1">&ldquo;{item.story}&rdquo;</p>
         </div>
       )}
     </div>
@@ -290,13 +290,13 @@ function EmptyState() {
       <div className="w-16 h-16 rounded-full bg-aring-ink-100 flex items-center justify-center mb-5">
         <IconSparkle className="w-7 h-7 text-aring-ink-500" />
       </div>
-      <p className="text-[17px] font-bold text-aring-ink-900 leading-snug">아직 딱 맞는 짝을<br />찾지 못했어요</p>
-      <p className="mt-3 text-[13px] lg:text-[15px] text-aring-ink-500 leading-[1.8] max-w-[280px]">
+      <p className="text-[20px] font-bold text-aring-ink-900 leading-snug">아직 딱 맞는 짝을<br />찾지 못했어요</p>
+      <p className="mt-3 text-[15px] lg:text-[15px] text-aring-ink-500 leading-[1.8] max-w-[280px]">
         함께 기다려 볼까요?<br />새로운 귀걸이가 등록될 때마다 비슷한 짝을 다시 찾아볼 수 있어요.
       </p>
       <div className="mt-8 flex flex-col gap-2.5 w-full max-w-[240px]">
-        <Link href="/products" className="inline-flex items-center justify-center rounded-full bg-aring-ink-900 py-3 text-[13px] lg:text-[15px] font-bold text-white">비슷한 귀걸이 둘러보기</Link>
-        <Link href="/my" className="inline-flex items-center justify-center rounded-full bg-white border border-aring-ink-200 py-3 text-[13px] lg:text-[15px] font-bold text-aring-ink-900">내 상품 보러가기</Link>
+        <Link href="/products" className="inline-flex items-center justify-center rounded-full bg-aring-ink-900 py-3 text-[15px] lg:text-[15px] font-bold text-white">비슷한 귀걸이 둘러보기</Link>
+        <Link href="/my" className="inline-flex items-center justify-center rounded-full bg-white border border-aring-ink-200 py-3 text-[15px] lg:text-[15px] font-bold text-aring-ink-900">내 상품 보러가기</Link>
       </div>
     </div>
   );
@@ -325,7 +325,7 @@ function WaitingBanner({ referenceCount }: { referenceCount: number }) {
       <p className="relative text-[16px] lg:text-[17px] font-bold text-aring-ink-900 leading-snug">
         아직 딱 맞는 짝을 못 찾았어요
       </p>
-      <p className="relative mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-600 leading-relaxed">
+      <p className="relative mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-600 leading-relaxed">
         하지만 매일 새로운 귀걸이가 등록되고 있어요 🔔
       </p>
       {referenceCount > 0 && (
@@ -337,7 +337,7 @@ function WaitingBanner({ referenceCount }: { referenceCount: number }) {
       {/* 액션 버튼 */}
       <button
         type="button"
-        className="relative mt-4 inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] border-aring-green bg-white/70 hover:bg-white text-aring-green px-4 py-2 text-[13px] lg:text-[15px] font-bold transition active:scale-95"
+        className="relative mt-4 inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] border-aring-green bg-white/70 hover:bg-white text-aring-green px-4 py-2 text-[15px] lg:text-[15px] font-bold transition active:scale-95"
       >
         🔔 새 매치 알림 받기
       </button>
@@ -350,8 +350,8 @@ function LoadingScreen() {
     <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4">
       <div className="w-10 h-10 rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
       <div className="text-center">
-        <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">짝을 찾는 중이에요</p>
-        <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-500">aring이 비슷한 귀걸이를 분석하고 있어요</p>
+        <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">짝을 찾는 중이에요</p>
+        <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">aring이 비슷한 귀걸이를 분석하고 있어요</p>
       </div>
     </div>
   );
@@ -400,10 +400,10 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
 
           {/* Header */}
           <div className="px-5 lg:px-8 pt-3 pb-4">
-            <h1 className="text-[22px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-snug">
+            <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-snug">
               AI가 비슷한 짝을 찾아봤어요
             </h1>
-            <p className="mt-1 text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">
+            <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-400">
               방금 등록한 귀걸이를 기준으로 aring Match를 계산했어요
             </p>
           </div>
@@ -419,9 +419,9 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
             {state.status === 'loading' && <LoadingScreen />}
             {state.status === 'error' && (
               <div className="pt-4 text-center">
-                <p className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
+                <p className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900">매칭 결과를 불러오지 못했어요</p>
                 <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">잠시 후 다시 시도해주세요</p>
-                <Link href="/my" className="mt-5 inline-flex rounded-full bg-aring-ink-900 px-5 py-2.5 text-[13px] lg:text-[15px] font-bold text-white">내 상품 보기</Link>
+                <Link href="/my" className="mt-5 inline-flex rounded-full bg-aring-ink-900 px-5 py-2.5 text-[15px] lg:text-[15px] font-bold text-white">내 상품 보기</Link>
               </div>
             )}
             {isEmpty && <EmptyState />}
@@ -429,7 +429,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
             {/* Result summary — 딱 맞는 짝(>=60) 발견 시 */}
             {state.status === 'ok' && hasSimilar && (
               <div className="mb-5 rounded-2xl bg-aring-ink-50 border border-aring-ink-100 px-4 py-3.5">
-                <p className="text-[14px] font-bold text-aring-green">딱 맞는 짝을 찾았어요!</p>
+                <p className="text-[16px] font-bold text-aring-green">딱 맞는 짝을 찾았어요!</p>
                 <p className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-500">
                   {`유사한 후보 ${state.similar.length}개${hasReference ? ` · 참고 후보 ${state.reference.length}개` : ''}를 찾았어요`}
                 </p>
@@ -446,13 +446,13 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               <section className="mb-6">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-green shrink-0" />
-                  <h2 className="text-[15px] lg:text-[16px] font-bold text-aring-ink-900">
+                  <h2 className="text-[16px] lg:text-[16px] font-bold text-aring-ink-900">
                     가장 비슷한 짝을 찾아봤어요
-                    <span className="ml-2 text-[13px] lg:text-[15px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
+                    <span className="ml-2 text-[15px] lg:text-[15px] font-bold text-aring-green">유사 후보 {state.similar.length}개</span>
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[13px] lg:text-[15px] font-semibold border bg-green-50 text-green-700 border-green-200">
+                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[15px] lg:text-[15px] font-semibold border bg-green-50 text-green-700 border-green-200">
                     aring Match 60% 이상
                   </span>
                 </div>
@@ -465,13 +465,13 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
               <section>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-aring-ink-300 shrink-0" />
-                  <h2 className="text-[14px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-700">
+                  <h2 className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-700">
                     완전히 같진 않지만, 이런 후보도 있어요
-                    <span className="ml-2 text-[13px] lg:text-[15px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
+                    <span className="ml-2 text-[15px] lg:text-[15px] font-bold text-aring-ink-400">참고 후보 {state.reference.length}개</span>
                   </h2>
                 </div>
                 <div className="ml-4 mb-3">
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[13px] lg:text-[15px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
+                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[15px] lg:text-[15px] font-semibold border bg-blue-50 text-blue-600 border-blue-200">
                     aring Match 40~59%
                   </span>
                 </div>

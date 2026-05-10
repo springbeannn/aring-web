@@ -17,10 +17,10 @@ function SignupLeftPanel() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
       <div className="relative z-20 mt-auto px-9 pb-12">
-        <p className="text-[22px] font-bold leading-snug text-white mb-3 break-keep">
+        <p className="text-[24px] font-bold leading-snug text-white mb-3 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
-        <p className="text-[13px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
+        <p className="text-[15px] lg:text-[15px] leading-relaxed text-white/80 mb-4 break-keep">
           서랍 속에 한 짝만 남겨둔 경험이 있다면{' '}
           <span className="text-purple-300 font-semibold">aring에서 다시 찾아보세요</span>
         </p>
@@ -55,7 +55,7 @@ function SignupMobileBanner() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 px-5 pb-5">
-        <p className="text-[15px] font-bold text-white leading-snug mb-1 break-keep">
+        <p className="text-[16px] font-bold text-white leading-snug mb-1 break-keep">
           버리기엔, 포기하기엔 너무 예쁜 귀걸이
         </p>
         <p className="text-[12px] lg:text-[13px] text-white/70 leading-relaxed break-keep">
@@ -91,15 +91,15 @@ export default function SignupPage() {
             <div className="px-5 pt-4 pb-28 lg:pt-12 lg:pb-10 lg:px-14 xl:px-20 lg:max-w-[560px] lg:w-full lg:mx-auto">
 
               <div className="text-center mb-2 lg:text-left lg:mb-7">
-                <h1 className="text-[22px] font-bold text-aring-ink-900">에이링 시작하기</h1>
-                <p className="text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
+                <h1 className="text-[24px] font-bold text-aring-ink-900">에이링 시작하기</h1>
+                <p className="text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-400 mt-1">귀걸이 정보를 공유하고 발견해보세요</p>
               </div>
 
               <div className="w-full flex flex-col gap-6">
 
                 <button
                   onClick={handleGoogleSignup}
-                  className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl border border-aring-ink-200 bg-white text-aring-ink-900 font-semibold text-[14px] active:scale-95 transition"
+                  className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl border border-aring-ink-200 bg-white text-aring-ink-900 font-semibold text-[16px] active:scale-95 transition"
                 >
                   <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.3-.2-2.7-.5-4z" fill="#FFC107"/>
@@ -118,12 +118,12 @@ export default function SignupPage() {
 
                 <button
                   onClick={() => router.push('/signup/email')}
-                  className="w-full py-3.5 rounded-2xl bg-aring-ink-900 text-white font-bold text-[14px] active:scale-95 transition"
+                  className="w-full py-3.5 rounded-2xl bg-aring-ink-900 text-white font-bold text-[16px] active:scale-95 transition"
                 >
                   이메일로 가입하기
                 </button>
 
-                <p className="text-center text-[13px] lg:text-[15px] leading-[1.5] text-aring-ink-400">
+                <p className="text-center text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-400">
                   이미 계정이 있으신가요?{' '}
                   <button
                     onClick={() => router.push('/login')}

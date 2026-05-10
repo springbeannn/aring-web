@@ -90,7 +90,7 @@ export function FilterBar({ sort, price, onSort, onPrice }: Props) {
                   key={opt.value}
                   onClick={() => { onPrice(opt.value); setOpen(false); }}
                   className={[
-                    'w-full text-left px-3.5 py-2.5 text-[13px] lg:text-[15px] font-semibold transition',
+                    'w-full text-left px-3.5 py-2.5 text-[15px] lg:text-[15px] font-semibold transition',
                     selected ? 'bg-aring-ink-900 text-white' : 'text-aring-ink-700 hover:bg-aring-ink-100',
                   ].join(' ')}
                 >
