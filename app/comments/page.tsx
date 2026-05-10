@@ -114,9 +114,25 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
               </span>
             </div>
 
+            {/* 메타: 작성자 · 시간 · 조회수 · 좋아요 — 댓글 위로 이동 */}
+            <div className="mt-1 flex items-center gap-2 text-[12px] lg:text-[13px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
+              <span className="font-semibold text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
+              <span>·</span>
+              <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
+              <span>·</span>
+              <span className="flex-shrink-0 inline-flex items-center gap-1">
+                <IconEye className="w-3.5 h-3.5" />
+                {c.listing?.view_count ?? 0}
+              </span>
+              <span className="flex-shrink-0 inline-flex items-center gap-1">
+                <IconHeart className="w-3.5 h-3.5" />
+                0
+              </span>
+            </div>
+
             {/* 댓글 내용 — 모바일/PC 모두 2줄 클램프 */}
             <p
-              className="mt-1 text-[12px] lg:text-[13px] text-aring-ink-800 leading-relaxed overflow-hidden"
+              className="mt-1.5 text-[12px] lg:text-[13px] text-aring-ink-800 leading-relaxed overflow-hidden"
               style={{
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
@@ -126,22 +142,6 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
               {c.message}
             </p>
           </div>
-        </div>
-
-        {/* 하단 메타: 작성자 · 시간 · 조회수 · 좋아요 — 전체 너비 */}
-        <div className="mt-2 px-4 flex items-center gap-2 text-[12px] lg:text-[13px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
-          <span className="font-semibold text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
-          <span>·</span>
-          <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
-          <span>·</span>
-          <span className="flex-shrink-0 inline-flex items-center gap-1">
-            <IconEye className="w-3.5 h-3.5" />
-            {c.listing?.view_count ?? 0}
-          </span>
-          <span className="flex-shrink-0 inline-flex items-center gap-1">
-            <IconHeart className="w-3.5 h-3.5" />
-            0
-          </span>
         </div>
       </div>
     </Link>
