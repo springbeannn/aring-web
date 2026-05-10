@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { TopNav } from '@/components/Nav';
 import { signUpWithEmail, resendConfirmationEmail } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { WelcomeModal } from '@/components/auth/WelcomeModal';
 
 const IconCheck = ({ checked }: { checked: boolean }) => (
   <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full border-2 transition ${checked ? 'bg-aring-ink-900 border-aring-ink-900' : 'border-aring-ink-300 bg-white'}`}>
@@ -163,7 +162,6 @@ export default function SignupEmailPage() {
   const [loading, setLoading] = useState(false);
   // 인증 메일 발송 안내 화면 상태
   const [sent, setSent] = useState(false);
-  const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
   const [resendState, setResendState] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
 
@@ -214,7 +212,6 @@ export default function SignupEmailPage() {
     }
     setSubmittedEmail(cleanEmail);
     setSent(true);
-    setWelcomeOpen(true);
   }
 
   async function handleResend() {
@@ -401,12 +398,6 @@ export default function SignupEmailPage() {
           </div>
         </div>
       </div>
-
-      <WelcomeModal
-        isOpen={welcomeOpen}
-        nickname={nickname.trim()}
-        onClose={() => setWelcomeOpen(false)}
-      />
     </main>
   );
 }
