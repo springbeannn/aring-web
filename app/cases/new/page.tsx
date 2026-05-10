@@ -202,10 +202,10 @@ export default function NewCasePage() {
                       type="button"
                       onClick={() => setCategory(c)}
                       className={[
-                        'rounded-pill border px-3.5 py-2 text-[14px] font-bold transition active:scale-95',
+                        'rounded-pill border px-3.5 py-2 text-[15px] font-semibold transition active:scale-95',
                         active
                           ? 'border-aring-green bg-aring-green text-white'
-                          : 'border-aring-ink-200 text-aring-ink-500 hover:text-aring-ink-900',
+                          : 'border-aring-ink-200 text-aring-ink-500 hover:text-aring-ink-700',
                       ].join(' ')}
                     >
                       {c}
@@ -329,8 +329,8 @@ function CheckRow({ checked, onToggle, label }: { checked: boolean; onToggle: ()
     <button type="button" onClick={onToggle} className="w-full flex items-center gap-3 py-2 text-left">
       <span
         className={[
-          'w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center shrink-0 transition',
-          checked ? 'bg-aring-green border-aring-green text-white' : 'border-aring-ink-300 text-transparent',
+          'w-5 h-5 rounded-[5px] border-2 flex items-center justify-center shrink-0 transition',
+          checked ? 'bg-aring-green border-aring-green text-white' : 'border-aring-ink-300 bg-white text-transparent',
         ].join(' ')}
       >
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
