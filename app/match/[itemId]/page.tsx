@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase, type Listing } from '@/lib/supabase';
 import { calculateAringMatch, splitMatchCandidates, type MatchResult } from '@/lib/aringMatch';
 import { TopNav, BottomNav } from '@/components/Nav';
+import { NotificationSettingSheet } from '@/components/match/NotificationSettingSheet';
 
 type IP = { className?: string };
 const IconSparkle = ({ className = 'w-4 h-4' }: IP) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.5 5.5l2.8 2.8M15.7 15.7l2.8 2.8M5.5 18.5l2.8-2.8M15.7 8.3l2.8-2.8" /></svg>);
@@ -302,7 +303,7 @@ function EmptyState() {
   );
 }
 
-function WaitingBanner({ referenceCount }: { referenceCount: number }) {
+function WaitingBanner({ referenceCount, onAlert }: { referenceCount: number; onAlert: () => void }) {
   return (
     <div className="relative mb-5 rounded-2xl overflow-hidden bg-gradient-to-br from-aring-green/15 via-aring-green/5 to-transparent border border-aring-green/20 p-5">
       {/* 우측 상단 장식 */}
@@ -337,6 +338,7 @@ function WaitingBanner({ referenceCount }: { referenceCount: number }) {
       {/* 액션 버튼 */}
       <button
         type="button"
+        onClick={onAlert}
         className="relative mt-4 inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] border-aring-green bg-white/70 hover:bg-white text-aring-green px-4 py-2 text-[15px] lg:text-[15px] font-bold transition active:scale-95"
       >
         🔔 새 매치 알림 받기
@@ -364,6 +366,19 @@ type PageState =
 
 export default function MatchPage({ params }: { params: { itemId: string } }) {
   const [state, setState] = useState<PageState>({ status: 'loading' });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>('');
+
+  async function handleAlertClick() {
+    if (!supabase) return;
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      alert('알림 받기는 로그인 후 사용할 수 있어요.');
+      return;
+    }
+    setUserEmail(data.user.email ?? '');
+    setAlertOpen(true);
+  }
 
   useEffect(() => {
     if (!supabase) { setState({ status: 'error' }); return; }
@@ -438,7 +453,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
 
             {/* Waiting banner — 딱 맞는 짝 미발견 + 참고 후보 존재 시 */}
             {state.status === 'ok' && !hasSimilar && hasReference && (
-              <WaitingBanner referenceCount={state.reference.length} />
+              <WaitingBanner referenceCount={state.reference.length} onAlert={handleAlertClick} />
             )}
 
             {/* 유사 후보 섹션 — 항상 3 슬롯, 부족하면 SeekingCard로 채움 */}
@@ -482,6 +497,13 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
         </div>
         <BottomNav />
       </div>
+
+      <NotificationSettingSheet
+        isOpen={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        userEmail={userEmail}
+        earringId={params.itemId}
+      />
     </main>
   );
 }
