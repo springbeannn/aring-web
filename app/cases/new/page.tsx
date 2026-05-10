@@ -275,7 +275,7 @@ export default function NewCasePage() {
             <div className="pt-2 flex gap-2">
               <Link
                 href="/cases"
-                className="flex-1 inline-flex items-center justify-center rounded-pill border border-aring-ink-200 py-3.5 text-[15px] font-bold text-aring-ink-700"
+                className="flex-1 inline-flex items-center justify-center rounded-xl border border-aring-ink-200 py-3.5 text-[15px] font-bold text-aring-ink-700"
               >
                 취소
               </Link>
@@ -284,7 +284,7 @@ export default function NewCasePage() {
                 onClick={handleSubmit}
                 disabled={!valid || submitting}
                 className={[
-                  'flex-[2] inline-flex items-center justify-center rounded-pill py-3.5 text-[16px] font-bold transition',
+                  'flex-[2] inline-flex items-center justify-center rounded-xl py-3.5 text-[16px] font-bold transition',
                   valid && !submitting
                     ? 'bg-aring-ink-900 text-white shadow-cta active:scale-[0.99]'
                     : 'bg-aring-ink-200 text-aring-ink-400 cursor-not-allowed',

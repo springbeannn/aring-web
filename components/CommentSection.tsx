@@ -225,7 +225,7 @@ export function CommentSection({
           <button
             onClick={submit}
             disabled={!nickname.trim() || !message.trim() || submitting}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold disabled:opacity-40 active:scale-95 transition"
+            className="inline-flex items-center justify-center px-4 py-2 rounded-tile bg-aring-ink-900 text-white text-[11px] font-bold disabled:opacity-40 active:scale-95 transition"
           >
             {submitting ? '등록 중…' : replyTo ? '답글 등록' : '문의 등록'}
           </button>
@@ -363,7 +363,7 @@ function CommentItem({
               <button
                 onClick={() => onSaveEdit(comment.id)}
                 disabled={!editingMessage.trim()}
-                className="text-[11px] font-bold text-white bg-aring-ink-900 px-3 py-1 rounded-pill disabled:opacity-40"
+                className="text-[11px] font-bold text-white bg-aring-ink-900 px-3 py-1 rounded-tile disabled:opacity-40"
               >
                 저장
               </button>

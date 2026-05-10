@@ -74,11 +74,11 @@ export function ReportModal({ itemId, reporterId, onClose, onSuccess }: {
         {err && <p className="mt-2 text-[12px] lg:text-[13px] text-red-400 text-center">{err}</p>}
         <div className="mt-5 flex gap-2">
           <button onClick={onClose}
-            className="flex-1 py-3 rounded-pill border border-aring-green-line text-[15px] lg:text-[15px] font-bold text-aring-ink-700 hover:bg-aring-ink-100 transition active:scale-95">
+            className="flex-1 py-3 rounded-2xl border border-aring-green-line text-[15px] lg:text-[15px] font-bold text-aring-ink-700 hover:bg-aring-ink-100 transition active:scale-95">
             취소
           </button>
           <button onClick={submit} disabled={!valid || sub}
-            className="flex-1 py-3 rounded-pill bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-bold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
+            className="flex-1 py-3 rounded-2xl bg-aring-ink-900 text-white text-[15px] lg:text-[15px] font-bold hover:opacity-90 transition active:scale-95 disabled:opacity-40">
             {sub ? "접수 중…" : "신고하기"}
           </button>
         </div>

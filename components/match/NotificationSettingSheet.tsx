@@ -238,7 +238,7 @@ export function NotificationSettingSheet({ isOpen, onClose, userEmail, earringId
               onClick={handleSubmit}
               disabled={!valid || submitting}
               className={[
-                'w-full py-[14px] rounded-full text-[16px] font-semibold transition',
+                'w-full py-[14px] rounded-xl text-[16px] font-semibold transition',
                 valid && !submitting
                   ? 'bg-aring-ink-900 text-white active:scale-[0.99]'
                   : 'bg-aring-ink-200 text-aring-ink-400 cursor-not-allowed',
