@@ -222,11 +222,11 @@ function SectionHeader({ title, sub, more, onMore }: {
   return (
     <div className="flex items-end justify-between px-5 lg:px-8 mb-3">
       <div>
-        <h2 className="text-[16px] lg:text-[17px] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
-        {sub && <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500">{sub}</p>}
+        <h2 className="text-[17px] lg:text-[18px] font-bold text-aring-ink-900 tracking-tight">{title}</h2>
+        {sub && <p className="mt-0.5 text-[13px] lg:text-[14px] font-normal text-aring-ink-500">{sub}</p>}
       </div>
       {more && onMore && (
-        <button onClick={onMore} className="text-[12px] lg:text-[13px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
+        <button onClick={onMore} className="text-[13px] lg:text-[14px] font-bold text-aring-ink-500 hover:text-aring-ink-900 transition">
           {more}
         </button>
       )}
