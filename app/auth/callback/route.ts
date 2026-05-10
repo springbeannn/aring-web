@@ -13,12 +13,7 @@ export async function GET(request: NextRequest) {
 
   const cookieStore = cookies();
 
-  // 디버그: 쿠키 목록 확인
-  const allCookies = cookieStore.getAll();
-  console.log('[auth/callback] cookies:', allCookies.map(c => c.name));
-
-  const response = NextResponse.redirect(`${origin}/`);
-
+  // App Router cookies() API 직접 사용 → 자동으로 응답 쿠키에 반영
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -29,7 +24,7 @@ export async function GET(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            cookieStore.set(name, value, options);
           });
         },
       },
@@ -40,7 +35,9 @@ export async function GET(request: NextRequest) {
 
   if (error || !data.user) {
     console.error('[auth/callback] exchangeCodeForSession error:', error?.message);
-    return NextResponse.redirect(`${origin}/signup?error=auth_failed&msg=${encodeURIComponent(error?.message ?? 'unknown')}`);
+    return NextResponse.redirect(
+      `${origin}/signup?error=auth_failed&msg=${encodeURIComponent(error?.message ?? 'unknown')}`
+    );
   }
 
   const user = data.user;
@@ -64,14 +61,10 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (existing) {
-    if (!existing.nickname) {
-      response.headers.set('Location', `${origin}/signup/nickname`);
-      return NextResponse.redirect(`${origin}/signup/nickname`);
-    }
-    return response;
+    return NextResponse.redirect(`${origin}${existing.nickname ? '/' : '/signup/nickname'}`);
   }
 
-  // 동일 이메일 다른 계정 확인 (nickname 체크 포함)
+  // 동일 이메일 다른 계정 확인
   const { data: emailExisting } = await supabase
     .from('profiles')
     .select('id, provider, nickname')
@@ -79,13 +72,10 @@ export async function GET(request: NextRequest) {
     .maybeSingle();
 
   if (emailExisting) {
-    if (!emailExisting.nickname) {
-      return NextResponse.redirect(`${origin}/signup/nickname`);
-    }
-    return response;
+    return NextResponse.redirect(`${origin}${emailExisting.nickname ? '/' : '/signup/nickname'}`);
   }
 
-  // 신규 사용자 프로필 생성 (provider는 위에서 이미 선언됨)
+  // 신규 사용자 프로필 생성
   await supabase.from('profiles').insert({
     user_id: user.id,
     email,
