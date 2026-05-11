@@ -103,20 +103,20 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
             )}
           </div>
 
-          {/* 내용 */}
+          {/* 내용 — RecentItemCard 가이드 적용 */}
           <div className="flex-1 min-w-0">
-            {/* 상단 한 줄: No · 브랜드 · 상태 (우측) */}
+            {/* 상단: No · 브랜드(가이드 토큰) · 상태(우측) */}
             <div className="flex items-center gap-1.5 mb-0.5">
-              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-400 flex-shrink-0">No.{no}</span>
-              <span className="text-[12px] lg:text-[13px] font-bold text-aring-ink-900 truncate">{brand}</span>
+              <span className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-400 flex-shrink-0">No.{no}</span>
+              <span className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">{brand}</span>
               <span className="ml-auto flex-shrink-0">
                 <StatusBadge status={listing?.status} />
               </span>
             </div>
 
-            {/* 메타: 작성자 · 시간 · 조회수 · 좋아요 — 댓글 위로 이동 */}
-            <div className="mt-1 flex items-center gap-2 text-[12px] lg:text-[13px] text-aring-ink-400 whitespace-nowrap overflow-hidden">
-              <span className="font-semibold text-aring-ink-600 truncate">{c.user_name || '익명'}</span>
+            {/* 메타: 작성자 · 시간 · 조회수 · 좋아요 (가이드 — 11/lg12 ink-400) */}
+            <div className="mt-1 flex items-center gap-2 text-[11px] lg:text-[12px] font-normal text-aring-ink-400 whitespace-nowrap overflow-hidden">
+              <span className="font-semibold text-aring-ink-500 truncate">{c.user_name || '익명'}</span>
               <span>·</span>
               <span className="flex-shrink-0">{relativeTime(c.created_at)}</span>
               <span>·</span>
@@ -130,9 +130,9 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
               </span>
             </div>
 
-            {/* 댓글 내용 — 모바일/PC 모두 2줄 클램프 */}
+            {/* 댓글 본문 — 가이드 "설명/서브" 토큰 (12/lg13 normal ink-500 leading-[1.5]) */}
             <p
-              className="mt-1.5 text-[12px] lg:text-[13px] text-aring-ink-800 leading-relaxed overflow-hidden"
+              className="mt-1.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-700 leading-[1.5] overflow-hidden"
               style={{
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
