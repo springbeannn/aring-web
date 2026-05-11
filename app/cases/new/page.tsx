@@ -36,24 +36,15 @@ export default function NewCasePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── admin gate ──────────────────────────────────
+  // ─── 로그인 게이트 — admin role 검사 제거, 비로그인만 차단 ───
   useEffect(() => {
     let cancelled = false;
     async function check() {
       if (!supabase) { setAuthChecking(false); return; }
       const { data: userRes } = await supabase.auth.getUser();
       const user = userRes.user;
-      if (!user) {
-        if (!cancelled) { setAllowed(false); setAuthChecking(false); }
-        return;
-      }
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('user_id', user.id)
-        .maybeSingle();
       if (!cancelled) {
-        setAllowed(profile?.role === 'admin');
+        setAllowed(!!user);
         setAuthChecking(false);
       }
     }
@@ -128,10 +119,10 @@ export default function NewCasePage() {
         <div className="relative w-full max-w-[440px] bg-white min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:rounded-none lg:shadow-none">
           <TopNav />
           <div className="px-5 lg:px-8 py-16 text-center">
-            <p className="text-[16px] lg:text-[18px] font-bold text-aring-ink-900">접근 권한이 없어요</p>
-            <p className="mt-1 text-[13px] text-aring-ink-500">사례 등록은 관리자만 가능합니다.</p>
-            <Link href="/cases" className="mt-6 inline-flex rounded-pill bg-aring-ink-900 px-5 py-2.5 text-[14px] font-bold text-white">
-              사례 목록으로
+            <p className="text-[16px] lg:text-[18px] font-bold text-aring-ink-900">로그인이 필요해요</p>
+            <p className="mt-1 text-[13px] text-aring-ink-500">사례 등록은 로그인 후 이용할 수 있어요.</p>
+            <Link href="/login?redirect=/cases/new" className="mt-6 inline-flex rounded-pill bg-aring-ink-900 px-5 py-2.5 text-[14px] font-bold text-white">
+              로그인하러 가기
             </Link>
           </div>
         </div>
