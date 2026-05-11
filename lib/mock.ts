@@ -43,12 +43,12 @@ export type RecentItem = {
 // 기존 'peach'|'peri'|'mix'|'green' 폐기 → 6-tone pastel
 export type ThumbTone =
   | 'pink' | 'peach' | 'butter' | 'mint' | 'sky' | 'sage'
-  | 'lavender' | 'coral' | 'cream' | 'aqua';
+  | 'lavender' | 'cream' | 'aqua' | 'rose';
 
-// 단일 source of truth — 모든 페이지가 import해서 동일 순서·동일 알고리즘으로 톤 결정
+// 단일 source of truth — lib/pastel.ts PASTEL_ROTATION과 1:1 매칭
 export const TONE_ROTATION: ThumbTone[] = [
   'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-  'lavender', 'coral', 'cream', 'aqua',
+  'lavender', 'cream', 'aqua', 'rose',
 ];
 
 // id 해시 기반 톤 결정 — 같은 id → 항상 같은 톤
@@ -203,29 +203,24 @@ export function formatKRW(n: number): string {
   return `₩${n.toLocaleString('ko-KR')}`;
 }
 
+// 신규 파스텔 토큰 (40% 더 연한 v2) — 단일색
+// inline style 호환을 위해 양 stop 동일 색으로 그라데이션 형태 유지
+const PASTEL: Record<ThumbTone, string> = {
+  pink: '#FEE8F1',
+  peach: '#FFEFD9',
+  butter: '#FFF7D6',
+  mint: '#EDF8F6',
+  sky: '#E3EFF7',
+  sage: '#F5F3EA',
+  lavender: '#F4EBF8',
+  cream: '#FBF3EA',
+  aqua: '#EBF6F8',
+  rose: '#F8EAEA',
+};
+
 export function thumbBg(tone: ThumbTone): string {
-  switch (tone) {
-    case 'pink':
-      return 'linear-gradient(135deg,#FDEAEF,#FBD3DF)';
-    case 'peach':
-      return 'linear-gradient(135deg,#FFF1DF,#FFE0C5)';
-    case 'butter':
-      return 'linear-gradient(135deg,#FFFADC,#FFF3C4)';
-    case 'mint':
-      return 'linear-gradient(135deg,#E7F4E8,#D5EBD6)';
-    case 'sky':
-      return 'linear-gradient(135deg,#E8F2FA,#D2E5F4)';
-    case 'sage':
-      return 'linear-gradient(135deg,#ECF1E0,#DEE8CF)';
-    case 'lavender':
-      return 'linear-gradient(135deg,#F1EAF6,#E2D2EE)';
-    case 'coral':
-      return 'linear-gradient(135deg,#FFEDE6,#FFD8C8)';
-    case 'cream':
-      return 'linear-gradient(135deg,#FAF4E5,#F2E9D2)';
-    case 'aqua':
-      return 'linear-gradient(135deg,#E5F1F0,#CFE5DF)';
-  }
+  const hex = PASTEL[tone];
+  return `linear-gradient(135deg,${hex},${hex})`;
 }
 
 // ─────────────────────────────────────────────────────────────

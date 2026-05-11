@@ -19,14 +19,18 @@ const config: Config = {
             bg: '#EFF3F0',
             line: '#E5E5E5', // 더 중립적인 라인 (sage tint 제거)
           },
-          // Soft Pastel Palette — 썸네일·장식 시스템
+          // Soft Pastel Palette — 썸네일·장식 시스템 (40% 더 연한 v2, 10종)
           pastel: {
-            pink: '#FBC8DC',
-            peach: '#FFD9B8',
-            butter: '#FFEFB5',
-            mint: '#C8E6C9',
-            sky: '#C5DDF0',
-            sage: '#D8E5C8',
+            pink: '#FEE8F1',
+            peach: '#FFEFD9',
+            butter: '#FFF7D6',
+            mint: '#EDF8F6',
+            sky: '#E3EFF7',
+            sage: '#F5F3EA',
+            lavender: '#F4EBF8',
+            cream: '#FBF3EA',
+            aqua: '#EBF6F8',
+            rose: '#F8EAEA',
           },
           // 단일 강조 ('알림 dot' 같은 곳에서 쓰는 채도 한 단계 위 핑크)
           accent: '#F5A8C7',
@@ -43,8 +47,6 @@ const config: Config = {
           'olive-light':   '#8FA05A',
           cream:           '#F5F2EC',
           'pastel-green':  '#D6E4C7',
-          'pastel-yellow': '#F0EDCA',
-          'pastel-pink':   '#F2D9D0',
           'pastel-blue':   '#D0DFF2',
           gray:            '#8A8A8A',
           'gray-light':    '#E8E5DE',
