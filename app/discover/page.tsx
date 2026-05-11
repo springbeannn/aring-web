@@ -528,8 +528,8 @@ function DiscoverPageInner() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {filtered.map((it, i) => (
-                  <RecentItemCard key={it.id} it={it} index={i} />
+                {filtered.map((it) => (
+                  <RecentItemCard key={it.id} it={it} />
                 ))}
               </div>
             )}

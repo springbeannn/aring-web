@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { pickTone, type ThumbTone } from '@/lib/mock';
-import { getPastelClass } from '@/lib/pastel';
+import { getPastelClassById } from '@/lib/pastel';
 import {
   supabase,
   type Listing,
@@ -508,11 +508,10 @@ function MyListingsSection({
           />
         ) : (
           <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
-            {listings.map((l, i) => (
+            {listings.map((l) => (
               <MyListingCard
                 key={l.id}
                 listing={l}
-                index={i}
                 onStatusChange={onStatusChange}
               />
             ))}
@@ -525,18 +524,16 @@ function MyListingsSection({
 
 function MyListingCard({
   listing,
-  index,
   onStatusChange,
 }: {
   listing: Listing;
-  index: number;
   onStatusChange: (listing: Listing, next: Listing['status']) => void;
 }) {
   return (
     <div className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3.5">
       <Link
         href={`/items/${listing.id}`}
-        className={`shrink-0 w-[86px] h-[86px] rounded-tile overflow-hidden relative ${getPastelClass(index)}`}
+        className={`shrink-0 w-[86px] h-[86px] rounded-tile overflow-hidden relative ${getPastelClassById(listing.id)}`}
       >
         {listing.photo_url && (
           <img
@@ -711,8 +708,8 @@ function LikedSection({
           />
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {items.map((l, i) => (
-              <LikedCard key={l.id} listing={l} index={i} />
+            {items.map((l) => (
+              <LikedCard key={l.id} listing={l} />
             ))}
           </div>
         )}
@@ -721,12 +718,12 @@ function LikedSection({
   );
 }
 
-function LikedCard({ listing, index }: { listing: Listing; index: number }) {
+function LikedCard({ listing }: { listing: Listing }) {
   return (
     <div className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden">
       <Link
         href={`/items/${listing.id}`}
-        className={`relative aspect-square overflow-hidden block ${getPastelClass(index)}`}
+        className={`relative aspect-square overflow-hidden block ${getPastelClassById(listing.id)}`}
       >
         {listing.photo_url && (
           <img
@@ -790,8 +787,8 @@ function CommentActivitySection({
           />
         ) : (
           <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
-            {items.map((s, i) => (
-              <CommentSummaryCard key={s.productId} s={s} index={i} />
+            {items.map((s) => (
+              <CommentSummaryCard key={s.productId} s={s} />
             ))}
           </div>
         )}
@@ -800,7 +797,7 @@ function CommentActivitySection({
   );
 }
 
-function CommentSummaryCard({ s, index }: { s: CommentSummary; index: number }) {
+function CommentSummaryCard({ s }: { s: CommentSummary }) {
   const STATUS_TAG: Record<
     CommentSummary['status'],
     { label: string; cls: string }
@@ -826,7 +823,7 @@ function CommentSummaryCard({ s, index }: { s: CommentSummary; index: number }) 
       className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3 active:scale-[0.99] transition"
     >
       <div
-        className={`relative w-[64px] h-[64px] shrink-0 rounded-tile overflow-hidden ${getPastelClass(index)}`}
+        className={`relative w-[64px] h-[64px] shrink-0 rounded-tile overflow-hidden ${getPastelClassById(s.productId)}`}
       >
         {s.image && (
           <img

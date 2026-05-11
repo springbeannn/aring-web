@@ -290,8 +290,8 @@ export default function BrandPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-                {filtered.map((it, i) => (
-                  <RecentItemCard key={it.id} it={it} index={i} />
+                {filtered.map((it) => (
+                  <RecentItemCard key={it.id} it={it} />
                 ))}
               </div>
 
