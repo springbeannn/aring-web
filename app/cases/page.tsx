@@ -118,7 +118,7 @@ export default async function CasesPage() {
       />
       <main className="min-h-screen flex justify-center bg-white">
         <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
-          <div className={isAdmin ? 'pb-[180px] lg:pb-[120px]' : 'pb-28 lg:pb-10'}>
+          <div className="pb-28 lg:pb-10">
             <TopNav />
             <PageHeader />
             <div className="px-5 lg:px-8">
@@ -133,22 +133,21 @@ export default async function CasesPage() {
                   ))}
                 </div>
               )}
+
+              {/* 등록하기 — /my/profile 로그아웃 버튼과 동일 디자인·위치 */}
+              {isAdmin && (
+                <div className="mt-6 lg:flex lg:justify-end">
+                  <Link
+                    href="/cases/new"
+                    className="inline-flex items-center justify-center gap-1.5 w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 bg-aring-ink-900 text-white shadow-cta"
+                  >
+                    등록하기
+                    <span aria-hidden>→</span>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-
-          {isAdmin && (
-            <div className="fixed left-0 right-0 bottom-[80px] lg:bottom-0 z-30 pointer-events-none">
-              <div className="mx-auto w-full max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-white/60 px-5 lg:px-8 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] lg:pb-4 pointer-events-auto">
-                <Link
-                  href="/cases/new"
-                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-pill bg-aring-ink-900 py-3.5 text-[16px] font-bold text-white shadow-cta active:scale-[0.99] transition"
-                >
-                  등록하기
-                  <span aria-hidden>→</span>
-                </Link>
-              </div>
-            </div>
-          )}
 
           <BottomNav />
         </div>
