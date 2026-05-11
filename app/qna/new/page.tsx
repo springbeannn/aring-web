@@ -151,9 +151,8 @@ export default function QnaNewPage() {
             <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">유형을 골라 짧고 명확하게 적어주세요.</p>
           </div>
 
-          {/* 폼 — PC에서 720px 중앙 */}
-          <div className="lg:max-w-[720px] lg:mx-auto lg:w-full">
-            <form onSubmit={handleSubmit} className="px-5 lg:px-8 space-y-4">
+          {/* 폼 — 사이트 표준 폭 (1200px) */}
+          <form onSubmit={handleSubmit} className="px-5 lg:px-8 space-y-4">
               {/* 문의 유형 */}
               <div>
                 <label className="block text-[13px] lg:text-[14px] font-bold text-aring-ink-700 mb-1.5">문의 유형</label>
@@ -291,7 +290,6 @@ export default function QnaNewPage() {
                 </button>
               </div>
             </form>
-          </div>
         </div>
         <BottomNav />
       </div>

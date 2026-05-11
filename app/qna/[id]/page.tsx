@@ -139,9 +139,8 @@ export default function QnaDetailPage() {
             <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">문의 상세</h1>
           </div>
 
-          {/* 본문 — PC 720px */}
-          <div className="lg:max-w-[720px] lg:mx-auto lg:w-full">
-            <article className="px-5 lg:px-8 space-y-4">
+          {/* 본문 — 사이트 표준 폭 (1200px) */}
+          <article className="px-5 lg:px-8 space-y-4">
               {/* 메타: 유형 / 비공개 / 답변 상태 */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="inline-flex items-center px-2 py-0.5 rounded-pill text-[12px] font-bold bg-aring-ink-100 text-aring-ink-700">
@@ -217,7 +216,6 @@ export default function QnaDetailPage() {
                 </Link>
               </div>
             </article>
-          </div>
         </div>
         <BottomNav />
       </div>
