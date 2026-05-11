@@ -923,7 +923,7 @@ function EmptyBlock({
       <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{sub}</p>
       <Link
         href={ctaHref}
-        className="mt-4 inline-flex w-full items-center justify-center h-8 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-[0.98] transition"
+        className="mt-4 inline-flex w-full lg:w-2/5 items-center justify-center h-8 rounded-pill bg-aring-ink-900 text-white text-[11px] font-bold active:scale-[0.98] transition"
       >
         {ctaLabel}
       </Link>
