@@ -1,12 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { TopNav } from '@/components/Nav';
-import { supabase } from '@/lib/supabase';
+import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
 
-const CATEGORIES = ['패션', '뷰티', 'F&B', '라이프스타일'] as const;
+const CATEGORIES = ['패션', '뷰티', '라이프스타일'] as const;
+const IMAGE_MAX_BYTES = 5 * 1024 * 1024; // 5MB
+
+function buildCaseImagePath(filename: string): string {
+  const ext = (filename.split('.').pop() || 'jpg').toLowerCase();
+  const rnd = Math.random().toString(36).slice(2, 10);
+  return `cases/${Date.now()}-${rnd}.${ext}`;
+}
 
 function slugify(s: string): string {
   return s
@@ -27,7 +34,9 @@ export default function NewCasePage() {
   const [slugTouched, setSlugTouched] = useState(false);
   const [summary, setSummary] = useState('');
   const [category, setCategory] = useState<string>('패션');
-  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [tagsInput, setTagsInput] = useState('');
   const [content, setContent] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
@@ -69,12 +78,44 @@ export default function NewCasePage() {
     summary.trim().length > 0 &&
     content.trim().length > 0;
 
+  function handlePickImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (f.size > IMAGE_MAX_BYTES) {
+      setError('이미지 크기는 5MB 이하만 첨부할 수 있어요.');
+      e.target.value = '';
+      return;
+    }
+    setError(null);
+    setImageFile(f);
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(typeof reader.result === 'string' ? reader.result : null);
+    reader.readAsDataURL(f);
+  }
+
+  function handleRemoveImage() {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
   async function handleSubmit() {
     if (!valid || submitting) return;
     if (!supabase) return;
     setSubmitting(true);
     setError(null);
     try {
+      let thumbnailUrl: string | null = null;
+      if (imageFile) {
+        const path = buildCaseImagePath(imageFile.name);
+        const { error: upErr } = await supabase.storage
+          .from(STORAGE_BUCKET)
+          .upload(path, imageFile, { contentType: imageFile.type, cacheControl: '3600', upsert: false });
+        if (upErr) throw upErr;
+        const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+        thumbnailUrl = urlData.publicUrl;
+      }
+
       const { data, error: insErr } = await supabase
         .from('success_cases')
         .insert({
@@ -83,7 +124,7 @@ export default function NewCasePage() {
           summary: summary.trim(),
           content: content.trim(),
           category: category || null,
-          thumbnail_url: thumbnailUrl.trim() || null,
+          thumbnail_url: thumbnailUrl,
           tags,
           is_featured: isFeatured,
           published: publish,
@@ -182,9 +223,9 @@ export default function NewCasePage() {
               />
             </Field>
 
-            {/* 카테고리 */}
+            {/* 카테고리 — /qna/new 칩 스타일과 통일 */}
             <Field label="카테고리">
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((c) => {
                   const active = category === c;
                   return (
@@ -193,10 +234,10 @@ export default function NewCasePage() {
                       type="button"
                       onClick={() => setCategory(c)}
                       className={[
-                        'rounded-pill border px-3.5 py-2 text-[15px] font-semibold transition active:scale-95',
+                        'rounded-pill px-3 py-1.5 text-[13px] font-bold transition active:scale-95',
                         active
-                          ? 'border-aring-ink-900 bg-aring-ink-900 text-white'
-                          : 'border-aring-ink-200 text-aring-ink-500 hover:text-aring-ink-700',
+                          ? 'bg-aring-ink-900 text-white border border-aring-ink-900'
+                          : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300',
                       ].join(' ')}
                     >
                       {c}
@@ -206,17 +247,29 @@ export default function NewCasePage() {
               </div>
             </Field>
 
-            {/* 썸네일 URL */}
-            <Field label="썸네일 이미지 URL">
-              <input
-                value={thumbnailUrl}
-                onChange={(e) => setThumbnailUrl(e.target.value)}
-                placeholder="https://..."
-                className={inputCls}
-              />
-              {thumbnailUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={thumbnailUrl} alt="thumbnail preview" className="mt-2 w-full max-h-[180px] object-cover rounded-tile border border-aring-ink-200" />
+            {/* 이미지 첨부 (선택) — /qna/new 동일 패턴 */}
+            <Field label="이미지 첨부" hint="JPG/PNG, 최대 5MB">
+              {imagePreview ? (
+                <div className="relative inline-block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={imagePreview} alt="첨부 이미지 미리보기" className="max-w-[240px] max-h-[240px] rounded-tile border border-aring-ink-200" />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    aria-label="이미지 삭제"
+                    className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-aring-ink-900 text-white text-[13px] flex items-center justify-center shadow-card"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-pill border border-aring-ink-200 bg-white text-[14px] font-bold text-aring-ink-700 cursor-pointer hover:border-aring-ink-300 transition">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  이미지 선택
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePickImage} className="hidden" />
+                </label>
               )}
             </Field>
 
