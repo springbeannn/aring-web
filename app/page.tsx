@@ -411,7 +411,7 @@ function BrandSection({ brandCounts, isLoading }: {
 
   return (
     <section id="brands" className="pt-2 pb-5 scroll-mt-20">
-      <SectionHeader title="브랜드별 탐색" sub="가장 많이 등록된 브랜드" />
+      <SectionHeader title="브랜드별 탐색" sub="가장 많이 등록된 브랜드" more="더보기" onMore={() => router.push('/brands')} />
       {isLoading ? (
         <BrandSectionSkeleton />
       ) : (
