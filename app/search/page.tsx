@@ -169,7 +169,7 @@ function SearchPageInner() {
       <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none">
         <div className="pb-28 lg:pb-10">
           <TopNav />
-          <div className="px-5 lg:px-8 pt-3 pb-2 flex items-center gap-3">
+          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-2 flex items-center gap-3">
             <button onClick={() => router.back()} aria-label="뒤로가기" className="lg:hidden w-9 h-9 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition">
               <IconArrowLeft />
             </button>
