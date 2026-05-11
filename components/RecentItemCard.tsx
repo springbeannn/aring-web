@@ -58,18 +58,18 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
             </div>
             <div className="px-3 py-3">
                 {/* 브랜드 */}
-                <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">{it.brand}</p>
+                <p className="text-[13px] lg:text-[14px] font-bold tracking-wider text-aring-ink-500 truncate">{it.brand}</p>
                 {/* 제품 타이틀 */}
-                <p className="mt-px text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">{it.name}</p>
+                <p className="mt-px text-[15px] lg:text-[16px] font-bold text-aring-ink-900 leading-[1.5] truncate">{it.name}</p>
                 {/* 설명/서브 */}
-                {it.story && <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500 truncate">{it.story}</p>}
+                {it.story && <p className="mt-0.5 text-[13px] lg:text-[14px] font-normal text-aring-ink-500 truncate">{it.story}</p>}
                 <div className="mt-1.5 flex items-center justify-between">
                     {/* 가격 */}
-                    <span className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900">{formatKRW(it.price)}</span>
+                    <span className="text-[15px] lg:text-[16px] font-bold text-aring-ink-900">{formatKRW(it.price)}</span>
                     <div className="flex items-center gap-2">
                         {/* 조회수 — 메타 */}
                         {typeof it.viewCount === 'number' && it.viewCount > 0 && (
-                            <span className="inline-flex items-center gap-1 text-[11px] lg:text-[12px] font-normal text-aring-ink-400">
+                            <span className="inline-flex items-center gap-1 text-[12px] lg:text-[13px] font-normal text-aring-ink-400">
                                 <IconEye className="w-3.5 h-3.5" />
                                 {it.viewCount}
                             </span>

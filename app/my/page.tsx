@@ -550,15 +550,15 @@ function MyListingCard({
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         <Link href={`/items/${listing.id}`} className="block">
           {/* 브랜드 */}
-          <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate uppercase">
+          <p className="text-[13px] lg:text-[14px] font-bold tracking-wider text-aring-ink-500 truncate uppercase">
             {listing.brand ?? '브랜드 미상'}
           </p>
           {/* 제품 타이틀 */}
-          <p className="mt-0.5 text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+          <p className="mt-0.5 text-[15px] lg:text-[16px] font-bold text-aring-ink-900 leading-[1.5] truncate">
             {listing.detail ?? listing.shape ?? '한 짝'}
           </p>
           {/* 메타(날짜) */}
-          <p className="mt-0.5 text-[11px] lg:text-[12px] font-normal text-aring-ink-400">
+          <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-400">
             {relativeTime(listing.created_at)}
           </p>
         </Link>
@@ -740,11 +740,11 @@ function LikedCard({ listing }: { listing: Listing }) {
       </Link>
       <div className="p-2.5">
         {/* 브랜드 */}
-        <p className="text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="text-[13px] lg:text-[14px] font-bold tracking-wider text-aring-ink-500 truncate">
           {listing.brand ?? '브랜드 미상'}
         </p>
         {/* 제품 타이틀 */}
-        <p className="mt-px text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+        <p className="mt-px text-[15px] lg:text-[16px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {listing.detail ?? listing.shape ?? '한 짝'}
         </p>
         <Link
@@ -861,20 +861,20 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
           </span>
         </div>
         {/* 브랜드 */}
-        <p className="mt-1 text-[12px] lg:text-[13px] font-bold tracking-wider text-aring-ink-500 truncate">
+        <p className="mt-1 text-[13px] lg:text-[14px] font-bold tracking-wider text-aring-ink-500 truncate">
           {s.brand}
         </p>
         {/* 제품 타이틀 */}
-        <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-900 leading-[1.5] truncate">
+        <p className="text-[15px] lg:text-[16px] font-bold text-aring-ink-900 leading-[1.5] truncate">
           {s.productName}
         </p>
-        {/* 댓글 미리보기 — 본문성 텍스트 (서브) */}
-        <p className="mt-1 text-[12px] lg:text-[13px] font-normal text-aring-ink-700 truncate">
+        {/* 댓글 미리보기 — 본문성 텍스트 */}
+        <p className="mt-1 text-[13px] lg:text-[14px] font-normal text-aring-ink-700 truncate">
           <span className="font-semibold">{s.lastAuthor}</span>{' '}
           <span className="text-aring-ink-500">·</span> {s.lastMessage}
         </p>
         {/* 메타(시간) */}
-        <p className="mt-0.5 text-[11px] lg:text-[12px] font-normal text-aring-ink-400">
+        <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-400">
           {relativeTime(s.lastAt)}
         </p>
       </div>
