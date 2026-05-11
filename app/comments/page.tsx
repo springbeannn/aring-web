@@ -50,20 +50,6 @@ function StatusBadge({ status }: { status?: string | null }) {
   );
 }
 
-/* ── 태그 칩 ─────────────────────────────────── */
-function TagChips({ tags }: { tags: string[] }) {
-  if (!tags.length) return null;
-  return (
-    <div className="flex flex-wrap gap-1">
-      {tags.map((t, i) => (
-        <span key={i} className="px-1.5 py-0.5 rounded-md bg-aring-ink-100 text-aring-ink-600 text-[12px] lg:text-[13px] font-semibold">
-          {t}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 /* ── 타입 ────────────────────────────────────── */
 interface Listing {
   brand?: string | null;
@@ -152,7 +138,6 @@ function MobileRow({ c, no }: { c: Comment; no: number }) {
 function PcRow({ c, no }: { c: Comment; no: number }) {
   const listing = c.listing;
   const brand = listing?.brand ?? '브랜드 미상';
-  const tags = [listing?.material, listing?.shape].filter(Boolean) as string[];
   const imgUrl = listing?.photo_url;
 
   return (
@@ -182,11 +167,6 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
           <StatusBadge status={listing?.status} />
         </div>
 
-        {/* 태그 */}
-        <div className="w-28 flex-shrink-0">
-          <TagChips tags={tags} />
-        </div>
-
         {/* 댓글 내용 */}
         <div className="flex-1 min-w-0">
           <p className="text-[15px] lg:text-[15px] text-aring-ink-800 line-clamp-2 leading-relaxed">{c.message}</p>
@@ -203,7 +183,7 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
         </div>
 
         {/* 조회수 */}
-        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
+        <div className="w-14 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
           <span className="inline-flex items-center gap-1 justify-end">
             <IconEye className="w-3.5 h-3.5" />
             {c.listing?.view_count ?? 0}
@@ -211,7 +191,7 @@ function PcRow({ c, no }: { c: Comment; no: number }) {
         </div>
 
         {/* 좋아요 */}
-        <div className="w-10 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
+        <div className="w-14 flex-shrink-0 text-[12px] lg:text-[13px] text-aring-ink-400 text-right">
           <span className="inline-flex items-center gap-1 justify-end">
             <IconHeart className="w-3.5 h-3.5" />
             0
@@ -309,12 +289,11 @@ export default function CommentsPage() {
                 <div className="w-14 flex-shrink-0">사진</div>
                 <div className="w-28 flex-shrink-0">제품명</div>
                 <div className="w-16 flex-shrink-0">상태</div>
-                <div className="w-28 flex-shrink-0">특징</div>
                 <div className="flex-1 min-w-0">댓글 내용</div>
                 <div className="w-20 flex-shrink-0">작성자</div>
                 <div className="w-16 flex-shrink-0 text-right">시간</div>
-                <div className="w-10 flex-shrink-0 text-right">조회수</div>
-                <div className="w-10 flex-shrink-0 text-right">좋아요</div>
+                <div className="w-14 flex-shrink-0 text-right">조회수</div>
+                <div className="w-14 flex-shrink-0 text-right">좋아요</div>
               </div>
               {/* 바디 */}
               {comments.map((c, i) => (
