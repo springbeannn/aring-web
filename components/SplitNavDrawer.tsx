@@ -29,7 +29,7 @@ const MENU_ITEMS: MenuItem[] = [
       { label: '내 정보', href: '/my/profile' },
     ],
   },
-  { label: 'Q&A', href: '/qa' },
+  { label: 'Q&A', href: '/qna' },
 ];
 
 // ─────────────────────────────────────────────────
