@@ -204,7 +204,7 @@ export default function NewCasePage() {
                       className={[
                         'rounded-pill border px-3.5 py-2 text-[15px] font-semibold transition active:scale-95',
                         active
-                          ? 'border-aring-green bg-aring-green text-white'
+                          ? 'border-aring-ink-900 bg-aring-ink-900 text-white'
                           : 'border-aring-ink-200 text-aring-ink-500 hover:text-aring-ink-700',
                       ].join(' ')}
                     >
@@ -271,11 +271,11 @@ export default function NewCasePage() {
               <p className="text-[13px] text-aring-accent text-center">{error}</p>
             )}
 
-            {/* CTA */}
-            <div className="pt-2 flex gap-2">
+            {/* CTA — /qna/new와 동일 패턴 */}
+            <div className="pt-2 lg:flex lg:justify-end lg:gap-3">
               <Link
                 href="/cases"
-                className="flex-1 inline-flex items-center justify-center rounded-xl border border-aring-ink-200 py-3.5 text-[15px] font-bold text-aring-ink-700"
+                className="hidden lg:inline-flex items-center justify-center w-[140px] py-4 rounded-2xl font-bold text-[16px] border border-aring-ink-200 text-aring-ink-700 transition active:scale-95"
               >
                 취소
               </Link>
@@ -283,12 +283,11 @@ export default function NewCasePage() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={!valid || submitting}
-                className={[
-                  'flex-[2] inline-flex items-center justify-center rounded-xl py-3.5 text-[16px] font-bold transition',
+                className={`w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 ${
                   valid && !submitting
-                    ? 'bg-aring-ink-900 text-white shadow-cta active:scale-[0.99]'
-                    : 'bg-aring-ink-200 text-aring-ink-400 cursor-not-allowed',
-                ].join(' ')}
+                    ? 'bg-aring-ink-900 text-white shadow-cta'
+                    : 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'
+                }`}
               >
                 {submitting ? '등록 중…' : '등록하기'}
               </button>
@@ -300,7 +299,7 @@ export default function NewCasePage() {
   );
 }
 
-const inputCls = 'w-full rounded-xl border border-aring-ink-200 px-4 py-3 text-[15px] text-aring-ink-900 placeholder:text-aring-ink-300 focus:border-aring-green focus:outline-none transition';
+const inputCls = 'w-full rounded-tile border border-aring-ink-200 px-4 py-3 text-[15px] lg:text-[15px] text-aring-ink-900 bg-transparent placeholder:text-aring-ink-400 outline-none focus:border-aring-green transition';
 
 function Field({
   label,
@@ -315,7 +314,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block mb-1.5 text-[12px] font-bold tracking-[0.08em] text-aring-green uppercase">
+      <label className="block mb-1.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-700">
         {label}{required && <span className="text-aring-accent ml-0.5">*</span>}
       </label>
       {children}
@@ -330,7 +329,7 @@ function CheckRow({ checked, onToggle, label }: { checked: boolean; onToggle: ()
       <span
         className={[
           'w-5 h-5 rounded-[5px] border-2 flex items-center justify-center shrink-0 transition',
-          checked ? 'bg-aring-green border-aring-green text-white' : 'border-aring-ink-300 bg-white text-transparent',
+          checked ? 'bg-aring-ink-900 border-aring-ink-900 text-white' : 'border-aring-ink-300 bg-white text-transparent',
         ].join(' ')}
       >
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
