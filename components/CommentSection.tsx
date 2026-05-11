@@ -188,16 +188,17 @@ export function CommentSection({
     <section className="mt-7">
       {/* 헤더 */}
       <div className="px-5 lg:px-8 mb-3">
-        <h2 className="text-[20px] lg:text-[20px] font-bold tracking-tight text-aring-ink-900">
+        <h2 className="text-[20px] lg:text-[22px] font-bold tracking-tight text-aring-ink-900">
           문의 댓글
         </h2>
-        <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
+        <p className="mt-1 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
           이 상품에 대해 궁금한 점을 남겨보세요
         </p>
       </div>
 
-      {/* 입력 폼 */}
-      <div className="mx-5 lg:mx-8 rounded-tile border border-aring-green-line bg-white p-3 mb-4">
+      {/* 입력 폼 — 상단 textarea + 하단 액션 바 분리 카드 */}
+      <div className="mx-5 lg:mx-8 mb-4 rounded-[24px] border border-[#E5E5E5] bg-white overflow-hidden">
+        {/* 상단: textarea 영역 (연한 그레이) */}
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -206,26 +207,32 @@ export function CommentSection({
               ? '답글을 입력하세요'
               : '거래·상태·매칭 관련 문의를 남겨보세요'
           }
-          rows={3}
+          rows={5}
           maxLength={1000}
-          className="w-full px-3 py-2 rounded-tile bg-aring-ink-100 text-[15px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-500 outline-none resize-none"
+          className="block w-full px-5 py-4 lg:px-6 lg:py-5 bg-[#F5F5F5] text-[15px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none border-0 resize-none leading-[1.6] focus:bg-[#F0F0F0] transition-colors"
         />
-        <div className="mt-2 flex items-center gap-2">
+
+        {/* 하단: 흰색 액션 바 */}
+        <div className="flex items-center gap-3 px-5 lg:px-6 py-3 bg-white border-t border-[#E5E5E5]">
           {replyTo && (
             <button
               onClick={() => setReplyTo(null)}
-              className="text-[15px] lg:text-[15px] leading-[1.5] font-semibold text-aring-ink-500 hover:text-aring-ink-900"
+              className="text-[14px] lg:text-[14px] font-semibold text-aring-ink-500 hover:text-aring-ink-900"
             >
               답글 취소
             </button>
           )}
-          <span className="text-[12px] lg:text-[13px] text-aring-ink-500 ml-auto">
+          <span className="text-[13px] lg:text-[13px] text-aring-ink-500 ml-auto">
             {message.length}/1000
           </span>
           <button
             onClick={submit}
             disabled={!nickname.trim() || !message.trim() || submitting}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-tile bg-aring-ink-900 text-white text-[11px] font-bold disabled:opacity-40 active:scale-95 transition"
+            className={`inline-flex items-center justify-center min-w-[88px] px-4 py-2 rounded-pill text-[13px] lg:text-[13px] font-bold transition active:scale-95 ${
+              !nickname.trim() || !message.trim() || submitting
+                ? 'bg-aring-ink-300 text-white cursor-not-allowed'
+                : 'bg-aring-ink-900 text-white shadow-cta'
+            }`}
           >
             {submitting ? '등록 중…' : replyTo ? '답글 등록' : '문의 등록'}
           </button>
