@@ -155,7 +155,7 @@ export default function QnaNewPage() {
           <form onSubmit={handleSubmit} className="px-5 lg:px-8 space-y-4">
               {/* 문의 유형 */}
               <div>
-                <label className="block text-[13px] lg:text-[14px] font-bold text-aring-ink-700 mb-1.5">문의 유형</label>
+                <label className="block text-[15px] lg:text-[15px] font-bold text-aring-ink-700 mb-2">문의 유형</label>
                 <div className="flex flex-wrap gap-2">
                   {QNA_CATEGORIES.map((c) => {
                     const active = category === c.value;
@@ -180,7 +180,7 @@ export default function QnaNewPage() {
 
               {/* 제목 */}
               <div>
-                <label htmlFor="qna-title" className="block text-[13px] lg:text-[14px] font-bold text-aring-ink-700 mb-1.5">제목</label>
+                <label htmlFor="qna-title" className="block text-[15px] lg:text-[15px] font-bold text-aring-ink-700 mb-2">제목</label>
                 <input
                   id="qna-title"
                   type="text"
@@ -195,7 +195,7 @@ export default function QnaNewPage() {
 
               {/* 내용 */}
               <div>
-                <label htmlFor="qna-content" className="block text-[13px] lg:text-[14px] font-bold text-aring-ink-700 mb-1.5">문의 내용</label>
+                <label htmlFor="qna-content" className="block text-[15px] lg:text-[15px] font-bold text-aring-ink-700 mb-2">문의 내용</label>
                 <textarea
                   id="qna-content"
                   value={content}
@@ -210,7 +210,7 @@ export default function QnaNewPage() {
 
               {/* 이미지 첨부 */}
               <div>
-                <label className="block text-[13px] lg:text-[14px] font-bold text-aring-ink-700 mb-1.5">
+                <label className="block text-[15px] lg:text-[15px] font-bold text-aring-ink-700 mb-2">
                   이미지 첨부 <span className="text-aring-ink-400 font-normal">(선택)</span>
                 </label>
                 {imagePreview ? (

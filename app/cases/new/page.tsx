@@ -314,7 +314,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block mb-1.5 text-[13px] lg:text-[14px] font-bold text-aring-ink-700">
+      <label className="block mb-2 text-[15px] lg:text-[15px] font-bold text-aring-ink-700">
         {label}{required && <span className="text-aring-accent ml-0.5">*</span>}
       </label>
       {children}
