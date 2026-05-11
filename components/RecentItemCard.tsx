@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { formatKRW, readLikedIds, writeLikedIds, type RecentItem } from '@/lib/mock';
-import { getPastelClassById } from '@/lib/pastel';
+import { getPastelClass } from '@/lib/pastel';
 
 const IconHeart = ({ className = 'w-3.5 h-3.5', filled = false }: { className?: string; filled?: boolean }) => (
     <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -18,7 +18,7 @@ const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
     </svg>
 );
 
-export function RecentItemCard({ it }: { it: RecentItem }) {
+export function RecentItemCard({ it, index }: { it: RecentItem; index: number }) {
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
@@ -34,8 +34,8 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
         setLiked(next.includes(it.id));
     }
 
-    // 동일 상품 = 어디서 보든 같은 색 (id 해시)
-    const bgClass = getPastelClassById(it.id);
+    // 목록 위치 기반 1→10 순환
+    const bgClass = getPastelClass(index);
 
     return (
         <Link

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase, type Listing } from '@/lib/supabase';
-import { getPastelClassById } from '@/lib/pastel';
+import { getPastelClass } from '@/lib/pastel';
 
 const PAGE_SIZE = 20;
 
@@ -24,13 +24,13 @@ const IconSearch = ({ className = 'w-4 h-4' }: { className?: string }) => (
   </svg>
 );
 
-function SearchCard({ row }: { row: Listing }) {
+function SearchCard({ row, index }: { row: Listing; index: number }) {
   return (
     <Link
       href={`/items/${row.id}`}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
-      <div className={`relative w-full aspect-square ${getPastelClassById(row.id)} flex items-center justify-center overflow-hidden`}>
+      <div className={`relative w-full aspect-square ${getPastelClass(index)} flex items-center justify-center overflow-hidden`}>
         {row.photo_url ? (
           <img
             src={row.photo_url}
@@ -207,7 +207,7 @@ function SearchPageInner() {
           ) : (
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-                {rows.map((row) => <SearchCard key={row.id} row={row} />)}
+                {rows.map((row, i) => <SearchCard key={row.id} row={row} index={i} />)}
               </div>
               {hasMore && (
                 <div className="flex justify-center mt-6 mb-2 px-5">

@@ -15,7 +15,7 @@ import {
 import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { CommentSection } from '@/components/CommentSection';
-import { getPastelClassById } from '@/lib/pastel';
+import { getPastelClass, getPastelClassById } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘 (inline SVG)
@@ -494,15 +494,15 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
       </div>
 
       <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
-        {items.map((it) => (
-          <SimilarCard key={it.id} item={it} />
+        {items.map((it, i) => (
+          <SimilarCard key={it.id} item={it} index={i} />
         ))}
       </div>
     </section>
   );
 }
 
-function SimilarCard({ item }: { item: ItemSummary }) {
+function SimilarCard({ item, index }: { item: ItemSummary; index: number }) {
   return (
     <Link
       href={`/items/${item.id}`}
@@ -510,7 +510,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
       className="shrink-0 w-[calc((100vw-64px)/2.3)] lg:w-[150px] flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
       <div
-        className={`relative aspect-square overflow-hidden ${getPastelClassById(item.id)}`}
+        className={`relative aspect-square overflow-hidden ${getPastelClass(index)}`}
       >
         <img
           src={item.image}
