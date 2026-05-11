@@ -9,6 +9,8 @@ import {
   successStory,
   formatKRW,
   thumbBg,
+  readLikedIds,
+  writeLikedIds,
   type MatchCard,
   type RecentItem,
   type ThumbTone,
@@ -286,9 +288,25 @@ function TodayMatchSection() {
 function TodayMatchCard({ m }: { m: MatchCard }) {
   const priceLabel = typeof m.price === 'number' && m.price > 0 ? formatKRW(m.price) : '가격 협의';
   const viewCount = typeof m.viewCount === 'number' ? m.viewCount : 0;
-  const likeCount = typeof (m as MatchCard & { likes?: number }).likes === 'number'
+  const baseLikes = typeof (m as MatchCard & { likes?: number }).likes === 'number'
     ? (m as MatchCard & { likes?: number }).likes!
     : 0;
+
+  // 상세 페이지(items/[id])와 동일한 패턴: localStorage liked ids
+  const [liked, setLiked] = useState(false);
+  useEffect(() => {
+    setLiked(readLikedIds().includes(m.id));
+  }, [m.id]);
+
+  function handleLike(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const ids = readLikedIds();
+    const next = ids.includes(m.id) ? ids.filter(i => i !== m.id) : [...ids, m.id];
+    writeLikedIds(next);
+    setLiked(next.includes(m.id));
+  }
+
   return (
     <Link href={`/items/${m.id}`} onClick={log('today:tap', m.id)}
       className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition">
@@ -311,10 +329,15 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
             <IconEye className="w-3.5 h-3.5" />
             <span>조회수 {viewCount}</span>
           </span>
-          <span className="inline-flex items-center gap-1">
-            <IconHeart className="w-3.5 h-3.5" />
-            <span>{likeCount}</span>
-          </span>
+          <button
+            type="button"
+            onClick={handleLike}
+            aria-label="찜하기"
+            className={['inline-flex items-center gap-1 transition', liked ? 'text-aring-accent' : 'text-aring-ink-400'].join(' ')}
+          >
+            <IconHeart className="w-3.5 h-3.5" filled={liked} />
+            <span>{baseLikes + (liked ? 1 : 0)}</span>
+          </button>
         </div>
       </div>
     </Link>
