@@ -1,66 +1,36 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 // ─────────────────────────────────────────────────
-// 메뉴 데이터 (기존 SideMenu 구조 재사용)
+// 메뉴 데이터 — 1depth + 아코디언 2depth
 // ─────────────────────────────────────────────────
-type MenuItem = {
-  label: string;
-  href: string;
-  cta?: boolean;
-  children?: { label: string; href: string }[];
-};
+type LeafItem = { label: string; href: string };
+type GroupItem = { label: string; children: LeafItem[] };
+type MenuItem = LeafItem | GroupItem;
 
 const MENU_ITEMS: MenuItem[] = [
-  { label: '홈', href: '/' },
   {
     label: '탐색하기',
-    href: '/discover',
     children: [
-      { label: '모양으로 찾기',   href: '/discover?filter=shape' },
-      { label: '소재로 찾기',     href: '/discover?filter=material' },
-      { label: '가격대로 찾기',   href: '/discover?filter=price' },
-      { label: '브랜드로 찾기',   href: '/discover?filter=brand' },
+      { label: '내 귀걸이 매칭 현황', href: '/my/match' },
+      { label: '오늘의 매칭 후보',   href: '/popular' },
+      { label: '브랜드별 탐색',       href: '/#brands' },
+      { label: '탐색',                 href: '/discover' },
+      { label: '전체 리스트',          href: '/products' },
     ],
   },
-  {
-    label: '한 짝 등록하기',
-    href: '/register',
-    cta: true,
-    children: [
-      { label: '검색으로 찾기', href: '/search' },
-    ],
-  },
-  {
-    label: '댓글',
-    href: '/comments',
-    children: [
-      { label: '내 댓글 보기', href: '/my#comments' },
-    ],
-  },
+  { label: '댓글', href: '/comments' },
   {
     label: 'MY',
-    href: '/my',
     children: [
-      { label: '내 상품',     href: '/my#my-listings' },
-      { label: '관심 상품',   href: '/my#liked' },
-      { label: '로그인',      href: '/login' },
-      { label: '회원가입',    href: '/signup' },
+      { label: '내 정보', href: '/my/profile' },
     ],
   },
+  { label: 'Q&A', href: '/qa' },
 ];
-
-// 현재 경로에 매칭되는 1-depth 라벨 찾기
-function matchActiveLabel(pathname: string): string {
-  for (const item of MENU_ITEMS) {
-    if (pathname === item.href) return item.label;
-    if (item.href !== '/' && pathname.startsWith(item.href)) return item.label;
-  }
-  return MENU_ITEMS[0].label;
-}
 
 // ─────────────────────────────────────────────────
 // Props
@@ -68,50 +38,43 @@ function matchActiveLabel(pathname: string): string {
 interface SplitNavDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  isLoggedIn?: boolean | null;
 }
 
 // ─────────────────────────────────────────────────
-// SplitNavDrawer — 좌측 1depth 고정 + 우측 2depth 펼침
+// SplitNavDrawer — 아코디언 드로어
 // ─────────────────────────────────────────────────
-export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps) {
-  const router = useRouter();
-  const pathname = usePathname() ?? '/';
+export default function SplitNavDrawer({ isOpen, onClose, isLoggedIn = null }: SplitNavDrawerProps) {
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  const [selected, setSelected] = useState<string>(() => matchActiveLabel(pathname));
-
-  // 메뉴 열릴 때마다 현재 라우트로 selected 동기화
-  useEffect(() => {
-    if (isOpen) setSelected(matchActiveLabel(pathname));
-  }, [isOpen, pathname]);
-
-  // 메뉴 열릴 때 body 스크롤 잠금
+  // 드로어 열리면 body 스크롤 잠금
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  // ESC 키로 닫기
+  // ESC 닫기
   useEffect(() => {
     const fn = (e: KeyboardEvent) => { if (e.key === 'Escape' && isOpen) onClose(); };
     document.addEventListener('keydown', fn);
     return () => document.removeEventListener('keydown', fn);
   }, [isOpen, onClose]);
 
-  function handleLeftClick(item: MenuItem) {
-    if (!item.children?.length) {
-      // 하위 메뉴 없는 경우 바로 라우팅
-      router.push(item.href);
-      onClose();
-      return;
-    }
-    setSelected(item.label);
+  // 닫힐 때 펼침 상태 초기화
+  useEffect(() => {
+    if (!isOpen) setExpanded(null);
+  }, [isOpen]);
+
+  async function handleLogout() {
+    if (!supabase) return;
+    await supabase.auth.signOut();
+    onClose();
+    if (typeof window !== 'undefined') window.location.href = '/';
   }
 
-  const selectedItem = useMemo(
-    () => MENU_ITEMS.find((i) => i.label === selected),
-    [selected],
-  );
-  const children = selectedItem?.children ?? [];
+  function isGroup(item: MenuItem): item is GroupItem {
+    return 'children' in item;
+  }
 
   return (
     <>
@@ -152,100 +115,81 @@ export default function SplitNavDrawer({ isOpen, onClose }: SplitNavDrawerProps)
           </button>
         </div>
 
-        {/* Split: 좌측 1depth + 우측 2depth */}
-        <div className="flex-1 flex min-h-0">
-          {/* 좌측 패널 — 38% */}
-          <aside
-            aria-label="1차 메뉴"
-            className="w-[38%] bg-[#F5F5F5] overflow-y-auto"
-          >
-            {MENU_ITEMS.map((item) => {
-              const isActive = item.label === selected;
+        {/* 메뉴 본문 — 1depth 아래 아코디언 2depth */}
+        <nav className="flex-1 overflow-y-auto py-2">
+          {MENU_ITEMS.map((item) => {
+            if (!isGroup(item)) {
               return (
-                <button
+                <Link
                   key={item.label}
-                  type="button"
-                  onClick={() => handleLeftClick(item)}
-                  className={[
-                    'w-full text-left flex items-center min-h-[52px] py-4 px-4 text-[16px] border-l-2 transition',
-                    isActive
-                      ? 'bg-white font-bold text-aring-ink-900 border-l-aring-green'
-                      : item.cta
-                        ? 'bg-[#F5F5F5] font-bold text-aring-green border-l-transparent hover:bg-aring-ink-100/40'
-                        : 'bg-[#F5F5F5] font-semibold text-[#555555] border-l-transparent hover:bg-aring-ink-100/40',
-                  ].join(' ')}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center min-h-[52px] px-6 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[rgb(243,243,245)]"
                 >
                   {item.label}
-                </button>
-              );
-            })}
-          </aside>
-
-          {/* 우측 패널 — 62% */}
-          <section
-            aria-label="2차 메뉴"
-            className="flex-1 bg-white overflow-y-auto"
-          >
-            {children.length > 0 ? (
-              <ul>
-                {children.map((child) => (
-                  <li key={child.href}>
-                    <Link
-                      href={child.href}
-                      onClick={onClose}
-                      className="flex items-center justify-between h-[52px] px-4 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition border-b border-[#EEEEEE]"
-                    >
-                      <span>{child.label}</span>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-aring-ink-300 shrink-0"
-                      >
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="flex flex-col items-center justify-center min-h-[200px] px-6 text-center">
-                <p className="text-[15px] lg:text-[15px] text-aring-ink-400 leading-relaxed">
-                  선택한 메뉴는<br />바로 이동해요
-                </p>
-                <Link
-                  href={selectedItem?.href ?? '/'}
-                  onClick={onClose}
-                  className="mt-3 inline-flex items-center gap-1 px-4 py-2 rounded-full bg-aring-ink-900 text-white text-[12px] lg:text-[13px] font-bold hover:opacity-90 transition"
-                >
-                  {selectedItem?.label ?? ''} 페이지로
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
                 </Link>
-              </div>
-            )}
-          </section>
-        </div>
+              );
+            }
 
-        {/* 하단 CTA — 기존 스타일 유지 */}
-        <div className="px-6 pt-4 pb-6 border-t border-[rgb(229,229,229)] flex-shrink-0 bg-white">
-          <Link
-            href="/register"
-            onClick={onClose}
-            className="w-full flex items-center justify-center gap-1.5 py-[14px] bg-aring-ink-900 text-white rounded-full text-[16px] font-semibold tracking-tight hover:opacity-90 transition"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            등록하기
-          </Link>
-        </div>
+            const isExpanded = expanded === item.label;
+            return (
+              <div key={item.label} className="border-b border-[rgb(243,243,245)]">
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isExpanded ? null : item.label)}
+                  aria-expanded={isExpanded}
+                  className="w-full flex items-center justify-between min-h-[52px] px-6 text-[16px] font-semibold text-aring-ink-900 hover:bg-aring-ink-100/60 transition"
+                >
+                  <span>{item.label}</span>
+                  <svg
+                    className={`w-[18px] h-[18px] transition-transform duration-[250ms] ${isExpanded ? 'rotate-180 text-aring-green' : 'text-aring-ink-500'}`}
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div
+                  className="overflow-hidden bg-[rgb(248,248,250)]"
+                  style={{
+                    maxHeight: isExpanded ? `${item.children.length * 48}px` : '0',
+                    transition: 'max-height 0.3s ease',
+                  }}
+                >
+                  {item.children.map((c) => (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      onClick={onClose}
+                      className="flex items-center h-[48px] pl-12 pr-6 text-[15px] font-semibold text-aring-ink-700 hover:bg-aring-ink-100/60 transition"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-aring-accent mr-2.5 flex-shrink-0" />
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* 회원가입/로그인 또는 로그아웃 */}
+          {isLoggedIn ? (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full flex items-center min-h-[52px] px-6 text-[16px] font-semibold text-aring-ink-500 hover:bg-aring-ink-100/60 transition text-left"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              onClick={onClose}
+              className="flex items-center min-h-[52px] px-6 text-[16px] font-bold text-aring-green hover:bg-aring-ink-100/60 transition"
+            >
+              회원가입 / 로그인
+            </Link>
+          )}
+        </nav>
       </div>
     </>
   );

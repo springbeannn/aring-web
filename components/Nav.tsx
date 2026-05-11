@@ -121,7 +121,7 @@ export function TopNav() {
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
         </div>
       </div>
-      <SplitNavDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SplitNavDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} isLoggedIn={isLoggedIn} />
     </>
   );
 }
