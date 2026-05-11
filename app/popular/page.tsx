@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
-import { thumbBg, type ThumbTone } from '@/lib/mock';
+import { thumbBg, pickTone } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
 // ─────────────────────────────────────────────────────────────
@@ -12,14 +12,6 @@ import { supabase, type Listing } from '@/lib/supabase';
 // 카드는 RecentItemCard 와 비슷하나 조회수 표시 추가
 // ─────────────────────────────────────────────────────────────
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-];
-function pickTone(seed: string): ThumbTone {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
-}
 
 const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

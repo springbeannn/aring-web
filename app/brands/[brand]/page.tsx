@@ -8,8 +8,8 @@ import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
 import {
   recentItems as mockRecentItems,
+  pickTone,
   type RecentItem,
-  type ThumbTone,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
@@ -20,11 +20,7 @@ import { supabase, type Listing } from '@/lib/supabase';
 
 const PAGE_SIZE = 12;
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-];
-
-function listingToRecent(row: Listing, idx: number): RecentItem {
+function listingToRecent(row: Listing): RecentItem {
   return {
     id: row.id,
     brand: row.brand ?? '브랜드 미상',
@@ -33,7 +29,7 @@ function listingToRecent(row: Listing, idx: number): RecentItem {
     likes: 0,
     side: row.side,
     emoji: '◇',
-    tone: TONE_ROTATION[idx % TONE_ROTATION.length],
+    tone: pickTone(row.id),
     story: row.story ?? undefined,
     image: row.photo_url,
   };
@@ -135,7 +131,7 @@ export default function BrandPage() {
             return !dictEntry; // dict에 없으면 '기타'
           });
           if (cancelled) return;
-          const fresh = etcRows.map((r, i) => listingToRecent(r as Listing, i));
+          const fresh = etcRows.map((r) => listingToRecent(r as Listing));
           setItems(fresh);
           setHasMore(false); // '기타'는 한 번에 200건 fetch, 페이지네이션 미사용
         } catch (e) {
@@ -165,7 +161,7 @@ export default function BrandPage() {
       }
 
       const rows = (data ?? []) as Listing[];
-      const fresh = rows.map((r, i) => listingToRecent(r, i));
+      const fresh = rows.map((r) => listingToRecent(r));
 
       if (fresh.length === 0) {
         setItems([]);
@@ -205,7 +201,7 @@ export default function BrandPage() {
     }
 
     const rows = (data ?? []) as Listing[];
-    const fresh = rows.map((r, i) => listingToRecent(r, start + i));
+    const fresh = rows.map((r) => listingToRecent(r));
 
     setItems((prev) => [...prev, ...fresh]);
     setHasMore(rows.length === PAGE_SIZE);

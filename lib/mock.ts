@@ -41,7 +41,22 @@ export type RecentItem = {
 
 // Pastel design system — 2026-04-25 update
 // 기존 'peach'|'peri'|'mix'|'green' 폐기 → 6-tone pastel
-export type ThumbTone = 'pink' | 'peach' | 'butter' | 'mint' | 'sky' | 'sage';
+export type ThumbTone =
+  | 'pink' | 'peach' | 'butter' | 'mint' | 'sky' | 'sage'
+  | 'lavender' | 'coral' | 'cream' | 'aqua';
+
+// 단일 source of truth — 모든 페이지가 import해서 동일 순서·동일 알고리즘으로 톤 결정
+export const TONE_ROTATION: ThumbTone[] = [
+  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
+  'lavender', 'coral', 'cream', 'aqua',
+];
+
+// id 해시 기반 톤 결정 — 같은 id → 항상 같은 톤
+export function pickTone(seed: string): ThumbTone {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
+}
 
 export type SuccessStory = {
   badge: string;
@@ -191,17 +206,25 @@ export function formatKRW(n: number): string {
 export function thumbBg(tone: ThumbTone): string {
   switch (tone) {
     case 'pink':
-      return 'linear-gradient(135deg,#FCE2EC,#FBC8DC)';
+      return 'linear-gradient(135deg,#FDEAEF,#FBD3DF)';
     case 'peach':
-      return 'linear-gradient(135deg,#FFEAD3,#FFD9B8)';
+      return 'linear-gradient(135deg,#FFF1DF,#FFE0C5)';
     case 'butter':
-      return 'linear-gradient(135deg,#FFF6CF,#FFEFB5)';
+      return 'linear-gradient(135deg,#FFFADC,#FFF3C4)';
     case 'mint':
-      return 'linear-gradient(135deg,#DEEFDF,#C8E6C9)';
+      return 'linear-gradient(135deg,#E7F4E8,#D5EBD6)';
     case 'sky':
-      return 'linear-gradient(135deg,#DDEBF6,#C5DDF0)';
+      return 'linear-gradient(135deg,#E8F2FA,#D2E5F4)';
     case 'sage':
-      return 'linear-gradient(135deg,#E5EDD8,#D8E5C8)';
+      return 'linear-gradient(135deg,#ECF1E0,#DEE8CF)';
+    case 'lavender':
+      return 'linear-gradient(135deg,#F1EAF6,#E2D2EE)';
+    case 'coral':
+      return 'linear-gradient(135deg,#FFEDE6,#FFD8C8)';
+    case 'cream':
+      return 'linear-gradient(135deg,#FAF4E5,#F2E9D2)';
+    case 'aqua':
+      return 'linear-gradient(135deg,#E5F1F0,#CFE5DF)';
   }
 }
 

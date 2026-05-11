@@ -4,20 +4,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
-import { thumbBg, type ThumbTone } from '@/lib/mock';
+import { thumbBg, pickTone } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
 const PAGE_SIZE = 20;
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-];
-
-function pickTone(seed: string): ThumbTone {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = ((h * 31) + seed.charCodeAt(i)) | 0;
-  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
-}
 
 const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

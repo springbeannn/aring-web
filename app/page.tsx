@@ -11,6 +11,7 @@ import {
   thumbBg,
   readLikedIds,
   writeLikedIds,
+  pickTone,
   type MatchCard,
   type RecentItem,
   type ThumbTone,
@@ -72,15 +73,10 @@ const FAMOUS_BRANDS: string[] = [
 // ─────────────────────────────────────────────────────────────
 const log = (e: string, d?: unknown) => () => console.log('[aring]', e, d ?? '');
 
-const TONES: ThumbTone[] = ['pink', 'peach', 'butter', 'mint', 'sky', 'sage'];
+// 톤 결정은 lib/mock의 pickTone 사용 (전 페이지 통일)
+const toneFromId = pickTone;
 
-function toneFromId(id: string): ThumbTone {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (31 * h + id.charCodeAt(i)) | 0;
-  return TONES[Math.abs(h) % TONES.length];
-}
-
-function listingToRecentItem(row: Listing, idx: number): RecentItem {
+function listingToRecentItem(row: Listing): RecentItem {
   return {
     id: row.id,
     brand: row.brand ?? '브랜드 미상',
@@ -89,7 +85,7 @@ function listingToRecentItem(row: Listing, idx: number): RecentItem {
     likes: (row as any).likes_count ?? 0,
     side: (row.side ?? 'L') as 'L' | 'R',
     emoji: '◇',
-    tone: TONES[idx % TONES.length],
+    tone: pickTone(row.id),
     story: row.story ?? undefined,
     image: row.photo_url,
   };
@@ -612,7 +608,7 @@ export default function HomePage() {
           return;
         }
 
-        setAllItems(data.map((row, i) => listingToRecentItem(row as Listing, i)));
+        setAllItems(data.map((row) => listingToRecentItem(row as Listing)));
 
         // brand_key 또는 aliases 기준으로 집계, display_name으로 표시
         import('@/lib/brandNormalizer').then(({ getBrands }) => {

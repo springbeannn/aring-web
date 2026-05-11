@@ -6,8 +6,8 @@ import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import {
   recentItems as mockRecentItems,
+  pickTone,
   type RecentItem,
-  type ThumbTone,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 import {
@@ -31,14 +31,6 @@ const ACTIVE_BORDER = '#8ED9CC';
 const ACTIVE_TEXT = '#222222';
 const INACTIVE_BORDER = '#E5E5E5';
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-];
-function pickTone(seed: string): ThumbTone {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
-}
 
 function listingToRecent(row: Listing): RecentItem {
   return {

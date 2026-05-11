@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
-import { thumbBg, type ThumbTone } from '@/lib/mock';
+import { thumbBg, pickTone, type ThumbTone } from '@/lib/mock';
 import {
   supabase,
   type Listing,
@@ -24,20 +24,6 @@ const ANON_NICK_KEY = 'aring_anon_nickname';
 const ANON_BIO_KEY = 'aring_anon_bio';
 const LIKED_KEY = 'aring_liked_product_ids';
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink',
-  'peach',
-  'butter',
-  'mint',
-  'sky',
-  'sage',
-];
-
-function pickTone(seed: string): ThumbTone {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
-}
 
 const PROFILE_MESSAGES = [
   '오늘도 한 짝을 찾는 중 👀',

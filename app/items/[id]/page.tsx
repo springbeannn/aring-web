@@ -8,9 +8,9 @@ import {
   getItemSummary,
   formatKRW,
   thumbBg,
+  pickTone,
   type ItemDetail,
   type ItemSummary,
-  type ThumbTone,
     readLikedIds, writeLikedIds,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
@@ -84,14 +84,7 @@ const log =
     console.log('[aring]', label, payload ?? '');
 
 // Listing → ItemDetail 변환 (Supabase row → UI 모델)
-const TONE_ROTATION: ThumbTone[] = ['pink', 'peach', 'butter', 'mint', 'sky', 'sage'];
-
-function pickTone(seed: string, idx = 0): ThumbTone {
-  // 같은 id는 항상 같은 톤이 되도록 seed hash
-  let h = idx;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-  return TONE_ROTATION[Math.abs(h) % TONE_ROTATION.length];
-}
+// 톤은 lib/mock의 pickTone (id 해시) 사용 — 전 페이지 통일
 
 function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } {
   const detailTags = row.detail
@@ -128,7 +121,7 @@ function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } 
   };
 }
 
-function listingToSummary(row: Listing, idx: number): ItemSummary {
+function listingToSummary(row: Listing): ItemSummary {
   return {
     id: row.id,
     brand: row.brand ?? '브랜드 미상',
@@ -136,7 +129,7 @@ function listingToSummary(row: Listing, idx: number): ItemSummary {
     price: row.price ?? undefined,
     side: row.side,
     image: row.photo_url,
-    tone: pickTone(row.id, idx),
+    tone: pickTone(row.id),
   };
 }
 
@@ -693,8 +686,8 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
         .limit(5);
 
       if (cancelled) return;
-      const similars = (simRows ?? []).map((r, i) =>
-        listingToSummary(r as Listing, i)
+      const similars = (simRows ?? []).map((r) =>
+        listingToSummary(r as Listing)
       );
 
       setState({ status: 'ok', item: { ...item, viewCount: nextViewCount }, similars });

@@ -8,8 +8,8 @@ import { RecentItemCard } from '@/components/RecentItemCard';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
 import {
   recentItems as mockRecentItems,
+  pickTone,
   type RecentItem,
-  type ThumbTone,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 
@@ -19,11 +19,7 @@ import { supabase, type Listing } from '@/lib/supabase';
 
 const PAGE_SIZE = 12;
 
-const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-];
-
-function listingToRecent(row: Listing, idx: number): RecentItem {
+function listingToRecent(row: Listing): RecentItem {
   return {
     id: row.id,
     brand: row.brand ?? '브랜드 미상',
@@ -32,7 +28,7 @@ function listingToRecent(row: Listing, idx: number): RecentItem {
     likes: 0,
     side: row.side,
     emoji: '◇',
-    tone: TONE_ROTATION[idx % TONE_ROTATION.length],
+    tone: pickTone(row.id),
     story: row.story ?? undefined,
     image: row.photo_url,
   };
@@ -100,7 +96,7 @@ function ProductsContent() {
       }
 
       const rows = (data ?? []) as Listing[];
-      const fresh = rows.map((r, i) => listingToRecent(r, i));
+      const fresh = rows.map((r) => listingToRecent(r));
 
       if (fresh.length === 0) {
         setItems(mockRecentItems);
@@ -139,7 +135,7 @@ function ProductsContent() {
     }
 
     const rows = (data ?? []) as Listing[];
-    const fresh = rows.map((r, i) => listingToRecent(r, start + i));
+    const fresh = rows.map((r) => listingToRecent(r));
 
     setItems((prev) => [...prev, ...fresh]);
     setHasMore(rows.length === PAGE_SIZE);
