@@ -25,6 +25,11 @@ body {
   padding: 0;
 }
 
+/* 페이지 이동 시 스크롤바 등장/사라짐으로 인한 가로폭 흔들림 방지 */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background: #ffffff;
   color: #1e1b2e;
