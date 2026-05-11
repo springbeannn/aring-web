@@ -134,18 +134,16 @@ export default async function CasesPage() {
                 </div>
               )}
 
-              {/* 등록하기 — /my/profile 로그아웃 버튼과 동일 디자인·위치 */}
-              {isAdmin && (
-                <div className="mt-6 lg:flex lg:justify-end">
-                  <Link
-                    href="/cases/new"
-                    className="inline-flex items-center justify-center gap-1.5 w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 bg-aring-ink-900 text-white shadow-cta"
-                  >
-                    등록하기
-                    <span aria-hidden>→</span>
-                  </Link>
-                </div>
-              )}
+              {/* 등록하기 — /my/profile 로그아웃 버튼과 동일 디자인·위치 (PC/모바일 모두 노출) */}
+              <div className="mt-6 lg:flex lg:justify-end">
+                <Link
+                  href="/cases/new"
+                  className="inline-flex items-center justify-center gap-1.5 w-full lg:w-[200px] py-4 rounded-2xl font-bold text-[16px] transition active:scale-95 bg-aring-ink-900 text-white shadow-cta"
+                >
+                  등록하기
+                  <span aria-hidden>→</span>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -339,15 +337,8 @@ function EmptyState() {
 function ErrorState() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <span className="text-4xl mb-4" aria-hidden>⚠️</span>
-      <p className="text-[15px] font-bold text-aring-ink-900 mb-1">사례를 불러오지 못했어요.</p>
-      <p className="text-[13px] text-aring-ink-500 mb-6">잠시 후 다시 시도해주세요.</p>
-      <Link
-        href="/cases"
-        className="w-full max-w-[320px] inline-flex items-center justify-center rounded-pill border border-aring-ink-200 py-3.5 text-[15px] font-bold text-aring-ink-700 hover:border-aring-green hover:text-aring-ink-900 transition"
-      >
-        새로고침
-      </Link>
+      <span className="text-4xl mb-4" aria-hidden>💍</span>
+      <p className="text-[15px] font-bold text-aring-ink-900">이야기를 기다리고 있어요.</p>
     </div>
   );
 }
