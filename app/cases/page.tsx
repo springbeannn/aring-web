@@ -23,10 +23,11 @@ export const dynamic = 'force-dynamic';
 export default async function CasesPage() {
   const supabase = createSupabaseServer();
 
-  // ─── 데이터 fetch + admin role 체크 (병렬) ──────────────
   let cases: CaseListItemData[] = [];
   let fetchError = false;
   let isAdmin = false;
+  let isLoggedIn = false;
+  let openCount: number | null = null;
 
   if (supabase) {
     const casesQuery = supabase
@@ -36,9 +37,15 @@ export default async function CasesPage() {
       .order('is_featured', { ascending: false })
       .order('published_at', { ascending: false });
 
-    const [casesRes, userRes] = await Promise.all([
+    const countQuery = supabase
+      .from('listings')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'open');
+
+    const [casesRes, userRes, countRes] = await Promise.all([
       casesQuery,
       supabase.auth.getUser(),
+      countQuery,
     ]);
 
     if (casesRes.error) {
@@ -48,6 +55,7 @@ export default async function CasesPage() {
     }
 
     const user = userRes.data.user;
+    isLoggedIn = !!user;
     if (user) {
       const { data: profile } = await supabase
         .from('profiles')
@@ -56,9 +64,10 @@ export default async function CasesPage() {
         .maybeSingle();
       isAdmin = profile?.role === 'admin';
     }
+
+    openCount = countRes.error ? null : countRes.count ?? 0;
   }
 
-  // ─── JSON-LD CollectionPage 스키마 (AEO) ───────────────
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -75,6 +84,32 @@ export default async function CasesPage() {
     })),
   };
 
+  // ─── 비로그인: 게이트 화면 ─────────────────────
+  if (!isLoggedIn) {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <main className="min-h-screen flex justify-center bg-white">
+          <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
+            <div className="pb-28 lg:pb-10">
+              <TopNav />
+              <PageHeader />
+              <BlurredPreview cases={cases.slice(0, 2)} />
+              <WaitingCounter count={openCount} />
+              <LoginGateCTA />
+              <SocialProof count={openCount} />
+            </div>
+            <BottomNav />
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  // ─── 로그인: 기존 흐름 ─────────────────────────
   return (
     <>
       <script
@@ -83,21 +118,9 @@ export default async function CasesPage() {
       />
       <main className="min-h-screen flex justify-center bg-white">
         <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
-          {/* admin일 때 하단 sticky CTA가 떠있으므로 콘텐츠 하단 패딩 추가 */}
           <div className={isAdmin ? 'pb-[180px] lg:pb-[120px]' : 'pb-28 lg:pb-10'}>
             <TopNav />
-
-            {/* 헤더 — discover 와꾸 */}
-            <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
-              <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
-                aring 이야기
-              </h1>
-              <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
-                aring을 통해 연결된 브랜드들의 이야기
-              </p>
-            </div>
-
-            {/* 리스트 / 빈 상태 / 에러 */}
+            <PageHeader />
             <div className="px-5 lg:px-8">
               {fetchError ? (
                 <ErrorState />
@@ -113,7 +136,6 @@ export default async function CasesPage() {
             </div>
           </div>
 
-          {/* 하단 sticky CTA — BottomNav 위에 띄움 (admin only) */}
           {isAdmin && (
             <div className="fixed left-0 right-0 bottom-[80px] lg:bottom-0 z-30 pointer-events-none">
               <div className="mx-auto w-full max-w-[440px] lg:max-w-[1200px] glass-strong border-t border-white/60 px-5 lg:px-8 py-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)] lg:pb-4 pointer-events-auto">
@@ -136,7 +158,170 @@ export default async function CasesPage() {
 }
 
 // ─────────────────────────────────────────────────
-// Empty / Error 상태
+// 공용 헤더
+// ─────────────────────────────────────────────────
+function PageHeader() {
+  return (
+    <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
+      <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">
+        aring 이야기
+      </h1>
+      <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">
+        aring을 통해 연결된 브랜드들의 이야기
+      </p>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 비로그인 — 블러 처리된 카드 미리보기
+// ─────────────────────────────────────────────────
+function BlurredPreview({ cases }: { cases: CaseListItemData[] }) {
+  const items = cases.length > 0 ? cases : [null, null];
+  const showCount = Math.min(items.length, 2);
+
+  return (
+    <div className="relative px-5 lg:px-8 mt-2">
+      <div
+        aria-hidden
+        className="select-none pointer-events-none border-t border-aring-ink-100"
+        style={{ filter: 'blur(6px)' }}
+      >
+        {Array.from({ length: showCount }).map((_, i) => {
+          const c = cases[i];
+          return c ? (
+            <ListItem key={c.id} item={c} />
+          ) : (
+            <SkeletonCard key={`sk-${i}`} />
+          );
+        })}
+      </div>
+      {/* 흰 반투명 오버레이 */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.15)' }}
+      />
+    </div>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="border-b border-aring-ink-100 px-5 py-7">
+      <div className="h-3 w-16 rounded bg-aring-ink-100 mb-2" />
+      <div className="h-5 w-3/4 rounded bg-aring-ink-100 mb-2" />
+      <div className="h-3.5 w-full rounded bg-aring-ink-100 mb-1.5" />
+      <div className="h-3.5 w-5/6 rounded bg-aring-ink-100 mb-3" />
+      <div className="flex gap-1.5">
+        <div className="h-5 w-12 rounded-full bg-aring-pastel-blue" />
+        <div className="h-5 w-14 rounded-full bg-aring-pastel-blue" />
+        <div className="h-5 w-10 rounded-full bg-aring-pastel-blue" />
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 비로그인 — 대기 카운터 문구
+// ─────────────────────────────────────────────────
+function WaitingCounter({ count }: { count: number | null }) {
+  // 에러는 숨김
+  if (count === null) return null;
+
+  const text =
+    count > 0
+      ? `${count.toLocaleString('ko-KR')}개의 귀걸이가 짝을 기다리고 있어요`
+      : '첫 번째 짝을 기다리고 있어요';
+
+  return (
+    <div className="px-5 lg:px-8 mt-5 text-center">
+      <p className="text-[13px] lg:text-[14px] text-aring-ink-500">{text}</p>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 비로그인 — 로그인 게이트 CTA
+// ─────────────────────────────────────────────────
+function LoginGateCTA() {
+  return (
+    <div className="px-5 lg:px-8 mt-4">
+      <div className="rounded-card border border-aring-green-line bg-white shadow-card px-5 py-7 text-center">
+        {/* 잠금 아이콘 */}
+        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-aring-green/10 flex items-center justify-center">
+          <svg
+            className="w-5 h-5 text-aring-green"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+
+        <h2 className="text-[17px] lg:text-[18px] font-bold text-aring-ink-900">
+          매칭 스토리 전체 보기
+        </h2>
+        <p className="mt-1 text-[13px] lg:text-[14px] text-aring-ink-500 leading-[1.6]">
+          로그인하면 어떤 짝들이 기다리는지 볼 수 있어요
+        </p>
+
+        <Link
+          href="/login?redirect=/cases"
+          className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-aring-ink-900 py-4 text-[16px] font-bold text-white shadow-cta active:scale-95 transition"
+        >
+          로그인
+        </Link>
+
+        <p className="mt-3 text-[13px] text-aring-ink-500">
+          아직 회원이 아니세요?{' '}
+          <Link href="/signup" className="font-bold text-aring-ink-900 hover:text-aring-green transition">
+            회원가입 →
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 비로그인 — Social proof 수치 스트립
+// ─────────────────────────────────────────────────
+function SocialProof({ count }: { count: number | null }) {
+  const countLabel = count !== null && count > 0
+    ? `${count.toLocaleString('ko-KR')}개`
+    : '준비 중';
+
+  const items = [
+    { value: countLabel, label: '짝을 기다리는 중' },
+    { value: '₩0',       label: '수수료' },
+    { value: 'AI 매칭',  label: '사진 한 장으로' },
+  ];
+
+  return (
+    <div className="px-5 lg:px-8 mt-4">
+      <div className="grid grid-cols-3 gap-2">
+        {items.map((it) => (
+          <div
+            key={it.label}
+            className="rounded-tile bg-aring-ink-100/60 px-3 py-3 text-center"
+          >
+            <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900 truncate">{it.value}</p>
+            <p className="mt-0.5 text-[11px] lg:text-[12px] text-aring-ink-500 leading-[1.4]">{it.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// 로그인 후 — Empty / Error 상태 (기존)
 // ─────────────────────────────────────────────────
 function EmptyState() {
   return (

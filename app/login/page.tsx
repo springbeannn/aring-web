@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { TopNav } from '@/components/Nav';
 import { signInWithEmail, signInWithOAuth } from '@/lib/auth';
@@ -85,7 +85,17 @@ function LoginMobileBanner() {
 }
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -107,7 +117,7 @@ export default function LoginPage() {
     const { error } = await signInWithEmail(email, password);
     setLoading(false);
     if (error) { setError(error); return; }
-    router.push('/');
+    router.push(redirectTo);
   };
 
   const handleOAuth = async (provider: 'kakao' | 'google') => {
