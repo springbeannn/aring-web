@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { formatKRW, thumbBg, readLikedIds, writeLikedIds, type RecentItem } from '@/lib/mock';
+import { formatKRW, readLikedIds, writeLikedIds, type RecentItem } from '@/lib/mock';
+import { getPastelClass, getPastelClassById } from '@/lib/pastel';
 
 const IconHeart = ({ className = 'w-3.5 h-3.5', filled = false }: { className?: string; filled?: boolean }) => (
     <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -17,7 +18,7 @@ const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
     </svg>
 );
 
-export function RecentItemCard({ it }: { it: RecentItem }) {
+export function RecentItemCard({ it, index }: { it: RecentItem; index?: number }) {
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
@@ -33,13 +34,16 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
         setLiked(next.includes(it.id));
     }
 
+    // 목록 위치 기반 로테이션(우선) → 없으면 id 해시 폴백
+    const bgClass = typeof index === 'number' ? getPastelClass(index) : getPastelClassById(it.id);
+
     return (
         <Link
             href={`/items/${it.id}`}
             onClick={() => console.log('[aring]', 'recent:tap', it.id)}
             className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
         >
-            <div className="relative aspect-square overflow-hidden" style={{ background: thumbBg(it.tone) }}>
+            <div className={`relative aspect-square overflow-hidden ${bgClass}`}>
                 <img
                     src={it.image}
                     alt={`${it.brand} ${it.name}`}

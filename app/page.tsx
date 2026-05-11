@@ -8,18 +8,17 @@ import {
   recentItems as mockRecentItems,
   successStory,
   formatKRW,
-  thumbBg,
   readLikedIds,
   writeLikedIds,
   pickTone,
   type MatchCard,
   type RecentItem,
-  type ThumbTone,
 } from '@/lib/mock';
 import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { FilterBar, useFilterBar } from '@/components/FilterBar';
+import { getPastelClass } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘
@@ -194,11 +193,11 @@ return (
 // ─────────────────────────────────────────────────────────────
 // ThumbImage
 // ─────────────────────────────────────────────────────────────
-function ThumbImage({ src, fallback, tone, alt, className = '' }: {
-  src?: string; fallback: string; tone: ThumbTone; alt: string; className?: string;
+function ThumbImage({ src, fallback, bgClass, alt, className = '' }: {
+  src?: string; fallback: string; bgClass: string; alt: string; className?: string;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-tile border-2 border-white ${className}`} style={{ background: thumbBg(tone) }}>
+    <div className={`relative overflow-hidden rounded-tile border-2 border-white ${bgClass} ${className}`}>
       <img src={src} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover"
         onError={e => {
           e.currentTarget.style.display = 'none';
@@ -267,21 +266,21 @@ function TodayMatchSection() {
 
   return (
     <section className="pt-2 pb-5">
-      <SectionHeader title="오늘의 매칭 후보" sub="최근 일주일, 가장 많이 조회된 한 짝" more="전체보기" onMore={() => router.push('/popular')} />
+      <SectionHeader title="오늘의 매칭 후보" sub="최근 일주일, 가장 많이 조회된 한 짝" more="더보기" onMore={() => router.push('/popular')} />
       {isLoading ? (
         <TodayMatchSkeleton />
       ) : isError ? (
         <SectionErrorBox label="매칭 후보" />
       ) : (
         <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
-          {matches.map(m => <TodayMatchCard key={m.id} m={m} />)}
+          {matches.map((m, i) => <TodayMatchCard key={m.id} m={m} index={i} />)}
         </div>
       )}
     </section>
   );
 }
 
-function TodayMatchCard({ m }: { m: MatchCard }) {
+function TodayMatchCard({ m, index }: { m: MatchCard; index: number }) {
   const priceLabel = typeof m.price === 'number' && m.price > 0 ? formatKRW(m.price) : '가격 협의';
   const viewCount = typeof m.viewCount === 'number' ? m.viewCount : 0;
   const baseLikes = typeof (m as MatchCard & { likes?: number }).likes === 'number'
@@ -307,7 +306,7 @@ function TodayMatchCard({ m }: { m: MatchCard }) {
     <Link href={`/items/${m.id}`} onClick={log('today:tap', m.id)}
       className="shrink-0 w-[78%] lg:w-[300px] flex items-center gap-3 rounded-tile border border-aring-green-line bg-white p-3 lg:p-4 shadow-card text-left active:scale-[0.99] transition">
       <div className="relative w-[80px] h-[80px] shrink-0">
-        <ThumbImage src={m.leftImage} fallback={m.leftEmoji} tone={m.leftTone} alt={`${m.brand} ${m.name}`} className="w-full h-full" />
+        <ThumbImage src={m.leftImage} fallback={m.leftEmoji} bgClass={getPastelClass(index)} alt={`${m.brand} ${m.name}`} className="w-full h-full" />
       </div>
       <div className="flex-1 min-w-0">
         {/* 가격 */}
@@ -373,7 +372,7 @@ function RecentSection({ items, isLoading, isError }: { items: RecentItem[]; isL
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-                    {sortedFiltered.map(it => <RecentItemCard key={it.id} it={it} />)}
+                    {sortedFiltered.map((it, i) => <RecentItemCard key={it.id} it={it} index={i} />)}
         </div>
       )}
     </section>

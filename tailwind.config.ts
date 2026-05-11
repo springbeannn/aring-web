@@ -6,6 +6,19 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     './lib/**/*.{ts,tsx}',
   ],
+  // 동적으로 조합되는 파스텔 bg 클래스 — purge 방지
+  safelist: [
+    'bg-aring-pastel-pink',
+    'bg-aring-pastel-peach',
+    'bg-aring-pastel-butter',
+    'bg-aring-pastel-mint',
+    'bg-aring-pastel-sky',
+    'bg-aring-pastel-sage',
+    'bg-aring-pastel-lavender',
+    'bg-aring-pastel-cream',
+    'bg-aring-pastel-aqua',
+    'bg-aring-pastel-rose',
+  ],
   theme: {
     extend: {
       colors: {

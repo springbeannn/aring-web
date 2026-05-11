@@ -28,6 +28,17 @@ export const getPastelById = (id: string): PastelColor => {
   return PASTEL_ROTATION[Math.abs(h) % PASTEL_ROTATION.length];
 };
 
+// 별칭 — 기존 hash 헬퍼와 동일, 명시적 이름
+export const getPastelByIdHash = getPastelById;
+
+// index → Tailwind 클래스 (목록 카드용)
+export const getPastelClass = (index: number): string =>
+  `bg-aring-pastel-${getPastelByIndex(index)}`;
+
+// id → Tailwind 클래스 (상세 페이지, 목록 외 단일 카드용)
+export const getPastelClassById = (id: string): string =>
+  `bg-aring-pastel-${getPastelById(id)}`;
+
 // hex 직접 필요할 때 (inline style용)
 export const PASTEL_HEX: Record<PastelColor, string> = {
   pink: '#FEE8F1',

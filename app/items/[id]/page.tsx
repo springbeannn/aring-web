@@ -7,7 +7,6 @@ import {
   getItemDetail,
   getItemSummary,
   formatKRW,
-  thumbBg,
   pickTone,
   type ItemDetail,
   type ItemSummary,
@@ -16,6 +15,7 @@ import {
 import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { CommentSection } from '@/components/CommentSection';
+import { getPastelClass, getPastelClassById } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
 // 아이콘 (inline SVG)
@@ -234,25 +234,23 @@ function GalleryFloatingActions({ onBack, isOwner, itemId }: { onBack: () => voi
 // ─────────────────────────────────────────────────────────────
 function GallerySection({
   images,
-  tone,
   onBack,
   isOwner,
   itemId,
 }: {
   images: string[];
-  tone: ItemDetail['tone'];
   onBack: () => void;
   isOwner?: boolean;
   itemId?: string;
 }) {
   const [active, setActive] = useState(0);
   const showDots = images.length > 1;
+  const bgClass = itemId ? getPastelClassById(itemId) : 'bg-aring-pastel-pink';
 
   return (
     <section className="lg:mb-6" style={{maxWidth: "800px", width: "100%", margin: "0 auto"}}>
       <div
-        className="relative aspect-square w-full lg:rounded-card overflow-hidden bg-white"
-        style={{ background: thumbBg(tone) }}
+        className={`relative aspect-square w-full lg:rounded-card overflow-hidden ${bgClass}`}
       >
         {/* 갤러리 floating 액션 (back / share / more) */}
         <GalleryFloatingActions onBack={onBack} isOwner={isOwner ?? false} itemId={itemId ?? ''} />
@@ -496,15 +494,15 @@ function SimilarSection({ items }: { items: ItemSummary[] }) {
       </div>
 
       <div className="no-scrollbar flex gap-3 overflow-x-auto px-5 lg:px-8 pb-1">
-        {items.map((it) => (
-          <SimilarCard key={it.id} item={it} />
+        {items.map((it, i) => (
+          <SimilarCard key={it.id} item={it} index={i} />
         ))}
       </div>
     </section>
   );
 }
 
-function SimilarCard({ item }: { item: ItemSummary }) {
+function SimilarCard({ item, index }: { item: ItemSummary; index: number }) {
   return (
     <Link
       href={`/items/${item.id}`}
@@ -512,8 +510,7 @@ function SimilarCard({ item }: { item: ItemSummary }) {
       className="shrink-0 w-[calc((100vw-64px)/2.3)] lg:w-[150px] flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
       <div
-        className="relative aspect-square overflow-hidden"
-        style={{ background: thumbBg(item.tone) }}
+        className={`relative aspect-square overflow-hidden ${getPastelClass(index)}`}
       >
         <img
           src={item.image}
@@ -725,7 +722,6 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           <TopNav />
           <GallerySection
             images={item.images}
-            tone={item.tone}
             onBack={() => router.back()}
             isOwner={isOwner}
             itemId={item.id}
