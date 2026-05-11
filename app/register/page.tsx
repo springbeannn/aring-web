@@ -94,24 +94,29 @@ export default function RegisterPage() {
   const [story, setStory] = useState('');
   const [region, setRegion] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [bgRemoving, setBgRemoving] = useState(false);
+
+  // 배경 제거 — AI 분석 완료 후 사용자 확인 모달로 분기
+  const [showBgRemoveModal, setShowBgRemoveModal] = useState(false);
+  const [isRemovingBg, setIsRemovingBg] = useState(false);
 
   const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 1) 즉시 원본 미리보기 노출 (배경 제거 끝날 때까지 대기 안 함)
     const initial = await new Promise<string>((resolve) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result as string);
       r.readAsDataURL(file);
     });
     setPhoto({ url: initial, file });
+  };
 
-    // 2) 백그라운드로 배경 제거 시도 — 성공 시 미리보기 교체, 실패 시 원본 유지
-    setBgRemoving(true);
+  // "네, 배경을 지워주세요" — 배경 제거 API 호출 후 review 단계로 이동
+  const handleRemoveBg = async () => {
+    if (!photo || isRemovingBg) return;
+    setIsRemovingBg(true);
     try {
-      const bgRemovedFile = await removeBackground(file);
+      const bgRemovedFile = await removeBackground(photo.file);
       if (bgRemovedFile) {
         const bgUrl = await new Promise<string>((resolve) => {
           const r = new FileReader();
@@ -120,10 +125,20 @@ export default function RegisterPage() {
         });
         setPhoto({ url: bgUrl, file: bgRemovedFile });
       }
-      // 실패해도 원본이 이미 set 돼있으니 fallback 동작
+      // 실패해도 원본이 이미 set 돼있으니 그대로 review 진행
+    } catch (err) {
+      console.warn('[aring] bg-remove failed', err);
     } finally {
-      setBgRemoving(false);
+      setIsRemovingBg(false);
+      setShowBgRemoveModal(false);
+      setStep('review');
     }
+  };
+
+  // "아니오, 원본 저장이오" — API 호출 없이 review 단계로 이동
+  const handleKeepOriginal = () => {
+    setShowBgRemoveModal(false);
+    setStep('review');
   };
 
   const startAnalysis = async () => {
@@ -155,7 +170,8 @@ export default function RegisterPage() {
         setAiShape(result.shape ?? '');
         setAiMaterial(result.material ?? '');
         setAiDetail(result.detail ?? '');
-        setStep('review');
+        // 분석 완료 → 배경 제거 여부 확인 팝업
+        setShowBgRemoveModal(true);
       }, 700);
     } catch (err) {
       clearInterval(id);
@@ -166,7 +182,7 @@ export default function RegisterPage() {
         setAiShape(MOCK_ANALYSIS.shape);
         setAiMaterial(MOCK_ANALYSIS.material);
         setAiDetail(MOCK_ANALYSIS.detail);
-        setStep('review');
+        setShowBgRemoveModal(true);
       }, 700);
     }
   };
@@ -253,7 +269,7 @@ export default function RegisterPage() {
         <StepIndicator current={step} />
 
         {step === 'upload' && (
-          <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} bgRemoving={bgRemoving} />
+          <UploadStep photo={photo?.url ?? null} onPhoto={handlePhoto} onAnalyze={startAnalysis} />
         )}
 
         {step === 'review' && analysis && photo && (
@@ -285,8 +301,88 @@ export default function RegisterPage() {
         {step === 'analyzing' && photo && (
           <AnalyzingOverlay progress={progress} photo={photo.url} />
         )}
+
+        {/* 배경 제거 여부 확인 — AI 분석 완료 후 노출 */}
+        {showBgRemoveModal && photo && (
+          <BgRemoveModal
+            photoUrl={photo.url}
+            isRemoving={isRemovingBg}
+            onRemove={handleRemoveBg}
+            onKeep={handleKeepOriginal}
+          />
+        )}
       </div>
     </main>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 배경 제거 여부 확인 바텀시트 — aring 디자인 시스템 (블랙 톤)
+// 바깥 영역 탭으로는 닫히지 않음 (반드시 버튼 선택)
+// ─────────────────────────────────────────────────────────────
+function BgRemoveModal({
+  photoUrl,
+  isRemoving,
+  onRemove,
+  onKeep,
+}: {
+  photoUrl: string;
+  isRemoving: boolean;
+  onRemove: () => void;
+  onKeep: () => void;
+}) {
+  return (
+    <div
+      aria-modal="true"
+      role="dialog"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-[rgba(30,27,46,0.45)] backdrop-blur-[2px]"
+    >
+      <div className="w-full max-w-[440px] bg-white rounded-t-[20px] px-5 pt-5 pb-10">
+        {/* 핸들 */}
+        <div className="w-9 h-1 rounded-full bg-aring-ink-100 mx-auto mb-5" />
+
+        {/* 미리보기 */}
+        <div className="flex justify-center mb-5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photoUrl}
+            alt="등록 이미지 미리보기"
+            className="w-[120px] h-[120px] object-contain rounded-tile border border-aring-ink-100"
+          />
+        </div>
+
+        {/* 텍스트 */}
+        <p className="text-[17px] font-bold text-aring-ink-900 text-center mb-2">
+          배경을 깔끔하게 삭제할까요?
+        </p>
+        <p className="text-[13px] lg:text-[14px] leading-[1.6] text-aring-ink-500 text-center mb-7">
+          배경을 제거하면 AI 매칭 정확도가 높아져요
+        </p>
+
+        {/* 버튼 */}
+        <button
+          type="button"
+          onClick={onRemove}
+          disabled={isRemoving}
+          className={`w-full py-4 rounded-tile font-bold text-[15px] mb-2.5 transition active:scale-95 ${
+            isRemoving
+              ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'
+              : 'bg-aring-ink-900 text-white shadow-cta'
+          }`}
+        >
+          {isRemoving ? '배경 제거 중…' : '네, 배경을 지워주세요'}
+        </button>
+
+        <button
+          type="button"
+          onClick={onKeep}
+          disabled={isRemoving}
+          className="w-full py-4 rounded-tile border border-aring-ink-200 text-[15px] font-bold text-aring-ink-700 disabled:opacity-50 transition active:scale-95"
+        >
+          아니오, 원본 저장이오
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -329,11 +425,10 @@ function StepIndicator({ current }: { current: Step }) {
 // Step 1 — Upload
 // ─────────────────────────────────────────────────────────────
 
-function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
+function UploadStep({ photo, onPhoto, onAnalyze }: {
   photo: string | null;
   onPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAnalyze: () => void;
-  bgRemoving?: boolean;
 }) {
   return (
     <div className="px-5 pb-28">
@@ -373,15 +468,6 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
         <div className="relative aspect-[4/5] rounded-card overflow-hidden bg-aring-ink-100">
           <img src={photo} alt="업로드한 한 짝" className="w-full h-full object-cover" />
 
-          {/* 배경 제거 중 오버레이 */}
-          {bgRemoving && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-              <div className="w-10 h-10 mb-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-              <p className="text-[15px] lg:text-[15px] font-bold text-white">배경 제거 중…</p>
-              <p className="mt-0.5 text-[11px] text-white/70">잠시만 기다려 주세요</p>
-            </div>
-          )}
-
           <label className="absolute top-3 right-3 cursor-pointer">
             <span className="glass rounded-pill px-3 py-1.5 text-[11px] font-bold text-aring-ink-900 shadow-card inline-flex items-center gap-1.5">
               <IconCamera className="w-3.5 h-3.5" /> 다시 선택
@@ -400,8 +486,8 @@ function UploadStep({ photo, onPhoto, onAnalyze, bgRemoving }: {
         ))}
       </div>
 
-      <StickyCTA onClick={onAnalyze} disabled={!photo || !!bgRemoving}>
-        {!photo ? '사진을 먼저 올려주세요' : bgRemoving ? '배경 제거 중…' : 'AI 분석 시작하기'}
+      <StickyCTA onClick={onAnalyze} disabled={!photo}>
+        {!photo ? '사진을 먼저 올려주세요' : 'AI 분석 시작하기'}
       </StickyCTA>
     </div>
   );
