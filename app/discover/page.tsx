@@ -99,7 +99,7 @@ function PillChip({ label, isActive, onClick }: { label: string; isActive?: bool
   return (
     <button
       onClick={onClick}
-      className={`rounded-pill px-2 py-1 text-[11px] lg:text-[13px] font-bold transition active:scale-95 ${
+      className={`rounded-pill px-2 py-1 text-[12px] lg:text-[14px] font-bold transition active:scale-95 ${
         isActive
           ? 'bg-aring-ink-900 text-white border border-transparent'
           : 'bg-white text-aring-ink-700 border border-aring-green-line hover:border-aring-ink-300'
@@ -114,7 +114,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-0.5 w-[44px] shrink-0 active:scale-95 transition text-[12px]"
+      className="flex flex-col items-center gap-0.5 w-[44px] shrink-0 active:scale-95 transition text-[13px]"
     >
       <span
         className="relative w-8 h-8 rounded-full"
@@ -141,7 +141,7 @@ function MaterialThumb({ bg, label, isActive, onClick }: { bg: string; label: st
           />
         </span>
       </span>
-      <span className="text-[11px] lg:text-[11px] font-medium" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
+      <span className="text-[12px] lg:text-[12px] font-medium" style={{ color: isActive ? ACTIVE_TEXT : '#555' }}>
         {label}
       </span>
     </button>
