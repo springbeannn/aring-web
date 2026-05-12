@@ -41,14 +41,14 @@ export const getPastelClassById = (id: string): string =>
 
 // hex 직접 필요할 때 (inline style용)
 export const PASTEL_HEX: Record<PastelColor, string> = {
-  pink: '#FBD3E1',
-  peach: '#FFE1B9',
-  butter: '#FFEFB2',
-  mint: '#C8E8DE',
-  sky: '#BED9EC',
-  sage: '#DBD7C6',
-  lavender: '#DECAEC',
-  cream: '#EFDFC7',
-  aqua: '#BEE2EA',
-  rose: '#EBCBCB',
+  pink: '#FCDAE6',
+  peach: '#FFE6C4',
+  butter: '#FFF1BE',
+  mint: '#D0ECE3',
+  sky: '#C8DFEF',
+  sage: '#E0DDCF',
+  lavender: '#E3D2EF',
+  cream: '#F1E4CF',
+  aqua: '#C8E6ED',
+  rose: '#EED3D3',
 };
