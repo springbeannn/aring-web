@@ -4,16 +4,16 @@
 // ─────────────────────────────────────────────────────────────
 
 export const PASTEL_ROTATION = [
-  'pink',     // #FEE8F1
-  'peach',    // #FFEFD9
-  'butter',   // #FFF7D6
-  'mint',     // #EDF8F6
-  'sky',      // #E3EFF7
-  'sage',     // #F5F3EA
-  'lavender', // #F4EBF8
-  'cream',    // #FBF3EA
-  'aqua',     // #EBF6F8
-  'rose',     // #F8EAEA
+  'pink',     // #FBD2E1
+  'peach',    // #FFDFAF
+  'butter',   // #FFEFA8
+  'mint',     // #C8E8DD
+  'sky',      // #BDD8EC
+  'sage',     // #DDD9C5
+  'lavender', // #E0CCED
+  'cream',    // #F0E0C9
+  'aqua',     // #BFE0E8
+  'rose',     // #F0CCCC
 ] as const;
 
 export type PastelColor = (typeof PASTEL_ROTATION)[number];
@@ -41,14 +41,14 @@ export const getPastelClassById = (id: string): string =>
 
 // hex 직접 필요할 때 (inline style용)
 export const PASTEL_HEX: Record<PastelColor, string> = {
-  pink: '#FEE8F1',
-  peach: '#FFEFD9',
-  butter: '#FFF7D6',
-  mint: '#EDF8F6',
-  sky: '#E3EFF7',
-  sage: '#F5F3EA',
-  lavender: '#F4EBF8',
-  cream: '#FBF3EA',
-  aqua: '#EBF6F8',
-  rose: '#F8EAEA',
+  pink: '#FBD2E1',
+  peach: '#FFDFAF',
+  butter: '#FFEFA8',
+  mint: '#C8E8DD',
+  sky: '#BDD8EC',
+  sage: '#DDD9C5',
+  lavender: '#E0CCED',
+  cream: '#F0E0C9',
+  aqua: '#BFE0E8',
+  rose: '#F0CCCC',
 };
