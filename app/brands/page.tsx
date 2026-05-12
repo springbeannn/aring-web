@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase, type Listing } from '@/lib/supabase';
-import { getPastelClass } from '@/lib/pastel';
+import { getPastelClassById } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
 // /brands — 브랜드별 탐색 (홈 "브랜드별 탐색 > 더보기" 진입점)
@@ -32,13 +32,13 @@ const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
 // ─────────────────────────────────────────────────────────────
 // 카드 — /popular의 PopularCard와 동일 UI (rank 뱃지만 제거)
 // ─────────────────────────────────────────────────────────────
-function BrandProductCard({ row, index }: { row: Listing; index: number }) {
+function BrandProductCard({ row }: { row: Listing }) {
   return (
     <Link
       href={`/items/${row.id}`}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
-      <div className={`relative aspect-square overflow-hidden ${getPastelClass(index)}`}>
+      <div className={`relative aspect-square overflow-hidden ${getPastelClassById(row.id)}`}>
         {row.photo_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -264,8 +264,8 @@ export default function BrandsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-              {filtered.map((row, idx) => (
-                <BrandProductCard key={row.id} row={row} index={idx} />
+              {filtered.map((row) => (
+                <BrandProductCard key={row.id} row={row} />
               ))}
             </div>
           )}
