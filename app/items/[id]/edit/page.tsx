@@ -170,7 +170,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
           {/* 삭제 버튼 */}
           <button
             onClick={handleDelete}
-            className="mt-3 w-full py-3.5 rounded-2xl font-bold text-[16px] border border-aring-ink-200 text-aring-ink-500 hover:border-red-200 hover:text-red-400 transition active:scale-95"
+            className="mt-3 w-full py-4 rounded-2xl font-bold text-[16px] border border-aring-ink-200 text-aring-ink-500 hover:border-red-200 hover:text-red-400 transition active:scale-95"
           >
             이 상품 삭제하기
           </button>

@@ -55,7 +55,7 @@ export default function SignupCompletePage() {
 
         <Link
           href="/login"
-          className="inline-flex items-center justify-center w-full bg-aring-ink-900 text-white py-4 rounded-2xl font-bold text-[16px] hover:opacity-90 transition active:scale-95"
+          className="inline-flex items-center justify-center w-full bg-aring-ink-900 text-white shadow-cta py-4 rounded-2xl font-bold text-[16px] transition active:scale-95"
         >
           지금 로그인하기
         </Link>

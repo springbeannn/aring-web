@@ -121,9 +121,21 @@ export default function ProfilePage() {
           <TopNav />
 
           {/* 헤더 — 사이트 표준 (홈/탐색/댓글 등과 동일 폭·padding·타이포) */}
-          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
-            <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">내 정보</h1>
-            <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
+          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3 flex items-center gap-3">
+            <Link
+              href="/my"
+              aria-label="MY로"
+              className="lg:hidden w-9 h-9 rounded-full bg-aring-ink-100 flex items-center justify-center text-aring-ink-900 active:scale-95 transition shrink-0"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </Link>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">내 정보</h1>
+              <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
+            </div>
           </div>
 
           {/* 카드 영역 — 사이트 표준 1200px 폭 */}

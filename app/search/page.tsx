@@ -211,7 +211,7 @@ function SearchPageInner() {
               </div>
               {hasMore && (
                 <div className="flex justify-center mt-6 mb-2 px-5">
-                  <button onClick={handleLoadMore} className="w-full max-w-[320px] py-3 rounded-pill border border-aring-green-line text-[15px] lg:text-[15px] font-bold text-aring-ink-700 bg-white active:scale-[0.99] transition">더 보기</button>
+                  <button onClick={handleLoadMore} className="w-full inline-flex items-center justify-center h-12 rounded-pill bg-aring-ink-100 text-aring-ink-900 text-[15px] lg:text-[15px] font-bold active:scale-[0.99] transition disabled:opacity-60">더보기</button>
                 </div>
               )}
             </>
