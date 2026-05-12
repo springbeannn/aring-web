@@ -206,16 +206,16 @@ export function formatKRW(n: number): string {
 // 신규 파스텔 토큰 (40% 더 연한 v2) — 단일색
 // inline style 호환을 위해 양 stop 동일 색으로 그라데이션 형태 유지
 const PASTEL: Record<ThumbTone, string> = {
-  pink: '#F8B5CD',
-  peach: '#FFCD8A',
-  butter: '#FFE57F',
-  mint: '#A4D9C8',
-  sky: '#93BFDF',
-  sage: '#C3BDA0',
-  lavender: '#C8A6E0',
-  cream: '#E5C9A2',
-  aqua: '#93CFDC',
-  rose: '#DDA8A8',
+  pink: '#FBD3E1',
+  peach: '#FFE1B9',
+  butter: '#FFEFB2',
+  mint: '#C8E8DE',
+  sky: '#BED9EC',
+  sage: '#DBD7C6',
+  lavender: '#DECAEC',
+  cream: '#EFDFC7',
+  aqua: '#BEE2EA',
+  rose: '#EBCBCB',
 };
 
 export function thumbBg(tone: ThumbTone): string {
