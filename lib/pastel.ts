@@ -4,16 +4,16 @@
 // ─────────────────────────────────────────────────────────────
 
 export const PASTEL_ROTATION = [
-  'pink',     // #FBD2E1
-  'peach',    // #FFDFAF
-  'butter',   // #FFEFA8
-  'mint',     // #C8E8DD
-  'sky',      // #BDD8EC
-  'sage',     // #DDD9C5
-  'lavender', // #E0CCED
-  'cream',    // #F0E0C9
-  'aqua',     // #BFE0E8
-  'rose',     // #F0CCCC
+  'pink',     // 웜
+  'mint',     // 쿨
+  'peach',    // 웜
+  'sky',      // 쿨
+  'butter',   // 웜
+  'aqua',     // 쿨
+  'rose',     // 웜
+  'lavender', // 쿨
+  'cream',    // 웜
+  'sage',     // 뉴트럴
 ] as const;
 
 export type PastelColor = (typeof PASTEL_ROTATION)[number];
