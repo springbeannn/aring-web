@@ -250,7 +250,7 @@ export default function CommentsPage() {
           <TopNav />
 
           {/* 헤더 */}
-          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-2">
+          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
             <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">댓글</h1>
             <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">한 짝을 찾는 이야기들이 시간순으로 모였어요</p>
             {!loading && (

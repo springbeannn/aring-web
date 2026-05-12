@@ -99,7 +99,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <main className="min-h-screen flex justify-center bg-gradient-to-b from-white to-blue-50">
-        <div className="relative w-full max-w-[440px] min-h-screen lg:max-w-none lg:w-full">
+        <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
           <TopNav />
           <div className="flex items-center justify-center py-32">
             <div className="w-8 h-8 rounded-full border-2 border-aring-ink-100 border-t-aring-ink-900 animate-spin" />
@@ -117,7 +117,7 @@ export default function ProfilePage() {
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-white to-blue-50">
       {/* 모바일: max-w-[440px] 고정 / PC(lg): 전체 폭 사용 */}
       <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
-        <div className="pb-28 lg:pb-16">
+        <div className="pb-28 lg:pb-10">
           <TopNav />
 
           {/* 헤더 — 사이트 표준 (홈/탐색/댓글 등과 동일 폭·padding·타이포) */}
@@ -126,11 +126,8 @@ export default function ProfilePage() {
             <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">닉네임과 프로필을 관리해보세요</p>
           </div>
 
-          {/* PC에서 폼 카드만 720px로 중앙 정렬 (가독성) */}
-          <div className="lg:max-w-[720px] lg:mx-auto lg:w-full">
-
-            {/* 카드 영역 */}
-            <div className="px-5 lg:px-8 space-y-3 lg:space-y-4">
+          {/* 카드 영역 — 사이트 표준 1200px 폭 */}
+          <div className="px-5 lg:px-8 space-y-3 lg:space-y-4">
 
               {/* 아바타 + 닉네임 */}
               <div className="rounded-2xl border border-aring-green-line bg-white p-5 lg:p-6">
@@ -231,7 +228,6 @@ export default function ProfilePage() {
                 </button>
               </div>
 
-            </div>
           </div>
         </div>
 

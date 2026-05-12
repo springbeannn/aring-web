@@ -94,7 +94,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="min-h-screen flex justify-center bg-white">
-      <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:rounded-[36px] sm:shadow-phone lg:max-w-[600px]">
+      <div className="relative w-full max-w-[440px] bg-white overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <TopNav />
 
         <div className="px-5 pt-2 pb-32">

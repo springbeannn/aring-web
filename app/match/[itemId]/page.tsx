@@ -403,7 +403,7 @@ export default function MatchPage({ params }: { params: { itemId: string } }) {
           <TopNav />
 
           {/* Header */}
-          <div className="px-5 lg:px-8 pt-3 pb-4">
+          <div className="px-5 lg:px-8 pt-3 lg:pt-7 pb-3">
             <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900 leading-snug">
               AI가 비슷한 짝을 찾아봤어요
             </h1>

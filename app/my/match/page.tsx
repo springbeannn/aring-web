@@ -195,7 +195,7 @@ export default function MyMatchPage() {
         <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
           <div className='pb-28 lg:pb-10'>
             <TopNav />
-            <div className='px-5 lg:px-8 pt-3 pb-2'>
+            <div className='px-5 lg:px-8 pt-3 lg:pt-7 pb-3'>
               <h1 className='text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
               <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 0건</p>
             </div>
@@ -221,7 +221,7 @@ export default function MyMatchPage() {
       <div className='relative w-full max-w-[440px] min-h-screen overflow-hidden sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible bg-white'>
         <div className='pb-28 lg:pb-10'>
           <TopNav />
-          <div className='px-5 lg:px-8 pt-3 pb-2'>
+          <div className='px-5 lg:px-8 pt-3 lg:pt-7 pb-3'>
             <h1 className='text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900'>내 귀걸이 매칭 현황</h1>
             <p className='text-sm text-aring-ink-400 mt-1'>귀걸이 매칭을 기다리는 나의 귀걸이 {listings.length}건</p>
           </div>
