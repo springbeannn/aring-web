@@ -45,10 +45,10 @@ export type ThumbTone =
   | 'pink' | 'peach' | 'butter' | 'mint' | 'sky' | 'sage'
   | 'lavender' | 'cream' | 'aqua' | 'rose';
 
-// 단일 source of truth — lib/pastel.ts PASTEL_ROTATION과 1:1 매칭
+// 단일 source of truth — lib/pastel.ts PASTEL_ROTATION과 1:1 매칭 (웜↔쿨 교차)
 export const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'peach', 'butter', 'mint', 'sky', 'sage',
-  'lavender', 'cream', 'aqua', 'rose',
+  'pink', 'mint', 'peach', 'sky', 'butter',
+  'aqua', 'rose', 'lavender', 'cream', 'sage',
 ];
 
 // id 해시 기반 톤 결정 — 같은 id → 항상 같은 톤
