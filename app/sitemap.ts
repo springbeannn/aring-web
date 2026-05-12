@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const BASE_URL = 'https://aring.vercel.app'
+const BASE_URL = 'https://aring.app'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
