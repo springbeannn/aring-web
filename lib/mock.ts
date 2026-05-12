@@ -45,10 +45,10 @@ export type ThumbTone =
   | 'pink' | 'peach' | 'butter' | 'mint' | 'sky' | 'sage'
   | 'lavender' | 'cream' | 'aqua' | 'rose';
 
-// 단일 source of truth — lib/pastel.ts PASTEL_ROTATION과 1:1 매칭 (웜↔쿨 교차)
+// 단일 source of truth — lib/pastel.ts PASTEL_ROTATION과 1:1 매칭 (역순)
 export const TONE_ROTATION: ThumbTone[] = [
-  'pink', 'mint', 'peach', 'sky', 'butter',
-  'aqua', 'rose', 'lavender', 'cream', 'sage',
+  'sage', 'cream', 'lavender', 'rose', 'aqua',
+  'butter', 'sky', 'peach', 'mint', 'pink',
 ];
 
 // id 해시 기반 톤 결정 — 같은 id → 항상 같은 톤
@@ -206,16 +206,16 @@ export function formatKRW(n: number): string {
 // 신규 파스텔 토큰 (40% 더 연한 v2) — 단일색
 // inline style 호환을 위해 양 stop 동일 색으로 그라데이션 형태 유지
 const PASTEL: Record<ThumbTone, string> = {
-  pink: '#FBD2E1',
-  peach: '#FFDFAF',
-  butter: '#FFEFA8',
-  mint: '#C8E8DD',
-  sky: '#BDD8EC',
-  sage: '#DDD9C5',
-  lavender: '#E0CCED',
-  cream: '#F0E0C9',
-  aqua: '#BFE0E8',
-  rose: '#F0CCCC',
+  pink: '#F8B5CD',
+  peach: '#FFCD8A',
+  butter: '#FFE57F',
+  mint: '#A4D9C8',
+  sky: '#93BFDF',
+  sage: '#C3BDA0',
+  lavender: '#C8A6E0',
+  cream: '#E5C9A2',
+  aqua: '#93CFDC',
+  rose: '#DDA8A8',
 };
 
 export function thumbBg(tone: ThumbTone): string {
