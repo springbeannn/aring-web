@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
+import { signInWithOAuth } from '@/lib/auth'
 import { TopNav } from '@/components/Nav'
 
 function SignupLeftPanel() {
@@ -71,12 +72,8 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     if (!supabase) return
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+    // signInWithOAuth 헬퍼는 Google에 prompt: 'select_account' 자동 부여 → 계정 선택 화면 노출
+    const { error } = await signInWithOAuth('google')
     if (error) console.error(error)
   }
 

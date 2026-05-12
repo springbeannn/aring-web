@@ -110,10 +110,15 @@ export async function signInWithOAuth(
 ): Promise<{ error: string | null }> {
   if (!supabase) return { error: '서비스 연결에 실패했습니다.' };
 
+  // Google은 항상 계정 선택 화면 노출 (여러 계정 사용자 대응)
+  const queryParams =
+    provider === 'google' ? { prompt: 'select_account' } : undefined;
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
+      ...(queryParams ? { queryParams } : {}),
     },
   });
   if (error) return { error: parseAuthError(error.message) };

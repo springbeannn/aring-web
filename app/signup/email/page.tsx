@@ -207,7 +207,8 @@ export default function SignupEmailPage() {
     const { error } = await signUpWithEmail(cleanEmail, password, nickname.trim(), redirect, agreeMarketing);
     setLoading(false);
     if (error) {
-      setSubmitError(error === 'User already registered' ? '이미 가입된 이메일이에요.' : '회원가입에 실패했어요. 잠시 후 다시 시도해주세요.');
+      // signUpWithEmail이 이미 한국어로 변환된 메시지를 반환 — 그대로 노출
+      setSubmitError(error);
       return;
     }
     setSubmittedEmail(cleanEmail);
