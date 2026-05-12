@@ -12,6 +12,7 @@ import {
   buildQnaImagePath,
   type QnaCategory,
 } from '@/lib/qna';
+import { resizeImageFile } from '@/lib/resizeImage';
 
 // ─────────────────────────────────────────────────────────────
 // /qna/new — 문의 작성
@@ -55,11 +56,13 @@ export default function QnaNewPage() {
     check();
   }, [router]);
 
-  function handlePickImage(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
+  async function handlePickImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.files?.[0];
+    if (!raw) return;
+    // 모바일 카메라 원본은 5MB 초과가 잦음 → 클라이언트에서 리사이즈
+    const f = await resizeImageFile(raw);
     if (f.size > IMAGE_MAX_BYTES) {
-      setErrorMsg('이미지 크기는 5MB 이하만 첨부할 수 있어요.');
+      setErrorMsg('이미지 크기를 줄이지 못했어요. 다른 사진으로 시도해 주세요.');
       e.target.value = '';
       return;
     }

@@ -19,6 +19,7 @@ import {
 } from '@/lib/categories';
 import { normalizeBrand, resolveBrand } from '@/lib/brandNormalizer';
 import { removeBackground } from '@/lib/removeBg';
+import { resizeImageFile } from '@/lib/resizeImage';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
@@ -100,9 +101,11 @@ export default function RegisterPage() {
   const [isRemovingBg, setIsRemovingBg] = useState(false);
 
   const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const raw = e.target.files?.[0];
+    if (!raw) return;
 
+    // 모바일 카메라 원본은 보통 3~10MB — 5MB 한도 회피 위해 클라이언트 리사이즈
+    const file = await resizeImageFile(raw);
     const initial = await new Promise<string>((resolve) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result as string);
