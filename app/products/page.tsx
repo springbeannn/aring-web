@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
+import { getPastelClassesForList } from '@/lib/pastel';
 import { useItemFilters, ItemFilterChips } from '@/components/ItemFilters';
 import {
   recentItems as mockRecentItems,
@@ -198,9 +199,12 @@ function ProductsContent() {
       ) : (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-            {filtered.map((it) => (
-              <RecentItemCard key={it.id} it={it} />
-            ))}
+            {(() => {
+              const bgs = getPastelClassesForList(filtered.map(it => it.id));
+              return filtered.map((it, i) => (
+                <RecentItemCard key={it.id} it={it} bgClass={bgs[i]} />
+              ));
+            })()}
           </div>
 
           {hasMore && (

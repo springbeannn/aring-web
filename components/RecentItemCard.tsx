@@ -18,7 +18,7 @@ const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
     </svg>
 );
 
-export function RecentItemCard({ it }: { it: RecentItem }) {
+export function RecentItemCard({ it, bgClass }: { it: RecentItem; bgClass?: string }) {
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
@@ -34,8 +34,8 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
         setLiked(next.includes(it.id));
     }
 
-    // 동일 상품 = 어디서 보든 같은 색 (id 해시)
-    const bgClass = getPastelClassById(it.id);
+    // 부모가 하이브리드 dedup 결과 bgClass를 넘기면 사용, 없으면 id 해시 fallback
+    const finalBgClass = bgClass ?? getPastelClassById(it.id);
 
     return (
         <Link
@@ -43,7 +43,7 @@ export function RecentItemCard({ it }: { it: RecentItem }) {
             onClick={() => console.log('[aring]', 'recent:tap', it.id)}
             className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
         >
-            <div className={`relative aspect-square overflow-hidden ${bgClass}`}>
+            <div className={`relative aspect-square overflow-hidden ${finalBgClass}`}>
                 <img
                     src={it.image}
                     alt={`${it.brand} ${it.name}`}

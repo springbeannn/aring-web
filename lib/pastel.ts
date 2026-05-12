@@ -39,6 +39,33 @@ export const getPastelClass = (index: number): string =>
 export const getPastelClassById = (id: string): string =>
   `bg-aring-pastel-${getPastelById(id)}`;
 
+// 하이브리드 — 목록에서 id 해시 기본 사용 + 직전 2개와 충돌 시 시프트
+// 2열 그리드의 가로(직전 1개)·세로(직전 2개) 인접 카드 색 겹침 회피
+export function getPastelClassesForList(ids: string[]): string[] {
+  const colors: PastelColor[] = [];
+  const out: string[] = [];
+  for (const id of ids) {
+    const base = getPastelById(id);
+    let color = base;
+    const avoid = new Set<PastelColor>();
+    if (colors.length >= 1) avoid.add(colors[colors.length - 1]);
+    if (colors.length >= 2) avoid.add(colors[colors.length - 2]);
+    if (avoid.has(color)) {
+      const startIdx = PASTEL_ROTATION.indexOf(base);
+      for (let step = 1; step < PASTEL_ROTATION.length; step++) {
+        const candidate = PASTEL_ROTATION[(startIdx + step) % PASTEL_ROTATION.length];
+        if (!avoid.has(candidate)) {
+          color = candidate;
+          break;
+        }
+      }
+    }
+    colors.push(color);
+    out.push(`bg-aring-pastel-${color}`);
+  }
+  return out;
+}
+
 // hex 직접 필요할 때 (inline style용)
 export const PASTEL_HEX: Record<PastelColor, string> = {
   pink: '#FCDAE6',

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase, type Listing } from '@/lib/supabase';
-import { getPastelClassById } from '@/lib/pastel';
+import { getPastelClassById, getPastelClassesForList } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
 // /popular — 조회수 순 전체 한 짝
@@ -27,14 +27,14 @@ const IconEye = ({ className = 'w-3.5 h-3.5' }: { className?: string }) => (
   </svg>
 );
 
-function PopularCard({ row, rank }: { row: Listing; rank: number }) {
+function PopularCard({ row, rank, bgClass }: { row: Listing; rank: number; bgClass?: string }) {
   return (
     <Link
       href={`/items/${row.id}`}
       className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden text-left active:scale-[0.99] transition"
     >
       <div
-        className={`relative aspect-square overflow-hidden ${getPastelClassById(row.id)}`}
+        className={`relative aspect-square overflow-hidden ${bgClass ?? getPastelClassById(row.id)}`}
       >
         {row.photo_url && (
           <img
@@ -172,9 +172,12 @@ export default function PopularPage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 px-5 lg:px-8">
-              {rows.map((row, idx) => (
-                <PopularCard key={row.id} row={row} rank={idx + 1} />
-              ))}
+              {(() => {
+                const bgs = getPastelClassesForList(rows.map(r => r.id));
+                return rows.map((row, idx) => (
+                  <PopularCard key={row.id} row={row} rank={idx + 1} bgClass={bgs[idx]} />
+                ));
+              })()}
             </div>
           )}
         </div>

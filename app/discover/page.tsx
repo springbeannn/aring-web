@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
+import { getPastelClassesForList } from '@/lib/pastel';
 import {
   recentItems as mockRecentItems,
   pickTone,
@@ -528,9 +529,12 @@ function DiscoverPageInner() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {filtered.map((it) => (
-                  <RecentItemCard key={it.id} it={it} />
-                ))}
+                {(() => {
+                  const bgs = getPastelClassesForList(filtered.map(it => it.id));
+                  return filtered.map((it, i) => (
+                    <RecentItemCard key={it.id} it={it} bgClass={bgs[i]} />
+                  ));
+                })()}
               </div>
             )}
           </div>

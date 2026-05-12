@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { pickTone, type ThumbTone } from '@/lib/mock';
-import { getPastelClassById } from '@/lib/pastel';
+import { getPastelClassById, getPastelClassesForList } from '@/lib/pastel';
 import {
   supabase,
   type Listing,
@@ -508,13 +508,17 @@ function MyListingsSection({
           />
         ) : (
           <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
-            {listings.map((l) => (
-              <MyListingCard
-                key={l.id}
-                listing={l}
-                onStatusChange={onStatusChange}
-              />
-            ))}
+            {(() => {
+              const bgs = getPastelClassesForList(listings.map(l => l.id));
+              return listings.map((l, i) => (
+                <MyListingCard
+                  key={l.id}
+                  listing={l}
+                  bgClass={bgs[i]}
+                  onStatusChange={onStatusChange}
+                />
+              ));
+            })()}
           </div>
         )}
       </div>
@@ -524,16 +528,18 @@ function MyListingsSection({
 
 function MyListingCard({
   listing,
+  bgClass,
   onStatusChange,
 }: {
   listing: Listing;
+  bgClass?: string;
   onStatusChange: (listing: Listing, next: Listing['status']) => void;
 }) {
   return (
     <div className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3.5">
       <Link
         href={`/items/${listing.id}`}
-        className={`shrink-0 w-[86px] h-[86px] rounded-tile overflow-hidden relative ${getPastelClassById(listing.id)}`}
+        className={`shrink-0 w-[86px] h-[86px] rounded-tile overflow-hidden relative ${bgClass ?? getPastelClassById(listing.id)}`}
       >
         {listing.photo_url && (
           <img
@@ -708,9 +714,12 @@ function LikedSection({
           />
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {items.map((l) => (
-              <LikedCard key={l.id} listing={l} />
-            ))}
+            {(() => {
+              const bgs = getPastelClassesForList(items.map(l => l.id));
+              return items.map((l, i) => (
+                <LikedCard key={l.id} listing={l} bgClass={bgs[i]} />
+              ));
+            })()}
           </div>
         )}
       </div>
@@ -718,12 +727,12 @@ function LikedSection({
   );
 }
 
-function LikedCard({ listing }: { listing: Listing }) {
+function LikedCard({ listing, bgClass }: { listing: Listing; bgClass?: string }) {
   return (
     <div className="flex flex-col rounded-tile border border-aring-green-line bg-white overflow-hidden">
       <Link
         href={`/items/${listing.id}`}
-        className={`relative aspect-square overflow-hidden block ${getPastelClassById(listing.id)}`}
+        className={`relative aspect-square overflow-hidden block ${bgClass ?? getPastelClassById(listing.id)}`}
       >
         {listing.photo_url && (
           <img
@@ -787,9 +796,12 @@ function CommentActivitySection({
           />
         ) : (
           <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
-            {items.map((s) => (
-              <CommentSummaryCard key={s.productId} s={s} />
-            ))}
+            {(() => {
+              const bgs = getPastelClassesForList(items.map(s => s.productId));
+              return items.map((s, i) => (
+                <CommentSummaryCard key={s.productId} s={s} bgClass={bgs[i]} />
+              ));
+            })()}
           </div>
         )}
       </div>
@@ -797,7 +809,7 @@ function CommentActivitySection({
   );
 }
 
-function CommentSummaryCard({ s }: { s: CommentSummary }) {
+function CommentSummaryCard({ s, bgClass }: { s: CommentSummary; bgClass?: string }) {
   const STATUS_TAG: Record<
     CommentSummary['status'],
     { label: string; cls: string }
@@ -823,7 +835,7 @@ function CommentSummaryCard({ s }: { s: CommentSummary }) {
       className="flex gap-3 rounded-tile border border-aring-green-line bg-white p-3 active:scale-[0.99] transition"
     >
       <div
-        className={`relative w-[64px] h-[64px] shrink-0 rounded-tile overflow-hidden ${getPastelClassById(s.productId)}`}
+        className={`relative w-[64px] h-[64px] shrink-0 rounded-tile overflow-hidden ${bgClass ?? getPastelClassById(s.productId)}`}
       >
         {s.image && (
           <img
