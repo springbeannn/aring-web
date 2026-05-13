@@ -24,6 +24,31 @@ function fmtDate(iso: string): string {
   return new Date(iso).toLocaleString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' });
 }
 
+// 가입 방식 표시
+const PROVIDER_LABEL: Record<string, { label: string; cls: string }> = {
+  email:  { label: '이메일', cls: 'bg-aring-ink-100 text-aring-ink-700' },
+  google: { label: 'Google', cls: 'bg-rose-50 text-rose-700 border border-rose-200' },
+  kakao:  { label: '카카오', cls: 'bg-yellow-50 text-yellow-800 border border-yellow-300' },
+  naver:  { label: '네이버', cls: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
+};
+
+function ProviderBadge({ provider }: { provider: string | null }) {
+  const key = (provider ?? '').toLowerCase();
+  const conf = PROVIDER_LABEL[key];
+  if (!conf) {
+    return (
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-[12px] lg:text-[13px] font-bold bg-aring-ink-100 text-aring-ink-500">
+        {provider ?? '-'}
+      </span>
+    );
+  }
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[12px] lg:text-[13px] font-bold ${conf.cls}`}>
+      {conf.label}
+    </span>
+  );
+}
+
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<Profile[]>([]);
   const [statsMap, setStatsMap] = useState<Map<string, UserStat>>(new Map());
@@ -148,6 +173,7 @@ export default function AdminUsersPage() {
             <tr>
               <th className="text-left px-4 py-3">닉네임</th>
               <th className="text-left px-3 py-3">이메일</th>
+              <th className="text-left px-3 py-3 w-[90px]">가입 방식</th>
               <th className="text-left px-3 py-3 w-[100px]">가입일</th>
               <th className="text-right px-3 py-3 w-[80px]">등록수</th>
               <th className="text-right px-3 py-3 w-[100px]">받은댓글</th>
@@ -160,13 +186,13 @@ export default function AdminUsersPage() {
             {loading ? (
               Array.from({ length: 8 }).map((_, i) => (
                 <tr key={i} className="border-b border-aring-ink-100">
-                  <td colSpan={8} className="px-4 py-3">
+                  <td colSpan={9} className="px-4 py-3">
                     <div className="h-8 bg-aring-ink-100 animate-pulse rounded" />
                   </td>
                 </tr>
               ))
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-10 text-center text-aring-ink-500 text-[15px] lg:text-[15px]">회원이 없습니다</td></tr>
+              <tr><td colSpan={9} className="px-4 py-10 text-center text-aring-ink-500 text-[15px] lg:text-[15px]">회원이 없습니다</td></tr>
             ) : (
               filtered.map((u) => {
                 const stat = statsMap.get(u.user_id);
@@ -180,6 +206,7 @@ export default function AdminUsersPage() {
                       {u.role === 'admin' && <span className="ml-2 text-[10px] font-bold text-aring-green bg-aring-green/10 px-1.5 py-0.5 rounded">관리자</span>}
                     </td>
                     <td className="px-3 py-3 truncate max-w-[220px] text-aring-ink-600">{u.email}</td>
+                    <td className="px-3 py-3"><ProviderBadge provider={u.provider} /></td>
                     <td className="px-3 py-3 text-[15px] lg:text-[15px] text-aring-ink-500">{fmtDate(u.created_at)}</td>
                     <td className="px-3 py-3 text-right">{stat?.listingCount ?? 0}</td>
                     <td className="px-3 py-3 text-right">{stat?.receivedCommentCount ?? 0}</td>
@@ -252,6 +279,7 @@ function UserDetailPanel({ user, onClose }: { user: Profile; onClose: () => void
           <div>
             <p className="text-[20px] font-bold text-aring-ink-900">{user.nickname}</p>
             <p className="text-[15px] lg:text-[15px] text-aring-ink-500">{user.email}</p>
+            <div className="mt-1.5"><ProviderBadge provider={user.provider} /></div>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-aring-ink-100 hover:bg-aring-ink-200 flex items-center justify-center" aria-label="닫기">✕</button>
         </div>
