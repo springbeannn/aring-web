@@ -38,14 +38,75 @@ export async function POST(req: NextRequest) {
   const subject = SUBJECT_PREFIX[kind] ?? SUBJECT_PREFIX.custom;
   const html = buildHtml({ kind, message, context });
 
-  const channels = await Promise.allSettled([sendEmail(subject, html)]);
+  const text = buildPlainText({ kind, message, context });
+  const channels = await Promise.allSettled([
+    sendEmail(subject, html),
+    sendTelegram(`${subject}\n\n${text}`),
+  ]);
 
   const result = {
     ok: channels.some((c) => c.status === 'fulfilled' && c.value === true),
-    email: channels[0].status === 'fulfilled' ? channels[0].value : false,
+    email:    channels[0].status === 'fulfilled' ? channels[0].value : false,
+    telegram: channels[1].status === 'fulfilled' ? channels[1].value : false,
   };
 
   return NextResponse.json(result);
+}
+
+// ── 텔레그램 봇 ──────────────────────────────────────────────
+async function sendTelegram(text: string): Promise<boolean> {
+  const token  = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) {
+    console.warn('[notify-admin] TELEGRAM_BOT_TOKEN/CHAT_ID 미설정 — 텔레그램 발송 생략');
+    return false;
+  }
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        disable_web_page_preview: true,
+      }),
+    });
+    if (!res.ok) {
+      const t = await res.text().catch(() => '');
+      console.error('[notify-admin] Telegram HTTP', res.status, t);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('[notify-admin] Telegram exception', e);
+    return false;
+  }
+}
+
+// ── 텔레그램용 plain text ───────────────────────────────────
+function buildPlainText({
+  kind,
+  message,
+  context,
+}: {
+  kind: Kind;
+  message: string;
+  context: Record<string, unknown>;
+}): string {
+  const lines = [
+    `[${kind}]`,
+    new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+    '',
+    message,
+  ];
+  const entries = Object.entries(context);
+  if (entries.length) {
+    lines.push('');
+    for (const [k, v] of entries) {
+      lines.push(`${k}: ${String(v ?? '')}`);
+    }
+  }
+  return lines.join('\n');
 }
 
 // ── 이메일 (Resend) ──────────────────────────────────────────
