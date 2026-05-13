@@ -143,6 +143,11 @@ export function CommentSection({
     const trimmedMsg = message.trim();
     if (!trimmedNick || !trimmedMsg || submitting) return;
 
+    if (trimmedMsg.length > 1000) {
+      alert('1000자까지 입력 가능합니다.');
+      return;
+    }
+
     setSubmitting(true);
     const role: CommentRole =
       ownerId && currentUserId === ownerId ? 'seller' : 'buyer';
@@ -162,8 +167,16 @@ export function CommentSection({
 
     setSubmitting(false);
     if (error || !data) {
-      console.error('[aring] comment insert error', error);
-      alert('등록에 실패했습니다');
+      const errAny = error as { code?: string; message?: string; details?: string; hint?: string } | null;
+      console.error('[aring] comment insert error', {
+        code: errAny?.code,
+        message: errAny?.message,
+        details: errAny?.details,
+        hint: errAny?.hint,
+        raw: error,
+      });
+      const reason = errAny?.message || errAny?.details || errAny?.hint || '알 수 없는 오류';
+      alert(`등록에 실패했습니다.\n사유: ${reason}`);
       return;
     }
     setComments((prev) => [...prev, data as Comment]);
@@ -232,7 +245,6 @@ export function CommentSection({
               : '거래·상태·매칭 관련 문의를 남겨보세요'
           }
           rows={5}
-          maxLength={1000}
           className="block w-full px-5 py-4 lg:px-6 lg:py-5 bg-[#F5F5F5] text-[15px] lg:text-[15px] text-aring-ink-900 placeholder:text-aring-ink-400 outline-none border-0 resize-none leading-[1.6] focus:bg-[#F0F0F0] transition-colors"
         />
 
@@ -246,7 +258,11 @@ export function CommentSection({
               답글 취소
             </button>
           )}
-          <span className="text-[13px] lg:text-[13px] text-aring-ink-500 ml-auto">
+          <span
+            className={`text-[13px] lg:text-[13px] ml-auto ${
+              message.length > 1000 ? 'text-red-500 font-bold' : 'text-aring-ink-500'
+            }`}
+          >
             {message.length}/1000
           </span>
           <button
