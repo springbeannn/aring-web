@@ -116,7 +116,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="제11조 개인정보 보호책임자">
-          <p>개인정보 보호책임자: 김의정 / 연락처: 010-5059-6110 / 이메일: letitdigit@gmail.com</p>
+          <p>개인정보 보호책임자: 김의정 / 연락처: 010-5059-6110 / 이메일: aring.official@gmail.com</p>
         </Section>
 
         <Section title="제12조 고지 및 시행일">

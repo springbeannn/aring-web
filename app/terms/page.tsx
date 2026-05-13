@@ -144,7 +144,7 @@ export default function TermsPage() {
 
         <Section title="제12조 문의">
           <p>서비스 이용, 신고, 개인정보 관련 문의는 아래 연락처로 접수할 수 있습니다.</p>
-          <p>운영자: 김의정 / 연락처: 010-5059-6110 / 이메일: letitdigit@gmail.com</p>
+          <p>운영자: 김의정 / 연락처: 010-5059-6110 / 이메일: aring.official@gmail.com</p>
         </Section>
 
         <Section title="제13조 시행일">

@@ -80,7 +80,7 @@ export default function MarketingPage() {
         </Section>
 
         <Section title="제6조 문의">
-          <p>운영자: 김의정 / 연락처: 010-5059-6110 / 이메일: letitdigit@gmail.com</p>
+          <p>운영자: 김의정 / 연락처: 010-5059-6110 / 이메일: aring.official@gmail.com</p>
         </Section>
 
         <Section title="제7조 시행일">
