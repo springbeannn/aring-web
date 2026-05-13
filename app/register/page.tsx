@@ -20,6 +20,7 @@ import {
 import { normalizeBrand, resolveBrand } from '@/lib/brandNormalizer';
 import { removeBackground } from '@/lib/removeBg';
 import { resizeImageFile } from '@/lib/resizeImage';
+import { notifyAdmin } from '@/lib/notifyAdmin';
 
 // ─────────────────────────────────────────────────────────────
 // Icons (inline)
@@ -255,6 +256,15 @@ export default function RegisterPage() {
       console.error('[aring] register:submit error', err);
       alert(`등록 실패: ${msg}`);
       setSubmitting(false);
+      // 운영자에게 알림 (fire-and-forget)
+      notifyAdmin('register_error', msg, {
+        brand,
+        shapeKey,
+        materialKey,
+        price,
+        region,
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      });
     }
   };
 

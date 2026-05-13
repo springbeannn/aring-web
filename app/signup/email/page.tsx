@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { TopNav } from '@/components/Nav';
 import { signUpWithEmail, resendConfirmationEmail } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import { notifyAdmin } from '@/lib/notifyAdmin';
 
 const IconCheck = ({ checked }: { checked: boolean }) => (
   <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full border-2 transition ${checked ? 'bg-aring-ink-900 border-aring-ink-900' : 'border-aring-ink-300 bg-white'}`}>
@@ -209,6 +210,13 @@ export default function SignupEmailPage() {
     if (error) {
       // signUpWithEmail이 이미 한국어로 변환된 메시지를 반환 — 그대로 노출
       setSubmitError(error);
+      // 운영자에게 알림 (fire-and-forget)
+      notifyAdmin('signup_error', error, {
+        email: cleanEmail,
+        nickname: nickname.trim(),
+        marketingAgreed: agreeMarketing,
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      });
       return;
     }
     setSubmittedEmail(cleanEmail);
