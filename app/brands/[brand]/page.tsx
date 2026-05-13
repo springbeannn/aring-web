@@ -19,7 +19,6 @@ import { supabase, type Listing } from '@/lib/supabase';
 // /products와 동일한 구성, 상단 제목만 브랜드명으로 표시
 // ─────────────────────────────────────────────────────────────
 
-const PAGE_SIZE = 12;
 
 function listingToRecent(row: Listing): RecentItem {
   return {
@@ -51,6 +50,9 @@ const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
   </svg>
 );
 
+// brand 컬럼 값을 brand_dict 한 엔트리로 정규화 (홈 BrandSection과 동일 로직)
+const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, '');
+
 export default function BrandPage() {
   const params = useParams();
   const brandName = decodeURIComponent(params.brand as string);
@@ -58,23 +60,68 @@ export default function BrandPage() {
   const isEtcBrand = brandName.trim() === '기타';
 
   const [items, setItems] = useState<RecentItem[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [aliasSet, setAliasSet] = useState<Set<string> | null>(null);
 
   const { sort, setSort, side, setSide, price, setPrice, filtered: sortFiltered } = useItemFilters(items);
 
-  // 브랜드 필터 적용
+  // 브랜드 필터 적용 — alias set 기반
   const filtered = useMemo(() => {
-    // '기타' 케이스는 fetch 시점에 이미 필터됐으므로 그대로 통과
     if (isEtcBrand) return sortFiltered;
-    return sortFiltered.filter(item =>
-      (item.brand ?? '').toLowerCase() === brandName.toLowerCase()
-    );
-  }, [sortFiltered, brandName, isEtcBrand]);
+    if (!aliasSet) return [];
+    return sortFiltered.filter((item) => aliasSet.has(normalize(item.brand ?? '')));
+  }, [sortFiltered, isEtcBrand, aliasSet]);
 
-  // 첫 페이지 fetch — 일반 브랜드는 직접 쿼리, '기타'는 dict 매칭 후 클라이언트 필터
+  // brand_dict에서 URL brandName → alias 집합 해석 (한 번만)
+  useEffect(() => {
+    if (isEtcBrand) { setAliasSet(new Set()); return; }
+    let cancelled = false;
+    async function resolve() {
+      try {
+        const { getBrands } = await import('@/lib/brandNormalizer');
+        const dict = await getBrands();
+        const target = normalize(brandName);
+        const entry = dict.find((b) => {
+          const candidates = [
+            b.brand_key,
+            b.display_name,
+            b.name_ko ?? '',
+            b.name_en ?? '',
+            ...b.aliases,
+          ].map(normalize);
+          return candidates.includes(target);
+        });
+        if (cancelled) return;
+        if (!entry) {
+          // dict 매칭 실패 — URL 값 자체로만 매칭
+          setAliasSet(new Set([target].filter(Boolean)));
+          return;
+        }
+        const set = new Set<string>(
+          [
+            entry.brand_key,
+            entry.display_name,
+            entry.name_ko ?? '',
+            entry.name_en ?? '',
+            ...entry.aliases,
+          ]
+            .map(normalize)
+            .filter(Boolean),
+        );
+        setAliasSet(set);
+      } catch (e) {
+        console.error('[aring] brand alias resolve error', e);
+        if (!cancelled) setAliasSet(new Set([normalize(brandName)].filter(Boolean)));
+      }
+    }
+    resolve();
+    return () => { cancelled = true; };
+  }, [brandName, isEtcBrand]);
+
+  // 첫 페이지 fetch — 모든 open listings을 가져온 뒤 클라이언트에서 alias 필터
+  // (URL brand가 display_name인데 listing.brand가 한글 alias인 경우 등 매칭 일관성 확보)
   useEffect(() => {
     let cancelled = false;
 
@@ -91,7 +138,6 @@ export default function BrandPage() {
       }
 
       // ── 분기 1: '기타' 케이스 ──
-      // brand_dict에 매칭 안 되는 row만 추림 (홈 BrandSection과 동일 로직)
       if (isEtcBrand) {
         const { data, error: fetchErr } = await supabase
           .from('listings')
@@ -115,17 +161,17 @@ export default function BrandPage() {
             const brandInput = (row.brand ?? '').trim();
             if (!brandInput || brandInput === '브랜드 미상') return false;
             const bkey = (row as Listing & { brand_key?: string }).brand_key;
-            let dictEntry = bkey ? brandDict.find(b => b.brand_key === bkey) : null;
+            let dictEntry = bkey ? brandDict.find((b) => b.brand_key === bkey) : null;
             if (!dictEntry) {
-              const q = brandInput.toLowerCase().replace(/\s+/g, '');
-              dictEntry = brandDict.find(b => {
+              const q = normalize(brandInput);
+              dictEntry = brandDict.find((b) => {
                 const targets = [
                   b.brand_key,
-                  b.display_name.toLowerCase(),
-                  (b.name_ko ?? '').toLowerCase(),
-                  (b.name_en ?? '').toLowerCase(),
-                  ...b.aliases.map(a => a.toLowerCase()),
-                ].map(t => t.replace(/\s+/g, ''));
+                  b.display_name,
+                  b.name_ko ?? '',
+                  b.name_en ?? '',
+                  ...b.aliases,
+                ].map(normalize);
                 return targets.includes(q);
               }) ?? null;
             }
@@ -134,7 +180,7 @@ export default function BrandPage() {
           if (cancelled) return;
           const fresh = etcRows.map((r) => listingToRecent(r as Listing));
           setItems(fresh);
-          setHasMore(false); // '기타'는 한 번에 200건 fetch, 페이지네이션 미사용
+          setHasMore(false);
         } catch (e) {
           console.error('[aring] brand dict load error', e);
           setError('브랜드 사전을 불러오지 못했습니다');
@@ -143,19 +189,19 @@ export default function BrandPage() {
         return;
       }
 
-      // ── 분기 2: 일반 브랜드 (정확 매칭) ──
-      const { data, error } = await supabase
+      // ── 분기 2: 일반 브랜드 ──
+      // listing.brand가 영문/한글/alias 어떤 형태로 저장돼있든 매칭되도록
+      // 전체 fetch 후 클라이언트에서 alias set 기반 필터
+      const { data, error: fetchErr } = await supabase
         .from('listings')
         .select('*')
         .eq('status', 'open')
-        .ilike('brand', brandName)
         .order('created_at', { ascending: false })
-        .range(0, PAGE_SIZE - 1);
+        .limit(200);
 
       if (cancelled) return;
-
-      if (error) {
-        console.error('[aring] brand fetch error', error);
+      if (fetchErr) {
+        console.error('[aring] brand fetch error', fetchErr);
         setError('상품을 불러오지 못했습니다');
         setLoading(false);
         return;
@@ -163,15 +209,8 @@ export default function BrandPage() {
 
       const rows = (data ?? []) as Listing[];
       const fresh = rows.map((r) => listingToRecent(r));
-
-      if (fresh.length === 0) {
-        setItems([]);
-        setHasMore(false);
-      } else {
-        setItems(fresh);
-        setHasMore(rows.length === PAGE_SIZE);
-      }
-
+      setItems(fresh);
+      setHasMore(false);
       setLoading(false);
     }
 
@@ -180,34 +219,8 @@ export default function BrandPage() {
   }, [brandName, isEtcBrand]);
 
   async function loadMore() {
-    if (!supabase || loading || !hasMore) return;
-    setLoading(true);
-
-    const nextPage = page + 1;
-    const start = nextPage * PAGE_SIZE;
-
-    const { data, error } = await supabase
-      .from('listings')
-      .select('*')
-      .eq('status', 'open')
-      .ilike('brand', brandName)
-      .order('created_at', { ascending: false })
-      .range(start, start + PAGE_SIZE - 1);
-
-    if (error) {
-      console.error('[aring] brand loadMore error', error);
-      setError('추가 데이터를 불러오지 못했습니다');
-      setLoading(false);
-      return;
-    }
-
-    const rows = (data ?? []) as Listing[];
-    const fresh = rows.map((r) => listingToRecent(r));
-
-    setItems((prev) => [...prev, ...fresh]);
-    setHasMore(rows.length === PAGE_SIZE);
-    setPage(nextPage);
-    setLoading(false);
+    // 전체 fetch 후 클라이언트 필터 방식이라 더보기 페이지네이션 불필요
+    return;
   }
 
   return (
