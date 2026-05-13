@@ -32,6 +32,10 @@ export function useItemFilters(items: RecentItem[]) {
       if (price === '150000-plus') return p !== null && p > 150000;
       return true;
     });
+    // 정렬 — recent: 입력 순서 유지(fetch가 created_at desc), view_count: 조회수 내림차순
+    if (sort === 'view_count') {
+      arr.sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0));
+    }
     return arr;
   }, [items, sort, side, price]);
 

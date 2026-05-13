@@ -87,6 +87,7 @@ function listingToRecentItem(row: Listing): RecentItem {
     tone: pickTone(row.id),
     story: row.story ?? undefined,
     image: row.photo_url,
+    viewCount: (row as Listing & { view_count?: number }).view_count ?? 0,
   };
 }
 
