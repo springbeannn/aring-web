@@ -74,11 +74,35 @@ export function CommentSection({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingMessage, setEditingMessage] = useState('');
 
-  // 익명 user_id + 닉네임 캐시
+  // 로그인 사용자 → profiles.nickname + auth user.id 사용
+  // 비로그인 사용자 → 익명 localStorage 폴백 (기존 동작 유지)
   useEffect(() => {
-    setCurrentUserId(getOrCreateAnonId());
-    const cached = localStorage.getItem(ANON_NICK_KEY);
-    setNickname(cached && cached.trim() ? cached.trim() : 'aring 사용자');
+    let cancelled = false;
+    async function init() {
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        const user = session?.user;
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('nickname')
+            .eq('user_id', user.id)
+            .maybeSingle();
+          if (cancelled) return;
+          setCurrentUserId(user.id);
+          const nick = profile?.nickname?.trim();
+          setNickname(nick && nick.length > 0 ? nick : 'aring 사용자');
+          return;
+        }
+      }
+      // 비로그인 — 익명 흐름
+      if (cancelled) return;
+      setCurrentUserId(getOrCreateAnonId());
+      const cached = typeof window !== 'undefined' ? localStorage.getItem(ANON_NICK_KEY) : null;
+      setNickname(cached && cached.trim() ? cached.trim() : 'aring 사용자');
+    }
+    init();
+    return () => { cancelled = true; };
   }, []);
 
   // 댓글 fetch
