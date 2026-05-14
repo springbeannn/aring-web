@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 import { ScrollToTop } from '@/components/ScrollToTop';
+import { IdleLogout } from '@/components/IdleLogout';
 
 export const metadata: Metadata = {
   title: 'aring — 한 짝의 짝을 찾다',
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <ScrollToTop />
         </Suspense>
+        <IdleLogout />
         {children}
       </body>
     </html>
