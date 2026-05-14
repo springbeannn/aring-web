@@ -7,13 +7,34 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
 User-agent: Claude-Web
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
 User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: NaverBot
 Allow: /
 
 User-agent: *
@@ -25,4 +46,4 @@ Disallow: /api/
 User-agent: *
 Disallow: /auth/
 
-Sitemap: https://aring.vercel.app/sitemap.xml
+Sitemap: https://aring.app/sitemap.xml
