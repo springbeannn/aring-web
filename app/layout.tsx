@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: 'aring — 한 짝의 짝을 찾다',
   description:
     '한 짝만 남은 귀걸이를 등록하면, AI가 비슷하거나 정확히 맞는 짝을 찾아 연결해주는 매칭 서비스.',
+  verification: {
+    other: {
+      'naver-site-verification': '3191773a36cc5fbe3950dd20e62bc4fc625a3253',
+    },
+  },
 };
 
 export const viewport: Viewport = {
