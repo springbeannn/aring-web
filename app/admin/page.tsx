@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, type Listing } from '@/lib/supabase';
+import { TrafficChart } from '@/components/admin/TrafficChart';
 
 type Profile = {
   user_id: string;
@@ -103,6 +104,9 @@ export default function AdminDashboardPage() {
         <KpiCard label="오늘 신규 가입" value={kpi?.todayUsers}     loading={loading} />
         <KpiCard label="오늘 신규 등록" value={kpi?.todayListings}  loading={loading} />
       </div>
+
+      {/* 방문자 통계 (PV/UV) */}
+      <TrafficChart />
 
       {/* 최근 게시물 */}
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">

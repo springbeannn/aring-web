@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { IdleLogout } from '@/components/IdleLogout';
+import { PageViewTracker } from '@/components/PageViewTracker';
 
 const SITE_URL = 'https://aring.app';
 
@@ -195,6 +196,9 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <ScrollToTop />
+        </Suspense>
+        <Suspense fallback={null}>
+          <PageViewTracker />
         </Suspense>
         <IdleLogout />
         {children}
