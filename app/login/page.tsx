@@ -92,11 +92,36 @@ export default function LoginPage() {
   );
 }
 
+// SNS provider 한글 라벨
+function providerLabel(p: string | null): string {
+  if (p === 'google') return 'Google';
+  if (p === 'kakao') return '카카오';
+  if (p === 'naver') return '네이버';
+  return 'SNS';
+}
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
-  const [email, setEmail] = useState('');
+
+  // OAuth 콜백에서 동일 이메일 충돌 발견 시 전달되는 안내 파라미터
+  const reason = searchParams.get('reason');
+  const conflictEmail = searchParams.get('email');
+  const fromProvider = searchParams.get('from');     // 시도한 SNS
+  const existingProvider = searchParams.get('existing'); // 기존 가입 방법
+
+  // 충돌 안내 메시지 (이메일 자동 채움 트리거)
+  const conflictNotice =
+    reason === 'different_provider' && conflictEmail
+      ? {
+          email: conflictEmail,
+          existing: existingProvider ?? 'email',
+          from: fromProvider,
+        }
+      : null;
+
+  const [email, setEmail] = useState(conflictNotice?.email ?? '');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
@@ -151,6 +176,21 @@ function LoginContent() {
                 <h1 className="text-[24px] lg:text-[26px] font-bold tracking-tight text-aring-ink-900">로그인</h1>
                 <p className="mt-1.5 text-[15px] lg:text-[15px] text-aring-ink-500 leading-snug">aring에 다시 오셨군요 :)</p>
               </div>
+
+              {conflictNotice && (
+                <div className="mb-5 rounded-tile border border-aring-green-line bg-aring-green-bg/40 px-4 py-3.5">
+                  <p className="text-[14px] lg:text-[15px] font-bold text-aring-ink-900 leading-snug break-keep">
+                    {conflictNotice.existing === 'email'
+                      ? `${conflictNotice.email}은 이메일로 가입한 계정이에요`
+                      : `${conflictNotice.email}은 ${providerLabel(conflictNotice.existing)}로 가입한 계정이에요`}
+                  </p>
+                  <p className="mt-1.5 text-[13px] lg:text-[14px] text-aring-ink-500 leading-relaxed break-keep">
+                    {conflictNotice.existing === 'email'
+                      ? `${providerLabel(conflictNotice.from)} 대신 아래에 비밀번호를 입력해 로그인해주세요.`
+                      : `${providerLabel(conflictNotice.existing)} 로그인 버튼으로 다시 시도해주세요.`}
+                  </p>
+                </div>
+              )}
 
               <div className="flex flex-col gap-3 mb-4 items-center sm:items-stretch">
                 {/* 카카오 로그인 — 임시 숨김 (서비스 준비 중). 다시 노출하려면 className에서 hidden 제거 */}
@@ -207,6 +247,7 @@ function LoginContent() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleEmailLogin()}
+                    autoFocus={conflictNotice?.existing === 'email'}
                     className="w-full px-4 py-3 pr-11 rounded-2xl border border-aring-ink-200 text-[16px] lg:text-[16px] lg:font-normal text-aring-ink-900 placeholder:text-aring-ink-400 outline-none focus:border-aring-ink-500 transition"
                     style={{ background: 'linear-gradient(to right, rgba(200,220,213,0.5), rgba(210,205,225,0.5))' }}
                   />
