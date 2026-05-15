@@ -44,6 +44,12 @@ CREATE POLICY "admin_read_page_views"
 -- ════════════════════════════════════════════════════════════════════
 -- 일별 PV/UV 집계 함수 — 대시보드에서 단일 RPC 호출로 사용
 -- ════════════════════════════════════════════════════════════════════
+-- SECURITY INVOKER + RLS 위임:
+--   - admin이 호출 → RLS의 admin_read_page_views 정책으로 SELECT 허용
+--   - 비-admin이 호출 → RLS 차단 → 빈 결과
+-- (SECURITY DEFINER + 함수 내부 is_admin() 체크는 SQL Editor 디버깅을
+--  불가능하게 만들고 JWT claim 전달 이슈 리스크가 있어 INVOKER 채택)
+-- ════════════════════════════════════════════════════════════════════
 
 DROP FUNCTION IF EXISTS public.page_views_daily(timestamptz, timestamptz);
 CREATE FUNCTION public.page_views_daily(
@@ -56,7 +62,7 @@ RETURNS TABLE (
   uv  BIGINT
 )
 LANGUAGE SQL
-SECURITY DEFINER
+SECURITY INVOKER
 STABLE
 AS $$
   SELECT
@@ -66,7 +72,6 @@ AS $$
   FROM public.page_views
   WHERE created_at >= range_start
     AND created_at <  range_end
-    AND is_admin()
   GROUP BY 1
   ORDER BY 1;
 $$;
