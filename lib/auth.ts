@@ -16,6 +16,8 @@ export function parseAuthError(message: string): string {
     return '올바른 이메일 주소를 입력해주세요.';
   if (message.includes('Email rate limit exceeded'))
     return '잠시 후 다시 시도해주세요.';
+  if (message.toLowerCase().includes('manual linking') || message.toLowerCase().includes('identity_already_exists'))
+    return '이미 연결된 계정이거나 연결 기능이 비활성화되어 있어요.';
   return '오류가 발생했습니다. 다시 시도해주세요.';
 }
 
@@ -124,6 +126,50 @@ export async function signInWithOAuth(
   if (error) return { error: parseAuthError(error.message) };
 
   return { error: null };
+}
+
+// ────────────────────────────────────────────────
+// OAuth identity 연결 / 조회
+// (이미 로그인된 세션에 SNS 가입 방법을 추가로 연결)
+// 사용 전 Supabase 대시보드에서 enable_manual_linking = true 필요
+// ────────────────────────────────────────────────
+export async function linkOAuthIdentity(
+  provider: 'google' | 'kakao',
+  next?: string,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: '서비스 연결에 실패했습니다.' };
+
+  const queryParams =
+    provider === 'google' ? { prompt: 'select_account' } : undefined;
+
+  const callbackUrl = `${window.location.origin}/auth/callback${
+    next ? `?next=${encodeURIComponent(next)}` : ''
+  }`;
+
+  const { error } = await supabase.auth.linkIdentity({
+    provider,
+    options: {
+      redirectTo: callbackUrl,
+      ...(queryParams ? { queryParams } : {}),
+    },
+  });
+  if (error) return { error: parseAuthError(error.message) };
+  return { error: null };
+}
+
+export type UserIdentitySummary = {
+  provider: string;
+  email: string | null;
+};
+
+export async function getUserIdentities(): Promise<UserIdentitySummary[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase.auth.getUserIdentities();
+  if (error || !data?.identities) return [];
+  return data.identities.map((i) => ({
+    provider: i.provider,
+    email: (i.identity_data?.email as string | undefined) ?? null,
+  }));
 }
 
 // ────────────────────────────────────────────────

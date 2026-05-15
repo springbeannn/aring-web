@@ -5,7 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { supabase } from '@/lib/supabase';
-import { signOut, getCurrentProfile } from '@/lib/auth';
+import {
+  signOut,
+  getCurrentProfile,
+  getUserIdentities,
+  linkOAuthIdentity,
+} from '@/lib/auth';
 
 function relativeDate(iso: string): string {
   return new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -29,6 +34,15 @@ export default function ProfilePage() {
   const [nickSaving, setNickSaving] = useState(false);
   const [nickMsg, setNickMsg] = useState('');
 
+  // 연결된 SNS identity 목록 (provider 문자열 배열)
+  const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
+  const [linkingProvider, setLinkingProvider] = useState<string | null>(null);
+  const [toast, setToast] = useState('');
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3500);
+  };
+
   useEffect(() => {
     async function load() {
       if (!supabase) { setLoading(false); return; }
@@ -51,10 +65,36 @@ export default function ProfilePage() {
           created_at: session.user.created_at,
         });
       }
+
+      // 연결된 SNS identity 조회 — 카드 표시용
+      const identities = await getUserIdentities();
+      setLinkedProviders(identities.map((i) => i.provider));
+
       setLoading(false);
+
+      // 콜백에서 ?linked=google로 돌아온 경우 토스트
+      const params = new URLSearchParams(window.location.search);
+      const linked = params.get('linked');
+      if (linked === 'google') showToast('Google 계정이 연결되었어요');
+      else if (linked === 'kakao') showToast('카카오 계정이 연결되었어요');
+      if (linked) {
+        // URL 정리 — 새로고침 시 다시 토스트 안 뜨도록
+        window.history.replaceState({}, '', '/my/profile');
+      }
     }
     load();
   }, [router]);
+
+  async function handleLinkGoogle() {
+    setLinkingProvider('google');
+    // 콜백이 /my/profile?linked=google로 돌아오게 함
+    const { error } = await linkOAuthIdentity('google', '/my/profile?linked=google');
+    if (error) {
+      setLinkingProvider(null);
+      showToast(error);
+    }
+    // 정상 흐름이면 페이지 이탈 → 상태 reset 불필요
+  }
 
   async function handleNickSave() {
     const trimmed = newNick.trim();
@@ -113,8 +153,15 @@ export default function ProfilePage() {
 
   const initial = (profile.nickname || '?').charAt(0).toUpperCase();
 
+  const googleLinked = linkedProviders.includes('google');
+
   return (
     <main className="min-h-screen flex justify-center bg-gradient-to-b from-white to-blue-50">
+      {toast && (
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-aring-ink-900 text-white text-[15px] font-semibold px-5 py-3 rounded-2xl shadow-lg whitespace-nowrap">
+          {toast}
+        </div>
+      )}
       {/* 모바일: max-w-[440px] 고정 / PC(lg): 전체 폭 사용 */}
       <div className="relative w-full max-w-[440px] bg-transparent overflow-hidden min-h-screen sm:my-6 sm:min-h-[900px] sm:rounded-[36px] sm:shadow-phone lg:max-w-[1200px] lg:my-0 lg:min-h-screen lg:rounded-none lg:shadow-none lg:overflow-visible">
         <div className="pb-28 lg:pb-10">
@@ -218,6 +265,54 @@ export default function ProfilePage() {
                     <p className="text-[16px] font-semibold text-aring-ink-900">{relativeDate(profile.created_at)}</p>
                   </div>
                 )}
+              </div>
+
+              {/* 다른 로그인 방법 — 비번 가입자도 Google로 로그인 가능하게 연결 */}
+              <div className="rounded-2xl border border-aring-green-line bg-white overflow-hidden">
+                <div className="px-5 py-3.5 lg:px-6 lg:py-4 border-b border-aring-ink-100">
+                  <p className="text-[15px] lg:text-[15px] font-bold text-aring-ink-400 tracking-wider uppercase mb-1">다른 로그인 방법</p>
+                  <p className="text-[13px] lg:text-[14px] text-aring-ink-500 leading-relaxed break-keep">
+                    SNS 계정을 연결하면 같은 계정으로 다양한 방법으로 로그인할 수 있어요.
+                  </p>
+                </div>
+
+                {/* Google */}
+                <div className="px-5 py-3.5 lg:px-6 lg:py-4 flex items-center gap-3">
+                  <span className="w-9 h-9 shrink-0 rounded-full bg-aring-ink-100 flex items-center justify-center">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[15px] lg:text-[16px] font-bold text-aring-ink-900">Google</p>
+                    <p className="text-[13px] lg:text-[14px] text-aring-ink-500">
+                      {googleLinked ? '연결됨' : '연결하면 Google로도 로그인할 수 있어요'}
+                    </p>
+                  </div>
+                  {googleLinked ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-aring-green-bg text-[12px] lg:text-[13px] font-bold text-aring-green">
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m5 12 5 5 9-11" />
+                      </svg>
+                      연결됨
+                    </span>
+                  ) : (
+                    <button
+                      onClick={handleLinkGoogle}
+                      disabled={linkingProvider !== null}
+                      className={`px-3.5 py-2 rounded-pill text-[13px] lg:text-[14px] font-bold transition active:scale-95 ${
+                        linkingProvider !== null
+                          ? 'bg-aring-ink-100 text-aring-ink-400 cursor-not-allowed'
+                          : 'bg-aring-ink-900 text-white'
+                      }`}
+                    >
+                      {linkingProvider === 'google' ? '연결 중...' : '연결하기'}
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* MY 바로가기 */}
