@@ -44,37 +44,58 @@ CREATE POLICY "admin_read_page_views"
 -- ════════════════════════════════════════════════════════════════════
 -- 일별 PV/UV 집계 함수 — 대시보드에서 단일 RPC 호출로 사용
 -- ════════════════════════════════════════════════════════════════════
--- SECURITY INVOKER + RLS 위임:
---   - admin이 호출 → RLS의 admin_read_page_views 정책으로 SELECT 허용
---   - 비-admin이 호출 → RLS 차단 → 빈 결과
--- (SECURITY DEFINER + 함수 내부 is_admin() 체크는 SQL Editor 디버깅을
---  불가능하게 만들고 JWT claim 전달 이슈 리스크가 있어 INVOKER 채택)
+-- SECURITY DEFINER + JWT claim 직접 파싱:
+--   - is_admin() helper는 PostgREST RPC 컨텍스트에서 auth.uid()가 NULL로
+--     떨어지는 케이스가 있어 함수 내부에서 직접 JWT sub claim을 파싱하여
+--     profiles.role을 검증한다.
+--   - search_path를 명시적으로 고정해 SECURITY DEFINER 함수의 안전성 확보.
+--   - 비-admin이 호출 → RAISE EXCEPTION → 클라이언트에 명시적 에러로 노출.
 -- ════════════════════════════════════════════════════════════════════
 
 DROP FUNCTION IF EXISTS public.page_views_daily(timestamptz, timestamptz);
+
 CREATE FUNCTION public.page_views_daily(
-  range_start TIMESTAMPTZ,
-  range_end   TIMESTAMPTZ
+  range_start timestamptz,
+  range_end   timestamptz
 )
 RETURNS TABLE (
-  day TIMESTAMPTZ,
-  pv  BIGINT,
-  uv  BIGINT
+  day timestamptz,
+  pv  bigint,
+  uv  bigint
 )
-LANGUAGE SQL
-SECURITY INVOKER
+LANGUAGE plpgsql
+SECURITY DEFINER
 STABLE
-AS $$
-  SELECT
-    date_trunc('day', created_at AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul' AS day,
-    COUNT(*)::BIGINT                     AS pv,
-    COUNT(DISTINCT session_id)::BIGINT   AS uv
-  FROM public.page_views
-  WHERE created_at >= range_start
-    AND created_at <  range_end
-  GROUP BY 1
-  ORDER BY 1;
-$$;
+SET search_path = public, auth, pg_temp
+AS $func$
+DECLARE
+  uid uuid;
+  caller_role text;
+BEGIN
+  uid := nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
+  IF uid IS NULL THEN
+    RAISE EXCEPTION 'unauthorized: no jwt sub claim';
+  END IF;
+
+  SELECT p.role INTO caller_role FROM public.profiles p WHERE p.user_id = uid;
+  IF caller_role IS NULL OR caller_role <> 'admin' THEN
+    RAISE EXCEPTION 'unauthorized: not admin (uid=%, role=%)', uid, caller_role;
+  END IF;
+
+  RETURN QUERY
+    SELECT
+      (date_trunc('day', v.created_at AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'),
+      COUNT(*)::bigint,
+      COUNT(DISTINCT v.session_id)::bigint
+    FROM public.page_views v
+    WHERE v.created_at >= range_start
+      AND v.created_at <  range_end
+    GROUP BY 1
+    ORDER BY 1;
+END;
+$func$;
+
+GRANT EXECUTE ON FUNCTION public.page_views_daily(timestamptz, timestamptz) TO authenticated;
 
 -- ════════════════════════════════════════════════════════════════════
 -- 적용 순서
