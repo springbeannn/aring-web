@@ -43,16 +43,19 @@ export async function GET(req: NextRequest) {
   // 5) 디버그 모드 — ?debug=1
   const debug = req.nextUrl.searchParams.get('debug') === '1';
   if (debug) {
-    // is_admin() 함수 직접 호출
     const isAdminRes = await supabase.rpc('is_admin');
-    // 직접 SELECT (RLS 적용) 시도
     const directRes = await supabase
       .from('page_views')
       .select('id, created_at, session_id', { count: 'exact', head: false })
       .gte('created_at', start)
       .lt('created_at', end)
       .limit(5);
+    // 범위 무관 — page_views 테이블 전체 count (RLS 적용)
+    const totalRes = await supabase
+      .from('page_views')
+      .select('id', { count: 'exact', head: true });
     return NextResponse.json({
+      _v: 'debug-v2',
       auth_user_id: user.id,
       auth_user_email: user.email,
       profile_role: profile.role,
@@ -63,17 +66,21 @@ export async function GET(req: NextRequest) {
         error: rpcRes.error?.message ?? null,
         row_count: Array.isArray(rpcRes.data) ? rpcRes.data.length : null,
       },
-      direct_select: {
+      direct_select_in_range: {
         count: directRes.count,
         sample: directRes.data,
         error: directRes.error?.message ?? null,
+      },
+      total_page_views_visible_to_me: {
+        count: totalRes.count,
+        error: totalRes.error?.message ?? null,
       },
     });
   }
 
   if (rpcRes.error) {
-    return NextResponse.json({ error: rpcRes.error.message }, { status: 500 });
+    return NextResponse.json({ error: rpcRes.error.message, _v: 'normal-v2' }, { status: 500 });
   }
 
-  return NextResponse.json({ rows: rpcRes.data ?? [] });
+  return NextResponse.json({ rows: rpcRes.data ?? [], _v: 'normal-v2' });
 }
