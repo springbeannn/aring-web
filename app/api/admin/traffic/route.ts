@@ -34,8 +34,12 @@ export async function GET(req: NextRequest) {
   const start = new Date(Date.UTC(y, m - 1, 1, -9, 0, 0)).toISOString();
   const end   = new Date(Date.UTC(y, m,     1, -9, 0, 0)).toISOString();
 
-  // 4) RPC 호출
+  // 4) RPC 호출 — caller_id를 명시적으로 넘김
+  // (PostgREST publishable key 환경에서 함수 내부 auth.uid()가 NULL이 되는
+  //  케이스 회피. admin 검증은 서버 라우트가 이미 통과시킨 상태이고,
+  //  함수도 내부에서 user_id의 role을 다시 검증한다.)
   const rpcRes = await supabase.rpc('page_views_daily', {
+    caller_id: user.id,
     range_start: start,
     range_end: end,
   });

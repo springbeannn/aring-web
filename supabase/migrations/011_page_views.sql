@@ -44,17 +44,22 @@ CREATE POLICY "admin_read_page_views"
 -- ════════════════════════════════════════════════════════════════════
 -- 일별 PV/UV 집계 함수 — 대시보드에서 단일 RPC 호출로 사용
 -- ════════════════════════════════════════════════════════════════════
--- SECURITY DEFINER + JWT claim 직접 파싱:
---   - is_admin() helper는 PostgREST RPC 컨텍스트에서 auth.uid()가 NULL로
---     떨어지는 케이스가 있어 함수 내부에서 직접 JWT sub claim을 파싱하여
---     profiles.role을 검증한다.
---   - search_path를 명시적으로 고정해 SECURITY DEFINER 함수의 안전성 확보.
---   - 비-admin이 호출 → RAISE EXCEPTION → 클라이언트에 명시적 에러로 노출.
+-- 시그니처: (caller_id uuid, range_start timestamptz, range_end timestamptz)
+--
+-- PostgREST가 publishable key(sb_publishable_*) 환경에서 RPC 컨텍스트의
+-- request.jwt.claim.* GUC를 빈 값으로 두는 케이스가 있어 함수 내부에서
+-- auth.uid()를 신뢰할 수 없다. 그래서 caller_id를 인자로 받아 검증한다.
+--
+-- 보안: 서버 라우트(/api/admin/traffic)가 supabase.auth.getUser()로 검증한
+-- user.id만을 caller_id로 넘긴다. 함수 내부에서도 다시 profiles.role을
+-- 확인하므로 임의의 user_id로 호출해도 admin이 아니면 차단된다.
 -- ════════════════════════════════════════════════════════════════════
 
 DROP FUNCTION IF EXISTS public.page_views_daily(timestamptz, timestamptz);
+DROP FUNCTION IF EXISTS public.page_views_daily(uuid, timestamptz, timestamptz);
 
 CREATE FUNCTION public.page_views_daily(
+  caller_id   uuid,
   range_start timestamptz,
   range_end   timestamptz
 )
@@ -69,17 +74,15 @@ STABLE
 SET search_path = public, auth, pg_temp
 AS $func$
 DECLARE
-  uid uuid;
   caller_role text;
 BEGIN
-  uid := nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
-  IF uid IS NULL THEN
-    RAISE EXCEPTION 'unauthorized: no jwt sub claim';
+  IF caller_id IS NULL THEN
+    RAISE EXCEPTION 'caller_id is required';
   END IF;
 
-  SELECT p.role INTO caller_role FROM public.profiles p WHERE p.user_id = uid;
+  SELECT p.role INTO caller_role FROM public.profiles p WHERE p.user_id = caller_id;
   IF caller_role IS NULL OR caller_role <> 'admin' THEN
-    RAISE EXCEPTION 'unauthorized: not admin (uid=%, role=%)', uid, caller_role;
+    RAISE EXCEPTION 'unauthorized: not admin (caller_id=%, role=%)', caller_id, caller_role;
   END IF;
 
   RETURN QUERY
@@ -95,7 +98,7 @@ BEGIN
 END;
 $func$;
 
-GRANT EXECUTE ON FUNCTION public.page_views_daily(timestamptz, timestamptz) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.page_views_daily(uuid, timestamptz, timestamptz) TO authenticated;
 
 -- ════════════════════════════════════════════════════════════════════
 -- 적용 순서
