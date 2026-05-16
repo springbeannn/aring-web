@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
 type DailyRow = { day: string; pv: number; uv: number };
 
@@ -23,14 +22,10 @@ function buildMonthOptions(): { value: string; label: string }[] {
   return opts;
 }
 
-// 'YYYY-MM' → [start, end) 의 ISO (KST 기준 → UTC 변환)
-function monthRange(yyyymm: string): { start: string; end: string; days: number } {
+// 'YYYY-MM' → 해당 월의 일수
+function monthDays(yyyymm: string): number {
   const [y, m] = yyyymm.split('-').map(Number);
-  // KST = UTC+9 → KST 자정은 UTC 전날 15:00
-  const startUtc = new Date(Date.UTC(y, m - 1, 1, -9, 0, 0));
-  const endUtc   = new Date(Date.UTC(y, m,     1, -9, 0, 0));
-  const days = new Date(y, m, 0).getDate();
-  return { start: startUtc.toISOString(), end: endUtc.toISOString(), days };
+  return new Date(y, m, 0).getDate();
 }
 
 function fmtDayKey(iso: string): number {
@@ -49,30 +44,31 @@ export function TrafficChart({ className }: Props) {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!supabase) {
-      setErr('Supabase 연결 없음');
-      setLoading(false);
-      return;
-    }
     let cancelled = false;
     setLoading(true);
     setErr(null);
-    const { start, end } = monthRange(month);
-    supabase!.rpc('page_views_daily', { range_start: start, range_end: end })
-      .then(({ data, error }) => {
+    fetch(`/api/admin/traffic?month=${encodeURIComponent(month)}`, { cache: 'no-store' })
+      .then(async (res) => {
         if (cancelled) return;
-        if (error) {
-          setErr(error.message);
+        const body = await res.json().catch(() => ({} as Record<string, unknown>));
+        if (!res.ok) {
+          setErr(typeof body.error === 'string' ? body.error : `요청 실패 (${res.status})`);
           setRows([]);
         } else {
-          setRows((data ?? []) as DailyRow[]);
+          setRows(((body.rows ?? []) as DailyRow[]));
         }
+        setLoading(false);
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setErr(String(e));
+        setRows([]);
         setLoading(false);
       });
     return () => { cancelled = true; };
   }, [month]);
 
-  const { days } = useMemo(() => monthRange(month), [month]);
+  const days = useMemo(() => monthDays(month), [month]);
 
   // day(1..days) → {pv, uv} 매핑
   const byDay = useMemo(() => {
@@ -149,6 +145,10 @@ export function TrafficChart({ className }: Props) {
       {/* 차트 */}
       {loading ? (
         <div className="h-64 bg-aring-ink-50 animate-pulse rounded-lg" />
+      ) : rows.length === 0 && !err ? (
+        <div className="h-64 flex items-center justify-center text-[14px] font-semibold text-aring-ink-500 bg-aring-ink-50 rounded-lg">
+          이 달의 방문자 기록이 아직 없습니다
+        </div>
       ) : (
         <Chart days={days} byDay={byDay} max={max} />
       )}
