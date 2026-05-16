@@ -30,6 +30,7 @@ const MENU_ITEMS: MenuItem[] = [
     ],
   },
   { label: 'Q&A', href: '/qna' },
+  { label: 'aring 서비스 소개', href: '/about/story' },
 ];
 
 // ─────────────────────────────────────────────────
