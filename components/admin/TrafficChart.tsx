@@ -28,9 +28,10 @@ function monthDays(yyyymm: string): number {
   return new Date(y, m, 0).getDate();
 }
 
-function fmtDayKey(iso: string): number {
-  // RPC가 반환한 day는 KST 자정 timestamptz → 일(day) 추출
+function fmtDayKey(iso: unknown): number {
+  if (typeof iso !== 'string') return NaN;
   const d = new Date(iso);
+  if (isNaN(d.getTime())) return NaN;
   // KST 변환: getUTCDate 후 UTC+9 보정
   const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
   return kst.getUTCDate();
@@ -75,6 +76,7 @@ export function TrafficChart({ className }: Props) {
     const m = new Map<number, { pv: number; uv: number }>();
     for (const r of rows) {
       const d = fmtDayKey(r.day);
+      if (!Number.isFinite(d)) continue;
       m.set(d, { pv: Number(r.pv) || 0, uv: Number(r.uv) || 0 });
     }
     return m;

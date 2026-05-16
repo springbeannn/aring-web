@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, type Listing } from '@/lib/supabase';
 import { TrafficChart } from '@/components/admin/TrafficChart';
+import { ChartErrorBoundary } from '@/components/admin/ChartErrorBoundary';
 
 type Profile = {
   user_id: string;
@@ -106,7 +107,9 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 방문자 통계 (PV/UV) */}
-      <TrafficChart />
+      <ChartErrorBoundary>
+        <TrafficChart />
+      </ChartErrorBoundary>
 
       {/* 최근 게시물 */}
       <section className="bg-white rounded-2xl shadow-card border border-aring-ink-100 p-6">
