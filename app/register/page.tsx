@@ -729,7 +729,7 @@ function ReviewStep({
         <p className="mt-1 text-[11px] lg:text-[12px] text-aring-ink-400 leading-[1.5]">
           따뜻한 마음을 담아 작성해 주세요. 욕설, 비하 표현, 타인의 개인정보가 포함된 내용은 작성할 수 없습니다.
         </p>
-        <p className="mt-2 text-[11px] lg:text-[11px] text-aring-ink-300 leading-[1.55]">
+        <p className="mt-2 text-[11px] lg:text-[12px] text-aring-ink-400 leading-[1.5]">
           개인정보 노출, 타인 비방, 부적절한 표현 등 서비스 운영 기준에 맞지 않는 글은 관리자 판단에 따라 별도 안내 없이 삭제될 수 있습니다.
         </p>
       </div>
