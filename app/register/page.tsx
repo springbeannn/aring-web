@@ -94,8 +94,28 @@ export default function RegisterPage() {
   const [materialKey, setMaterialKey] = useState<MaterialKey | null>(null);
   const [price, setPrice] = useState('');
   const [story, setStory] = useState('');
+  // 등록자 한마디 본문에 함께 노출되는 추가 사진 (최대 3장)
+  const [extraPhotos, setExtraPhotos] = useState<Photo[]>([]);
   const [region, setRegion] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const addExtraPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.files?.[0];
+    e.target.value = ''; // 같은 파일 재선택 가능하도록 reset
+    if (!raw) return;
+    if (extraPhotos.length >= 3) return;
+    const file = await resizeImageFile(raw);
+    const url = await new Promise<string>((resolve) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.readAsDataURL(file);
+    });
+    setExtraPhotos((prev) => [...prev, { url, file }].slice(0, 3));
+  };
+
+  const removeExtraPhoto = (idx: number) => {
+    setExtraPhotos((prev) => prev.filter((_, i) => i !== idx));
+  };
 
   // 배경 제거 — AI 분석 완료 후 사용자 확인 모달로 분기
   const [showBgRemoveModal, setShowBgRemoveModal] = useState(false);
@@ -215,6 +235,24 @@ export default function RegisterPage() {
       const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
       const photo_url = urlData.publicUrl;
 
+      // 추가 사진 업로드 (최대 3장) — 메인 photo와 같은 버킷에 저장
+      const extraUrls: string[] = [];
+      for (const extra of extraPhotos) {
+        const extraPath = buildPhotoPath(extra.file.name);
+        const { error: extraUpErr } = await supabase.storage
+          .from(STORAGE_BUCKET)
+          .upload(extraPath, extra.file, {
+            contentType: extra.file.type,
+            cacheControl: '3600',
+            upsert: false,
+          });
+        if (extraUpErr) throw extraUpErr;
+        const { data: extraUrlData } = supabase.storage
+          .from(STORAGE_BUCKET)
+          .getPublicUrl(extraPath);
+        extraUrls.push(extraUrlData.publicUrl);
+      }
+
       const priceNum = price ? parseInt(price.replace(/[^0-9]/g, ''), 10) : null;
       const brandInput = brand.trim() || '';
       const resolved = await resolveBrand(brandInput);
@@ -241,6 +279,7 @@ export default function RegisterPage() {
           side: 'L',
           price: Number.isFinite(priceNum) ? priceNum : null,
           story: story || null,
+          extra_photos: extraUrls,
           region: region || null,
         })
         .select('id')
@@ -304,6 +343,9 @@ export default function RegisterPage() {
             setPrice={setPrice}
             story={story}
             setStory={setStory}
+            extraPhotos={extraPhotos}
+            onAddExtraPhoto={addExtraPhoto}
+            onRemoveExtraPhoto={removeExtraPhoto}
             region={region}
             setRegion={setRegion}
             onSubmit={submit}
@@ -569,6 +611,7 @@ function ReviewStep({
   materialKey, setMaterialKey,
   price, setPrice,
   story, setStory,
+  extraPhotos, onAddExtraPhoto, onRemoveExtraPhoto,
   region, setRegion,
   onSubmit, submitting,
 }: {
@@ -581,6 +624,9 @@ function ReviewStep({
   materialKey: MaterialKey | null; setMaterialKey: (v: MaterialKey | null) => void;
   price: string; setPrice: (s: string) => void;
   story: string; setStory: (s: string) => void;
+  extraPhotos: Photo[];
+  onAddExtraPhoto: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveExtraPhoto: (idx: number) => void;
   region: string; setRegion: (s: string) => void;
   onSubmit: () => void;
   submitting: boolean;
@@ -686,6 +732,38 @@ function ReviewStep({
         <p className="mt-2 text-[11px] lg:text-[11px] text-aring-ink-300 leading-[1.55]">
           개인정보 노출, 타인 비방, 부적절한 표현 등 서비스 운영 기준에 맞지 않는 글은 관리자 판단에 따라 별도 안내 없이 삭제될 수 있습니다.
         </p>
+      </div>
+
+      {/* 추가 사진 — 등록자 한마디 본문에 함께 노출 (최대 3장) */}
+      <FieldLabel>
+        본문 추가 사진 <span className="text-aring-ink-500 font-semibold">(선택 · 최대 3장)</span>
+      </FieldLabel>
+      <div className="flex gap-2 mb-5 flex-wrap">
+        {extraPhotos.map((p, idx) => (
+          <div
+            key={idx}
+            className="relative w-[88px] h-[88px] rounded-tile overflow-hidden border border-aring-green-line bg-aring-ink-100"
+          >
+            <img src={p.url} alt={`추가 사진 ${idx + 1}`} className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => onRemoveExtraPhoto(idx)}
+              aria-label={`추가 사진 ${idx + 1} 삭제`}
+              className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center active:scale-95 transition"
+            >
+              <IconClose className="w-3.5 h-3.5" strokeWidth={2.5} />
+            </button>
+          </div>
+        ))}
+        {extraPhotos.length < 3 && (
+          <label className="w-[88px] h-[88px] rounded-tile border border-dashed border-aring-ink-200 bg-white flex flex-col items-center justify-center gap-1 cursor-pointer active:scale-95 transition">
+            <IconCamera className="w-5 h-5 text-aring-ink-500" />
+            <span className="text-[11px] font-bold text-aring-ink-500">
+              {extraPhotos.length}/3
+            </span>
+            <input type="file" accept="image/*" onChange={onAddExtraPhoto} className="hidden" />
+          </label>
+        )}
       </div>
 
       <FieldLabel>거래 지역</FieldLabel>

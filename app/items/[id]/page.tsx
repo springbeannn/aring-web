@@ -86,7 +86,10 @@ const log =
 // Listing → ItemDetail 변환 (Supabase row → UI 모델)
 // 톤은 lib/mock의 pickTone (id 해시) 사용 — 전 페이지 통일
 
-function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } {
+function listingToItemDetail(
+  row: Listing,
+  sellerNickname?: string | null,
+): ItemDetail & { viewCount?: number; extraPhotos: string[] } {
   const detailTags = row.detail
     ? row.detail.split(/[,·\s]+/).filter(Boolean).slice(0, 5)
     : [];
@@ -103,6 +106,7 @@ function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } 
     story: row.story ?? undefined,
     image: row.photo_url,
     images: [row.photo_url],
+    extraPhotos: Array.isArray(row.extra_photos) ? row.extra_photos : [],
     ownerId: row.user_id, // 댓글 role 판정용
     ai: {
       shape: row.shape ?? '미상',
@@ -111,7 +115,7 @@ function listingToItemDetail(row: Listing): ItemDetail & { viewCount?: number } 
       details: detailTags,
     },
     seller: {
-      nickname: row.user_id ? row.user_id.slice(0, 6) + '…' : '등록자',
+      nickname: sellerNickname?.trim() || '익명',
       rating: 5.0,
       deals: 0,
       region: row.region ?? '',
@@ -434,17 +438,43 @@ function ColorChip({ value }: { value: string }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 5) 등록자 스토리
+// 5) 등록자 스토리 — 텍스트 + 본문 추가 사진 (가로 max 300)
 // ─────────────────────────────────────────────────────────────
-function StorySection({ story, createdAt }: { story?: string; createdAt: string }) {
-  if (!story) return null;
+function StorySection({
+  story,
+  createdAt,
+  extraPhotos,
+}: {
+  story?: string;
+  createdAt: string;
+  extraPhotos?: string[];
+}) {
+  const hasPhotos = (extraPhotos?.length ?? 0) > 0;
+  if (!story && !hasPhotos) return null;
   const ago = relativeTime(createdAt);
   return (
     <section className="px-5 lg:px-8 mt-6">
       <h2 className="text-[16px] lg:text-[18px] lg:font-bold font-bold text-aring-ink-900 mb-2">
         등록자 한마디
       </h2>
-      <p className="text-[15px] lg:text-[15px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">{story}</p>
+      {story && (
+        <p className="text-[15px] lg:text-[15px] leading-[1.7] text-aring-ink-700 whitespace-pre-wrap break-words overflow-wrap-anywhere">
+          {story}
+        </p>
+      )}
+      {hasPhotos && (
+        <div className="mt-3 flex flex-col gap-2">
+          {extraPhotos!.map((src, i) => (
+            <img
+              key={src + i}
+              src={src}
+              alt={`본문 사진 ${i + 1}`}
+              loading="lazy"
+              className="w-full max-w-[300px] rounded-tile border border-aring-green-line object-cover"
+            />
+          ))}
+        </div>
+      )}
       <p className="mt-2 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500">{ago}</p>
     </section>
   );
@@ -626,7 +656,7 @@ function NotFoundScreen() {
 // ─────────────────────────────────────────────────────────────
 // MAIN
 // ─────────────────────────────────────────────────────────────
-type LoadState = { status: 'loading' } | { status: 'ok'; item: ItemDetail & { viewCount?: number }; similars: ItemSummary[] } | { status: 'not-found' };
+type LoadState = { status: 'loading' } | { status: 'ok'; item: ItemDetail & { viewCount?: number; extraPhotos?: string[] }; similars: ItemSummary[] } | { status: 'not-found' };
 
 export default function ItemDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -666,9 +696,18 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      const item = listingToItemDetail(row as Listing);
+      // 2-1) 등록자 닉네임 조회 (profiles RLS 우회용 RPC)
+      let sellerNickname: string | null = null;
+      if (row.user_id) {
+        const { data: nickData } = await supabase.rpc('get_nickname', {
+          uid: row.user_id,
+        });
+        sellerNickname = typeof nickData === 'string' ? nickData : null;
+      }
 
-      // 2-1) 조회수 +1 — DB 서버에서 직접 증가 (race condition 안전)
+      const item = listingToItemDetail(row as Listing, sellerNickname);
+
+      // 2-2) 조회수 +1 — DB 서버에서 직접 증가 (race condition 안전)
       const nextViewCount = ((row as Listing).view_count ?? 0) + 1;
       supabase
         .rpc('increment_view_count', { listing_id: params.id })
@@ -731,7 +770,11 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
           />
           <HeaderInfo item={item} />
           <AIAnalysisCard ai={item.ai} />
-          <StorySection story={item.story} createdAt={item.createdAt} />
+          <StorySection
+            story={item.story}
+            createdAt={item.createdAt}
+            extraPhotos={(item as ItemDetail & { extraPhotos?: string[] }).extraPhotos}
+          />
           <SimilarSection items={similars} />
           <SellerCard seller={item.seller} />
           <div id="comments">

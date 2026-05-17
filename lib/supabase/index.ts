@@ -55,6 +55,9 @@ export type Listing = {
   // 005_listings_view_count.sql — 인기 정렬용
   view_count: number;
 
+  // 012_listings_extra_photos — 등록자 한마디 본문에 함께 노출되는 추가 사진 (0~3장)
+  extra_photos: string[];
+
   status: 'open' | 'matched' | 'closed';
 };
 
