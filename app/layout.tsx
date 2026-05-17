@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { IdleLogout } from '@/components/IdleLogout';
 import { PageViewTracker } from '@/components/PageViewTracker';
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const SITE_URL = 'https://aring.app';
 
@@ -203,6 +206,7 @@ export default function RootLayout({
         <IdleLogout />
         {children}
       </body>
+      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
     </html>
   );
 }
