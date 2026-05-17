@@ -18,7 +18,6 @@ import { supabase, type Listing } from '@/lib/supabase';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { RecentItemCard } from '@/components/RecentItemCard';
 import { FilterBar, useFilterBar } from '@/components/FilterBar';
-import { LostFoundBanner } from '@/components/lost-found/LostFoundBanner';
 import { getPastelClassById, getPastelClassesForList } from '@/lib/pastel';
 
 // ─────────────────────────────────────────────────────────────
@@ -668,7 +667,6 @@ export default function HomePage() {
           <TodayMatchSection />
           <RecentSection items={allItems.slice(0, 12)} isLoading={isLoading} isError={isError} />
           <BrandSection brandCounts={brandCounts} isLoading={isLoading} />
-          <LostFoundBanner />
           <SuccessSection />
           <FindByPhotoCTA />
         </div>

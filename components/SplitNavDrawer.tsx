@@ -18,7 +18,6 @@ const MENU_ITEMS: MenuItem[] = [
       { label: '내 귀걸이 매칭 현황', href: '/my/match' },
       { label: '오늘의 매칭 후보',   href: '/popular' },
       { label: '브랜드별 탐색',       href: '/#brands' },
-      { label: '분실물 통합 검색',     href: '/lost-found' },
       { label: '탐색',                 href: '/discover' },
       { label: '전체 리스트',          href: '/products' },
     ],

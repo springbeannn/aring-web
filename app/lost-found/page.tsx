@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { TopNav, BottomNav } from '@/components/Nav';
 import { LostFoundGrid } from '@/components/lost-found/LostFoundGrid';
 import { LostFoundEmpty } from '@/components/lost-found/LostFoundEmpty';
 import { LostFoundFilter } from '@/components/lost-found/LostFoundFilter';
 import { fetchLostFoundList } from '@/lib/lost112/client';
 import { LOST_FOUND_REVALIDATE_SECONDS } from '@/lib/lost112/constants';
+
+// LOST112 OpenAPI 신규 발급 경로가 폐쇄되어 일시 숨김.
+// 데이터 경로 복구 시 true 로 변경하면 즉시 노출 복귀.
+const LOST_FOUND_ENABLED: boolean = false;
 
 export const revalidate = LOST_FOUND_REVALIDATE_SECONDS;
 
@@ -19,6 +24,9 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: '/lost-found' },
+  robots: LOST_FOUND_ENABLED
+    ? undefined
+    : { index: false, follow: false, googleBot: { index: false, follow: false } },
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
@@ -110,6 +118,8 @@ const IconArrowLeft = ({ className = 'w-5 h-5' }: { className?: string }) => (
 );
 
 export default async function LostFoundPage() {
+  if (!LOST_FOUND_ENABLED) notFound();
+
   const result = await fetchLostFoundList({ numOfRows: 30 });
   const { items, totalCount, isMock } = result;
 
