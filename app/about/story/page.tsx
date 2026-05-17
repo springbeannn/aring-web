@@ -34,8 +34,6 @@ export default function AboutStoryPage() {
 
           {/* 시작 — 왜 만들게 되었나 */}
           <Section>
-            <Para>저는 원래 물건을 자주 잃어버리는 편입니다.</Para>
-            <Para>그중에서도 유독 자주 잃어버리는 것이 귀걸이였습니다.</Para>
             <Para>
               액세서리를 좋아해서 귀걸이를 자주 착용하지만, 오래 하고 있으면 불편해서 중간에 빼두는 습관이 있었기 때문입니다.
               카페 테이블 위, 사무실 책상, 파우치 안, 주머니 속에 잠깐 넣어두었다가 어느 순간 한쪽만 사라지는 일이 반복됐습니다.
@@ -95,65 +93,6 @@ export default function AboutStoryPage() {
             <Para>
               aring은 바로 그 문제에서 출발했습니다.
               버려질 수 있는 귀걸이에 다시 사용 가치를 부여하고, 사용자에게는 잃어버린 짝을 되찾는 경험을 제공합니다.
-            </Para>
-          </Section>
-
-          {/* 현재 어디까지 만들었나요? */}
-          <Section>
-            <SectionTitle>현재 어디까지 만들었나요?</SectionTitle>
-            <Para>
-              현재 aring은 단순 아이디어 단계가 아니라 실제 MVP 서비스를 목표로 직접 개발 중입니다.
-            </Para>
-            <Para>현재까지 구현한 주요 기능은 다음과 같습니다.</Para>
-
-            <ul className="grid gap-2 sm:grid-cols-2 mb-6">
-              {[
-                '홈 화면',
-                '귀걸이 탐색 리스트',
-                '한 짝 귀걸이 등록 화면',
-                '귀걸이 상세 화면',
-                'AI 매칭 결과 화면',
-                '댓글 기반 문의 기능',
-                'MY 페이지',
-                '관심 상품 및 내 상품 관리',
-                '판매중 / 거래중 / 완료 상태 관리',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-2 rounded-tile bg-aring-ink-50 px-4 py-3 text-[14px] lg:text-[15px] font-semibold text-aring-ink-800 break-keep"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-aring-green flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <Para>
-              사용자는 귀걸이 사진을 등록하고, 브랜드·소재·형태·색상·가격대 등의 정보를 입력할 수 있습니다.
-              또한 AI가 귀걸이 사진을 분석해 특징을 추출하고, 유사한 귀걸이를 매칭하는 구조도 MVP 수준으로 설계하고 있습니다.
-            </Para>
-            <Para>
-              특히 단순히 “비슷한 상품입니다”라고 보여주는 것이 아니라,
-            </Para>
-
-            <ul className="space-y-2 mb-6">
-              {[
-                '형태가 왜 유사한지',
-                '컬러가 얼마나 비슷한지',
-                '소재와 디테일이 어떤 점에서 닮았는지',
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="rounded-tile border border-aring-green-line bg-white px-4 py-3 text-[14px] lg:text-[15px] text-aring-ink-700 break-keep"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <Para>
-              등 매칭 이유까지 함께 보여주는 방식으로 기획하고 있습니다.
-              사용자가 AI 분석 결과를 수정할 수 있는 기능도 넣어 실제 데이터 정확도를 높이는 방향으로 고민하고 있습니다.
             </Para>
           </Section>
 
