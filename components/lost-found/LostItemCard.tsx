@@ -59,7 +59,6 @@ export function LostItemCard({ item }: { item: LostItem }) {
               alt={`${item.title} 사진 (LOST112 자료)`}
               loading="lazy"
               className="w-[60px] h-[60px] rounded-tile object-cover border border-aring-green-line shrink-0"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
           )}
           <div className="flex-1 min-w-0">
