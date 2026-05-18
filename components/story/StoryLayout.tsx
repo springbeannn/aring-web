@@ -7,7 +7,7 @@ import { TopNav } from '@/components/Nav';
 import StoryNavigation from './StoryNavigation';
 
 type Props = {
-  /** 상단 eyebrow 라벨 (예: "STORY 02 · AARING") — 생략 시 미표시 */
+  /** 상단 eyebrow 라벨 (예: "STORY 02 · ARING") — 생략 시 미표시 */
   eyebrow?: string;
   /** 페이지 H1. `\n` 줄바꿈 지원 (whitespace-pre-line) */
   title: string;

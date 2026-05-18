@@ -186,7 +186,7 @@ export default function WhyRegisterFirstPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       }
-      eyebrow="STORY 02 · AARING"
+      eyebrow="STORY 02 · ARING"
       title={TITLE}
       intro={
         <>

@@ -152,7 +152,7 @@ export default function AboutStoryPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       }
-      eyebrow="STORY 01 · AARING"
+      eyebrow="STORY 01 · ARING"
       title={'aring 브랜드 스토리 —\n한 짝의 짝을 찾는 AI 매칭 서비스'}
       intro={
         <>
