@@ -8,9 +8,10 @@ import { LostFoundFilter } from '@/components/lost-found/LostFoundFilter';
 import { fetchLostFoundList } from '@/lib/lost112/client';
 import { LOST_FOUND_REVALIDATE_SECONDS } from '@/lib/lost112/constants';
 
-// LOST112 OpenAPI 신규 발급 경로가 폐쇄되어 일시 숨김.
-// 데이터 경로 복구 시 true 로 변경하면 즉시 노출 복귀.
-const LOST_FOUND_ENABLED: boolean = false;
+// LOST112 OpenAPI 신규 발급 경로가 폐쇄되어 실제 데이터 연결은 보류 중.
+// 페이지는 mock fallback으로 노출(robots noindex 유지 → 색인 차단).
+// 키 확보 후 실제 데이터로 자동 전환되며, 색인 허용 시 robots 블록 제거.
+const LOST_FOUND_ENABLED: boolean = true;
 
 export const revalidate = LOST_FOUND_REVALIDATE_SECONDS;
 
