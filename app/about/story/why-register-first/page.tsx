@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     '귀걸이 매칭',
     'AI 귀걸이 매칭',
     'aring',
-    '아링',
+    '에이링',
   ],
   alternates: { canonical: '/about/story/why-register-first' },
   openGraph: {
@@ -193,7 +193,7 @@ export default function WhyRegisterFirstPage() {
           <strong className="font-bold text-aring-ink-900">
             귀걸이 한 짝을 잃어버린 순간, 가장 빠른 행동은 검색이 아니라 등록입니다.
           </strong>{' '}
-          aring(아링)은 남아 있는 반대쪽 사진 한 장을 등록해 두면, 같은 모델의 한 짝을 가진 다른
+          aring(에이링)은 남아 있는 반대쪽 사진 한 장을 등록해 두면, 같은 모델의 한 짝을 가진 다른
           사용자가 등록하는 시점에 자동으로 매칭해주는 AI 기반 P2P 리커머스 서비스입니다.
         </>
       }

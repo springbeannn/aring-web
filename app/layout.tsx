@@ -68,7 +68,7 @@ const jsonLd = {
       '@type': 'Organization',
       '@id': `${SITE_URL}/#organization`,
       name: 'aring',
-      alternateName: '아링',
+      alternateName: '에이링',
       url: SITE_URL,
       description:
         '한 짝만 남은 귀걸이를 등록하면, AI가 비슷하거나 정확히 맞는 짝을 찾아 연결해주는 매칭 서비스.',
@@ -123,7 +123,7 @@ const jsonLd = {
           name: 'aring은 무엇인가요?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'aring(아링)은 귀걸이 한 짝을 잃어버렸거나 짝이 맞지 않는 귀걸이를 가진 사람들이 서로 연결될 수 있는 매칭 플랫폼입니다. 남은 한 짝을 사진으로 등록하면 AI가 유사하거나 정확히 맞는 짝을 찾아드립니다.',
+            text: 'aring(에이링)은 귀걸이 한 짝을 잃어버렸거나 짝이 맞지 않는 귀걸이를 가진 사람들이 서로 연결될 수 있는 매칭 플랫폼입니다. 남은 한 짝을 사진으로 등록하면 AI가 유사하거나 정확히 맞는 짝을 찾아드립니다.',
           },
         },
         {

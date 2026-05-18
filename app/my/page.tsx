@@ -155,7 +155,7 @@ export default function MyPage() {
       } else {
         setUserId(session.user.id);
       }
-      setNickname(localStorage.getItem(ANON_NICK_KEY) ?? '아링 친구');
+      setNickname(localStorage.getItem(ANON_NICK_KEY) ?? '에이링 친구');
       setBio(
         localStorage.getItem(ANON_BIO_KEY) ?? '한 짝의 짝을 찾고 있어요'
       );
@@ -406,7 +406,7 @@ function ProfileHeader({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[20px] lg:text-[20px] font-bold text-aring-ink-900 truncate">
-            {nickname || '아링 친구'}
+            {nickname || '에이링 친구'}
           </p>
           <p className="mt-0.5 text-[15px] lg:text-[15px] leading-[1.5] text-aring-ink-500 truncate">
             {bio}

@@ -14,7 +14,7 @@ const PAGE_URL = `${SITE_URL}/about/story`;
 export const metadata: Metadata = {
   title: 'aring 브랜드 스토리 — 한 짝의 짝을 찾는 AI 매칭 서비스',
   description:
-    '한 짝만 남은 귀걸이를 잃어버렸나요? aring(아링)은 사진 한 장으로 짝을 찾는 AI 매칭 서비스입니다. 형태·컬러·소재·디테일 분석으로 동일 또는 유사 디자인을 연결합니다.',
+    '한 짝만 남은 귀걸이를 잃어버렸나요? aring(에이링)은 사진 한 장으로 짝을 찾는 AI 매칭 서비스입니다. 형태·컬러·소재·디테일 분석으로 동일 또는 유사 디자인을 연결합니다.',
   keywords: [
     '귀걸이 한 짝',
     '귀걸이 분실',
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
     '한 짝 귀걸이 찾기',
     'AI 귀걸이 매칭',
     'aring',
-    '아링',
+    '에이링',
   ],
   alternates: { canonical: '/about/story' },
   openGraph: {
     title: 'aring 브랜드 스토리 — 한 짝의 짝을 찾는 AI 매칭 서비스',
     description:
-      '한 짝만 남은 귀걸이를 사진 한 장으로 매칭. AI 기반 P2P 리커머스 서비스 aring(아링).',
+      '한 짝만 남은 귀걸이를 사진 한 장으로 매칭. AI 기반 P2P 리커머스 서비스 aring(에이링).',
     url: PAGE_URL,
   },
   twitter: {
@@ -98,7 +98,7 @@ const jsonLd = {
       '@type': 'Organization',
       '@id': `${SITE_URL}/about/story#organization`,
       name: 'aring',
-      alternateName: '아링',
+      alternateName: '에이링',
       url: SITE_URL,
       logo: `${SITE_URL}/logo.png`,
       description: '한 짝만 남은 귀걸이를 AI로 다시 연결하는 P2P 리커머스 플랫폼',
@@ -156,7 +156,7 @@ export default function AboutStoryPage() {
       title={'aring 브랜드 스토리 —\n한 짝의 짝을 찾는 AI 매칭 서비스'}
       intro={
         <>
-          aring(아링)은 한 짝만 남은 귀걸이를 사진 한 장으로 매칭해주는 AI 기반 P2P 리커머스
+          aring(에이링)은 한 짝만 남은 귀걸이를 사진 한 장으로 매칭해주는 AI 기반 P2P 리커머스
           서비스입니다. 형태·컬러·소재·디테일을 AI가 분석해 같은 짝 또는 비슷한 짝을 가진
           사용자와 연결합니다.
         </>
