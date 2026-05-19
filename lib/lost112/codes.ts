@@ -30,10 +30,12 @@ export const PERIOD_OPTIONS: { days: number; label: string }[] = [
   { days: 90,  label: '최근 3개월' },
 ];
 
-// 분류 (PRDT_CL_CD_02) — 액세서리 도메인 한정
-// TODO: 사양서 확정 후 코드값 교체
+// 분류 (PRDT_CL_CD_02) — 귀금속(PRO000) 하위 중분류
 export const CATEGORY_OPTIONS: CodeOption[] = [
-  { code: '',       label: '전체 액세서리' },
-  { code: 'PRA200', label: '귀걸이' },
-  { code: 'PRA210', label: '귀걸이 (소형)' },
+  { code: '',       label: '전체 귀금속' },
+  { code: 'PRO300', label: '귀걸이' },
+  { code: 'PRO100', label: '반지' },
+  { code: 'PRO200', label: '목걸이' },
+  { code: 'PRO400', label: '시계' },
+  { code: 'PRO500', label: '기타' },
 ];

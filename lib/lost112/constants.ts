@@ -12,11 +12,11 @@ export function buildLost112DetailUrl(atcId: string, fdSn: string | number = 1):
 }
 
 // aring 도메인은 액세서리·귀걸이 중심.
-// 정확한 코드는 공공데이터포털 활용신청 후 사양서에서 확정 필요.
-// TODO: 사양서 확인 후 실제 코드로 교체
+// LOST112 대분류에서 가장 가까운 카테고리는 "귀금속(PRO000)".
+// 하위: PRO100 반지 / PRO200 목걸이 / PRO300 귀걸이 / PRO400 시계 / PRO500 기타
 export const ARING_RELEVANT_CL_CODES = {
-  PRDT_CL_CD_01: 'PRA000',           // 대분류: 액세서리 (확인 필요)
-  PRDT_CL_CD_02: ['PRA200', 'PRA210'], // 중분류: 귀걸이 등 (확인 필요)
+  PRDT_CL_CD_01: 'PRO000',
+  PRDT_CL_CD_02: ['PRO300'], // 귀걸이 (필요 시 다른 중분류 추가)
 } as const;
 
 // 캐싱

@@ -14,6 +14,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     storagePlace: '시청역 유실물센터',
     storagePhone: '02-6110-1122',
     status: '보관중',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11220004'),
   },
   {
@@ -25,6 +26,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     foundPlace: '3호선 옥수역 (열차 내)',
     storagePlace: '서울 옥수역 유실물보관소',
     status: '보관중',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11200015'),
   },
   {
@@ -36,6 +38,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     storagePlace: '강남경찰서 유실물계',
     storagePhone: '02-3673-0112',
     status: '보관중',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11180042'),
   },
   {
@@ -48,6 +51,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     storagePlace: '마포경찰서 유실물계',
     storagePhone: '02-3149-2331',
     status: '보관중',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11170027'),
   },
   {
@@ -61,6 +65,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     storagePhone: '02-2147-7331',
     status: '보관중',
     imageUrl: 'https://www.lost112.go.kr/sample/earring1.jpg',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11150009'),
   },
   {
@@ -72,6 +77,7 @@ export const MOCK_LOST_ITEMS: LostItem[] = [
     storagePlace: '강북경찰서 유실물계',
     storagePhone: '02-944-7331',
     status: '보관중',
+    fdSn: '1',
     sourceUrl: buildLost112DetailUrl('V0000493K11120031'),
   },
 ];

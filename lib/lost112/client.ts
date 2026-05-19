@@ -26,34 +26,46 @@ function defaultDateRange(days = 30): { startDate: string; endDate: string } {
   return { startDate: toYmd(start), endDate: toYmd(end) };
 }
 
-interface Lost112JsonResponse {
-  response?: {
-    header?: { resultCode?: string; resultMsg?: string };
-    body?: {
-      items?: { item?: Lost112RawItem | Lost112RawItem[] } | Lost112RawItem[];
-      totalCount?: number | string;
-      pageNo?: number | string;
-      numOfRows?: number | string;
-    };
+// LOST112 응답은 `_type=json` 파라미터가 무시되고 XML로만 회신됨.
+// item 단일·다중 케이스를 한꺼번에 처리하고, 평탄한 leaf 태그만 다루는 단순 파서.
+function parseLost112Xml(xml: string): {
+  resultCode?: string;
+  resultMsg?: string;
+  items: Lost112RawItem[];
+  totalCount?: number;
+  pageNo?: number;
+  numOfRows?: number;
+} {
+  const pick = (tag: string, scope: string): string | undefined => {
+    const m = scope.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`));
+    return m ? m[1] : undefined;
   };
-}
+  const header = pick('header', xml) ?? '';
+  const body = pick('body', xml) ?? '';
 
-function extractItems(json: Lost112JsonResponse): Lost112RawItem[] {
-  const body = json?.response?.body;
-  if (!body?.items) return [];
-  const items = (body.items as { item?: Lost112RawItem | Lost112RawItem[] }).item
-    ?? (body.items as Lost112RawItem[]);
-  if (!items) return [];
-  return Array.isArray(items) ? items : [items];
-}
+  const itemBlocks = [...body.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+  const items = itemBlocks.map((block) => {
+    const raw: Record<string, string> = {};
+    for (const m of block.matchAll(/<([a-zA-Z0-9_]+)>([\s\S]*?)<\/\1>/g)) {
+      raw[m[1]] = m[2].trim();
+    }
+    return raw as unknown as Lost112RawItem;
+  });
 
-function asNumber(v: number | string | undefined, fallback: number): number {
-  if (typeof v === 'number') return v;
-  if (typeof v === 'string') {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : fallback;
-  }
-  return fallback;
+  const toInt = (s?: string): number | undefined => {
+    if (!s) return undefined;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : undefined;
+  };
+
+  return {
+    resultCode: pick('resultCode', header),
+    resultMsg: pick('resultMsg', header),
+    items,
+    totalCount: toInt(pick('totalCount', body)),
+    pageNo: toInt(pick('pageNo', body)),
+    numOfRows: toInt(pick('numOfRows', body)),
+  };
 }
 
 // 분실물 목록 조회.
@@ -88,7 +100,6 @@ export async function fetchLostFoundList(
   if (params.regionCode) url.searchParams.set('N_FD_LCT_CD', params.regionCode);
   url.searchParams.set('pageNo', String(pageNo));
   url.searchParams.set('numOfRows', String(numOfRows));
-  url.searchParams.set('_type', 'json');
 
   try {
     const res = await fetch(url.toString(), {
@@ -98,18 +109,17 @@ export async function fetchLostFoundList(
       console.error('[aring][lost112] non-OK', res.status, res.statusText);
       return { items: [], totalCount: 0, pageNo, numOfRows, isMock: false };
     }
-    const json = (await res.json()) as Lost112JsonResponse;
-    const code = json?.response?.header?.resultCode;
-    if (code && code !== '00') {
-      console.error('[aring][lost112] api error', code, json?.response?.header?.resultMsg);
+    const xml = await res.text();
+    const parsed = parseLost112Xml(xml);
+    if (parsed.resultCode && parsed.resultCode !== '00') {
+      console.error('[aring][lost112] api error', parsed.resultCode, parsed.resultMsg);
       return { items: [], totalCount: 0, pageNo, numOfRows, isMock: false };
     }
-    const raws = extractItems(json);
     return {
-      items: normalizeLostItems(raws),
-      totalCount: asNumber(json?.response?.body?.totalCount, raws.length),
-      pageNo: asNumber(json?.response?.body?.pageNo, pageNo),
-      numOfRows: asNumber(json?.response?.body?.numOfRows, numOfRows),
+      items: normalizeLostItems(parsed.items),
+      totalCount: parsed.totalCount ?? parsed.items.length,
+      pageNo: parsed.pageNo ?? pageNo,
+      numOfRows: parsed.numOfRows ?? numOfRows,
       isMock: false,
     };
   } catch (e) {

@@ -67,25 +67,28 @@ export function LostItemCard({ item }: { item: LostItem }) {
             </h3>
             <p className="mt-0.5 text-[12px] lg:text-[13px] font-normal text-aring-ink-500 truncate">
               {item.category}
+              {item.color ? ` · ${item.color}` : ''}
             </p>
           </div>
         </div>
 
-        {/* 본문: 장소 / 보관처 / 전화 */}
+        {/* 본문: 보관처 우선, (있을 때) 습득장소·전화 보조 */}
         <dl className="mt-3 space-y-1.5 text-[13px] lg:text-[14px] leading-[1.45]">
           <div className="flex items-start gap-1.5 text-aring-ink-900">
-            <IconPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-aring-green" />
-            <span className="font-bold break-keep">{item.foundPlace}</span>
-          </div>
-          <div className="flex items-start gap-1.5 text-aring-ink-700">
-            <IconBuilding className="w-3.5 h-3.5 mt-0.5 shrink-0 text-aring-ink-500" />
-            <span className="font-normal break-keep">{item.storagePlace}</span>
+            <IconBuilding className="w-3.5 h-3.5 mt-0.5 shrink-0 text-aring-green" />
+            <span className="font-bold break-keep">{item.storagePlace}</span>
             {item.status && (
               <span className="ml-auto shrink-0 inline-flex items-center rounded-pill px-2 py-0.5 text-[11px] font-bold bg-aring-ink-100 text-aring-ink-700">
                 {item.status}
               </span>
             )}
           </div>
+          {item.foundPlace && (
+            <div className="flex items-start gap-1.5 text-aring-ink-700">
+              <IconPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-aring-ink-500" />
+              <span className="font-normal break-keep">{item.foundPlace}</span>
+            </div>
+          )}
           {item.storagePhone && (
             <div className="flex items-center gap-1.5 text-aring-ink-700">
               <IconPhone className="w-3.5 h-3.5 shrink-0 text-aring-ink-500" />

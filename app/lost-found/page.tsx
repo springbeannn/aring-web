@@ -19,7 +19,7 @@ const SITE_URL = 'https://aring.app';
 const PAGE_URL = `${SITE_URL}/lost-found`;
 const PAGE_TITLE = '분실물 통합 검색 · aring';
 const PAGE_DESCRIPTION =
-  '경찰청 LOST112와 연결된 액세서리 분실물을 aring에서 확인하세요. 직접 거래는 불가, 보관처에 문의해 확인할 수 있어요.';
+  '경찰청 LOST112와 연결된 귀금속·액세서리 분실물을 aring에서 확인하세요. 직접 거래는 불가, 보관처에 문의해 확인할 수 있어요.';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -148,7 +148,7 @@ export default async function LostFoundPage() {
                 어딘가 잃어버린 한 짝
               </h1>
               <p className="mt-0.5 text-[13px] lg:text-[14px] leading-[1.55] text-aring-ink-500 break-keep">
-                경찰청 LOST112와 연결된 액세서리 분실물이에요.
+                경찰청 LOST112와 연결된 귀금속·액세서리 분실물이에요.
                 <br className="sm:hidden" />
                 {' '}직접 거래는 불가, 보관처에 문의해 확인해보세요.
                 {totalCount > 0 && (
