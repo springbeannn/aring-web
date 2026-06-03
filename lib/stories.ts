@@ -34,7 +34,7 @@ export const STORIES: Story[] = [
     index: 3,
     title: '한쪽만 남은 귀걸이는 왜 버리지 못할까',
     href: '/about/story/cant-throw-away',
-    status: 'coming-soon',
+    status: 'ready',
   },
   {
     slug: 'moments-of-loss',
